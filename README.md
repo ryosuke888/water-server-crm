@@ -42,5 +42,4 @@ cd water-server-crm
 ./vendor/bin/sail artisan migrate
 
 ## 画面
-
 （スクショ貼る）
