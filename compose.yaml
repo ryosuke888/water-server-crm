@@ -27,6 +27,9 @@ services:
             - meilisearch
             - mailpit
             - selenium
+        dns:
+            - 8.8.8.8
+            - 1.1.1.1
     mysql:
         image: 'mysql:8.4'
         ports:
@@ -55,7 +58,7 @@ services:
     redis:
         image: 'redis:alpine'
         ports:
-            - '${FORWARD_REDIS_PORT:-6379}:6379'
+            - '${FORWARD_REDIS_PORT:-6380}:6379'
         volumes:
             - 'sail-redis:/data'
         networks:
@@ -70,7 +73,7 @@ services:
     meilisearch:
         image: 'getmeili/meilisearch:latest'
         ports:
-            - '${FORWARD_MEILISEARCH_PORT:-7700}:7700'
+            - '${FORWARD_MEILISEARCH_PORT:-7701}:7700'
         environment:
             MEILI_NO_ANALYTICS: '${MEILISEARCH_NO_ANALYTICS:-false}'
         volumes:
@@ -111,3 +114,5 @@ volumes:
         driver: local
     sail-meilisearch:
         driver: local
+
+
