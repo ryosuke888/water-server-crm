@@ -13,7 +13,8 @@
                             <th class="w-[20%] px-4 py-4 text-left font-semibold text-gray-600">電話番号</th>
                             <th class="w-[20%] px-4 py-4 text-left font-semibold text-gray-600">メールアドレス</th>
                             <th class="w-[20%] px-4 py-4 text-left font-semibold text-gray-600">契約状況</th>
-                            <th class="w-[20%] px-4 py-4 text-left font-semibold text-gray-600">登録日</th>
+                            <th class="w-[10%] px-4 py-4 text-left font-semibold text-gray-600">登録日</th>
+                            <th class="w-[10%] px-4 py-4"></th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100 bg-white">
@@ -32,6 +33,11 @@
                             </td>
                             <td class="px-4 py-4 text-gray-700 text-left">
                                 <div class="truncate">2026/03/21</div>
+                            </td>
+                            <td class="px-4 py-4">
+                                <div>
+                                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">編集</button>
+                                </div>
                             </td>
                             <tr class="hover:bg-gray-50">
                             <td class="px-4 py-4 text-gray-700 text-left">
