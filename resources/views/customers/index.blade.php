@@ -36,7 +36,9 @@
                             </td>
                             <td class="px-4 py-4">
                                 <div>
-                                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">編集</button>
+                                    <form action="" method="get">
+                                        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">編集</button>
+                                    </form>
                                 </div>
                             </td>
                             <tr class="hover:bg-gray-50">
