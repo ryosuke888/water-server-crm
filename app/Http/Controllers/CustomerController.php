@@ -46,6 +46,7 @@ class CustomerController extends Controller
             $customer = $customerService->store($validated);
             return redirect()->route('customers.show', $customer)->with('success', '顧客登録に成功しました。');
         } catch(Exception $e) {
+            // ログ出力
             Log::error("顧客登録失敗", [
                 'error' => $e->getMessage(),
             ]);

@@ -11,13 +11,15 @@
                 <p class="text-sm text-gray-500 mt-1">顧客情報を登録します</p>
             </div>
 
-            @if ($errors->any())
-                <div class="mb-4 rounded-lg bg-red-50 p-4 text-red-600">
-                    <ul class="list-disc pl-5">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
+            @if (session('success'))
+                <div class="bg-green-100 text-green-700 p-3 rounded mb-4">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if (session('error'))
+                <div class="bg-red-100 text-red-700 p-3 rounded mb-4">
+                    {{ session('error') }}
                 </div>
             @endif
 
