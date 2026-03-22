@@ -33,19 +33,19 @@
 
                         <div>
                             <label class="block text-sm font-medium mb-1">顧客名</label>
-                            <input type="text" name="name" required
+                            <input type="text" value="{{ old('name') }}" name="name" required
                             class="w-full rounded-xl border px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-200">
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium mb-1">電話番号</label>
-                            <input type="text" name="phone_number" required
+                            <input type="text" value="{{ old('phone_number') }}" name="phone_number" required
                             class="w-full rounded-xl border px-4 py-3 text-sm">
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium mb-1">メール</label>
-                            <input type="email" name="email"
+                            <input type="email" value="{{ old('email') }}" name="email"
                             class="w-full rounded-xl border px-4 py-3 text-sm">
                         </div>
 
@@ -62,31 +62,31 @@
 
                     <div>
                         <label class="block text-sm font-medium mb-1">郵便番号</label>
-                        <input type="text" name="postal_code"
+                        <input type="text" value="{{ old('postal_code') }}" name="postal_code"
                         class="w-full rounded-xl border px-4 py-3 text-sm">
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium mb-1">都道府県</label>
-                        <input type="text" name="prefecture"
+                        <input type="text" value="{{ old('prefecture') }}" name="prefecture"
                         class="w-full rounded-xl border px-4 py-3 text-sm">
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium mb-1">市区町村</label>
-                        <input type="text" name="city"
+                        <input type="text" value="{{ old('city') }}" name="city"
                         class="w-full rounded-xl border px-4 py-3 text-sm">
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium mb-1">番地</label>
-                        <input type="text" name="address_line1"
+                        <input type="text" value="{{ old('address_line1') }}" name="address_line1"
                         class="w-full rounded-xl border px-4 py-3 text-sm">
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium mb-1">建物名・部屋番号</label>
-                        <input type="text" name="address_line2"
+                        <input type="text" value="{{ old('address_line2') }}" name="address_line2"
                         class="w-full rounded-xl border px-4 py-3 text-sm">
                     </div>
 
@@ -104,9 +104,9 @@
                     <div>
                         <label class="block text-sm font-medium mb-1">ステータス</label>
                         <select class="w-full rounded-xl border px-4 py-3 text-sm" name="contract_status">
-                            <option selected>未契約</option>
-                            <option>契約中</option>
-                            <option>解約済</option>
+                            <option value="未契約" {{ old('contract_status') === '未契約' ? 'selected' : '' }}>未契約</option>
+                            <option value="契約中" {{ old('contract_status') === '契約中' ? 'selected' : '' }}>契約中</option>
+                            <option value="解約済" {{ old('contract_status') === '解約済' ? 'selected' : '' }}>解約済</option>
                         </select>
                     </div>
 
@@ -129,37 +129,37 @@
 
                         <div>
                             <label class="block text-sm font-medium mb-1">配送先氏名</label>
-                            <input type="text" name="shipping_name"
+                            <input type="text" value="{{ old('shipping_name') }}" name="shipping_name"
                             class="w-full rounded-xl border px-4 py-3 text-sm">
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium mb-1">郵便番号</label>
-                            <input type="text" name="shipping_postal_code" name="shipping_postal_code"
+                            <input type="text" value="{{ old('shipping_postal_code') }}" name="shipping_postal_code" name="shipping_postal_code"
                             class="w-full rounded-xl border px-4 py-3 text-sm">
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium mb-1">都道府県</label>
-                            <input type="text" name="shipping_prefecture" name="shipping_prefecture"
+                            <input type="text" value="{{ old('shipping_prefecture') }}" name="shipping_prefecture" name="shipping_prefecture"
                             class="w-full rounded-xl border px-4 py-3 text-sm">
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium mb-1">市区町村</label>
-                            <input type="text" name="shipping_city" name="shipping_city"
+                            <input type="text" value="{{ old('shipping_city') }}" name="shipping_city" name="shipping_city"
                             class="w-full rounded-xl border px-4 py-3 text-sm">
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium mb-1">番地</label>
-                            <input type="text" name="shipping_address_line1" name="shipping_address_line1"
+                            <input type="text" value="{{ old('shipping_address_line1') }}" name="shipping_address_line1" name="shipping_address_line1"
                             class="w-full rounded-xl border px-4 py-3 text-sm">
                         </div>
 
                         <div class="">
                             <label class="block text-sm font-medium mb-1">建物名・部屋番号</label>
-                            <input type="text" name="shipping_address_line2" name="shipping_address_line2"
+                            <input type="text" value="{{ old('shipping_address_line2') }}" name="shipping_address_line2" name="shipping_address_line2"
                             class="w-full rounded-xl border px-4 py-3 text-sm">
                         </div>
 

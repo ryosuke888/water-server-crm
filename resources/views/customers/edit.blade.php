@@ -100,9 +100,9 @@
                     <div>
                         <label class="block text-sm font-medium mb-1">ステータス</label>
                         <select class="w-full rounded-xl border px-4 py-3 text-sm" name="contract_status">
-                            <option {{ $customer->contract_status === '未契約' ? 'selected' : '' }}>未契約</option>
-                            <option {{ $customer->contract_status === '契約中' ? 'selected' : '' }}>契約中</option>
-                            <option {{ $customer->contract_status === '解約済' ? 'selected' : '' }}>解約済</option>
+                            <option value="未契約" {{ $customer->contract_status === '未契約' ? 'selected' : '' }}>未契約</option>
+                            <option value="契約中" {{ $customer->contract_status === '契約中' ? 'selected' : '' }}>契約中</option>
+                            <option value="解約済" {{ $customer->contract_status === '解約済' ? 'selected' : '' }}>解約済</option>
                         </select>
                     </div>
 
