@@ -35,9 +35,9 @@ class Customer extends Model
     ];
 
     protected $fillable = [
-        self::BASIC_FIELDS,
-        self::ADDRESS_FIELDS,
-        self::SHIPPING_ADDRESS_FIELDS,
-        self::CALL_INFORMATION_FIELDS,
+        ...self::BASIC_FIELDS,
+        ...self::ADDRESS_FIELDS,
+        ...self::SHIPPING_ADDRESS_FIELDS,
+        ...self::CALL_INFORMATION_FIELDS,
     ];
 }
