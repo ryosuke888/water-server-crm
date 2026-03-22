@@ -3,7 +3,7 @@
 
     </x-slot>
 
-    <div class="py-8">
+    <div class="my-8">
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div class="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-gray-200">
                 <table class="w-full divide-y divide-gray-200 text-sm">
@@ -37,8 +37,8 @@
                                 </td>
                                 <td class="px-4 py-4">
                                     <div>
-                                        <form action="" method="get">
-                                            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">編集</button>
+                                        <form action="{{ route('customers.show', $customer) }}" method="get">
+                                            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">詳細</button>
                                         </form>
                                     </div>
                                 </td>
