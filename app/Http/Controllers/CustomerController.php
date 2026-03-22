@@ -36,10 +36,9 @@ class CustomerController extends Controller
 
     public function store(StoreCustomerRequest $request) {
         $validated = $request->validated();
-        $latestCustomer = Customer::latest('id')->first();
-        $nextId = $latestCustomer ? $latestCustomer->id + 1 : 1;
-        $validated['customer_code'] = 'C' . str_pad((string) $nextId, 8, '0', STR_PAD_LEFT);
         $customer = Customer::create($validated);
+        $customer->customer_code = 'C' . str_pad((string) $customer->id, 8, '0', STR_PAD_LEFT);
+        $customer->save();
         return redirect()->route('customers.show', $customer);
     }
 }
