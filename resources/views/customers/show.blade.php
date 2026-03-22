@@ -14,7 +14,7 @@
                                 <h1 class="text-2xl font-bold text-gray-900">{{ $customer->name }}</h1>
                                 @if ($customer->contract_status === "解約済")
                                 <span class="px-3 py-1 text-xs font-medium rounded-full bg-red-100 text-red-700">
-                                    解約済
+                                    {{ $customer->contract_status }}
                                 </span>
                                 @else
                                 @endif
