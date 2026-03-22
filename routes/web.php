@@ -19,7 +19,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/customers', [CustomerController::class, 'index'])->name('customers.index');
     Route::get('/customers/show/{customer}', [CustomerController::class, 'show'])->name('customers.show');
     Route::get('customers/{customer}/edit', [CustomerController::class, 'edit'])->name('customers.edit');
-    Route::get('customers/{customer}/update', [CustomerController::class, 'update'])->name('customers.update');
+    Route::post('customers/{customer}/update', [CustomerController::class, 'update'])->name('customers.update');
 });
 
 require __DIR__.'/auth.php';
