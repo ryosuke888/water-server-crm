@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
 use App\Models\Customer;
+use App\Services\CustomerService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+
 
 class CustomerController extends Controller
 {
@@ -35,15 +36,9 @@ class CustomerController extends Controller
         return view('customers.show', compact('customer'));
     }
 
-    public function store(StoreCustomerRequest $request) {
+    public function store(StoreCustomerRequest $request, CustomerService $customerService) {
         $validated = $request->validated();
-        $customer = DB::transaction(function () use ($validated) {
-            $customer = Customer::create($validated);
-            $customer->customer_code = 'C' . str_pad((string) $customer->id, 8, '0', STR_PAD_LEFT);
-            $customer->save();
-            return $customer;
-        });
-
+        $customer = $customerService->store($validated);
         return redirect()->route('customers.show', $customer);
     }
 }
