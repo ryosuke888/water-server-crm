@@ -6,6 +6,7 @@ use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
 use App\Models\Customer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CustomerController extends Controller
 {
@@ -36,9 +37,13 @@ class CustomerController extends Controller
 
     public function store(StoreCustomerRequest $request) {
         $validated = $request->validated();
-        $customer = Customer::create($validated);
-        $customer->customer_code = 'C' . str_pad((string) $customer->id, 8, '0', STR_PAD_LEFT);
-        $customer->save();
+        $customer = DB::transaction(function () use ($validated) {
+            $customer = Customer::create($validated);
+            $customer->customer_code = 'C' . str_pad((string) $customer->id, 8, '0', STR_PAD_LEFT);
+            $customer->save();
+            return $customer;
+        });
+
         return redirect()->route('customers.show', $customer);
     }
 }
