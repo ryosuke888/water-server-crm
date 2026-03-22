@@ -23,10 +23,11 @@
                                 <p class="text-sm text-gray-500 mt-1">顧客ID: {{ $customer->customer_code }}</p>
                                 <p class="text-sm text-gray-500 mt-1">ステータス: {{ $customer->contract_status }}</p>
                                 <p class="text-sm text-gray-500">登録日: {{ $customer->created_at->format('Y/m/d'); }}</p>
+                                <p class="text-sm text-gray-500">更新日: {{ $customer->updated_at->format('Y/m/d'); }}</p>
                             </div>
                         </div>
                     </div>
-                    <a href="#" class="inline-flex items-center px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700">
+                    <a href="{{ route('customers.edit', $customer) }}" class="inline-flex items-center px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700">
                         編集
                     </a>
                 </div>
@@ -67,6 +68,10 @@
                         <div>
                             <p class="text-sm text-gray-500">契約先住所</p>
                             <p class="text-sm font-medium text-gray-800">{{ $customer->prefecture . $customer->city . $customer->address_line1 . $customer->address_line2 }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">ステータス</p>
+                            <p class="text-sm font-medium text-gray-800">{{ $customer->contract_status }}</p>
                         </div>
                     </div>
                 </div>
