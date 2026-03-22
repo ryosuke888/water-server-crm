@@ -24,18 +24,15 @@ class CustomerController extends Controller
         return view('customers.create');
     }
 
-    public function show($id) {
-        $customer = Customer::find($id);
+    public function show(Customer $customer) {
         return view('customers.show', compact('customer'));
     }
 
-    public function edit($id) {
-        $customer = Customer::find($id);
+    public function edit(Customer $customer) {
         return view('customers.edit', compact('customer'));
     }
 
-    public function update(UpdateCustomerRequest $request, $id) {
-        $customer = Customer::findOrFail($id);
+    public function update(UpdateCustomerRequest $request, Customer $customer) {
         $customer->update($request->validated());
         return view('customers.show', compact('customer'));
     }
