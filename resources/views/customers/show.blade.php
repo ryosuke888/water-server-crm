@@ -11,14 +11,18 @@
                     <div class="flex items-center gap-4">
                         <div>
                             <div class="flex items-center gap-3">
-                                <h1 class="text-2xl font-bold text-gray-900">山田 太郎</h1>
-                                <span class="px-3 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">
-                                    有効
+                                <h1 class="text-2xl font-bold text-gray-900">{{ $customer->name }}</h1>
+                                @if ($customer->contract_status === "解約済")
+                                <span class="px-3 py-1 text-xs font-medium rounded-full bg-red-100 text-red-700">
+                                    解約済
                                 </span>
+                                @else
+                                @endif
                             </div>
                             <div>
-                                <p class="text-sm text-gray-500 mt-1">顧客ID: CUST-0001</p>
-                                <p class="text-sm text-gray-500">登録日: 2026/03/22</p>
+                                <p class="text-sm text-gray-500 mt-1">顧客ID: {{ $customer->customer_code }}</p>
+                                <p class="text-sm text-gray-500 mt-1">ステータス: {{ $customer->contract_status }}</p>
+                                <p class="text-sm text-gray-500">登録日: {{ $customer->created_at->format('Y/m/d'); }}</p>
                             </div>
                         </div>
                     </div>
@@ -30,11 +34,11 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
                     <div class="bg-gray-50 rounded-xl p-4">
                         <p class="text-xs text-gray-500">電話番号</p>
-                        <p class="text-sm font-medium text-gray-800 mt-1">090-1234-5678</p>
+                        <p class="text-sm font-medium text-gray-800 mt-1">{{ $customer->phone_number }}</p>
                     </div>
                     <div class="bg-gray-50 rounded-xl p-4">
                         <p class="text-xs text-gray-500">メールアドレス</p>
-                        <p class="text-sm font-medium text-gray-800 mt-1">test@example.com</p>
+                        <p class="text-sm font-medium text-gray-800 mt-1">{{ $customer->email }}</p>
                     </div>
                 </div>
             </div>
@@ -46,23 +50,23 @@
                     <div class="space-y-4">
                         <div>
                             <p class="text-sm text-gray-500">氏名</p>
-                            <p class="text-sm font-medium text-gray-800">山田 太郎</p>
+                            <p class="text-sm font-medium text-gray-800">{{ $customer->name }}</p>
                         </div>
                         <div>
                             <p class="text-sm text-gray-500">電話番号</p>
-                            <p class="text-sm font-medium text-gray-800">090-1234-5678</p>
+                            <p class="text-sm font-medium text-gray-800">{{ $customer->phone_number }}</p>
                         </div>
                         <div>
                             <p class="text-sm text-gray-500">メールアドレス</p>
-                            <p class="text-sm font-medium text-gray-800">test@example.com</p>
+                            <p class="text-sm font-medium text-gray-800">{{ $customer->email }}</p>
                         </div>
                         <div>
                             <p class="text-sm text-gray-500">郵便番号</p>
-                            <p class="text-sm font-medium text-gray-800">123-4567</p>
+                            <p class="text-sm font-medium text-gray-800">{{ $customer->postal_code }}</p>
                         </div>
                         <div>
                             <p class="text-sm text-gray-500">契約先住所</p>
-                            <p class="text-sm font-medium text-gray-800">東京都新宿区○○1-2-3 ○○ビル 101</p>
+                            <p class="text-sm font-medium text-gray-800">{{ $customer->prefecture . $customer->city . $customer->address_line1 . $customer->address_line2 }}</p>
                         </div>
                     </div>
                 </div>
@@ -71,12 +75,16 @@
                     <h2 class="text-lg font-semibold text-gray-900 mb-4">配送先情報</h2>
                     <div class="space-y-4">
                         <div>
+                            <p class="text-sm text-gray-500">氏名</p>
+                            <p class="text-sm font-medium text-gray-800">{{ $customer->shipping_name }}</p>
+                        </div>
+                        <div>
                             <p class="text-sm text-gray-500">郵便番号</p>
-                            <p class="text-sm font-medium text-gray-800">123-4567</p>
+                            <p class="text-sm font-medium text-gray-800">{{ $customer->shipping_postal_code }}</p>
                         </div>
                         <div>
                             <p class="text-sm text-gray-500">住所</p>
-                            <p class="text-sm font-medium text-gray-800">東京都新宿区○○1-2-3 ○○ビル 101</p>
+                            <p class="text-sm font-medium text-gray-800">{{ $customer->shipping_prefecture . $customer->shipping_city . $customer->shipping_address_line1 . $customer->shipping_address_line2 }}</p>
                         </div>
                     </div>
                 </div>

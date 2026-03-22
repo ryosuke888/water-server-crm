@@ -1,0 +1,33 @@
+[90m= [39m[
+    {#5410
+      +"[1mTables_in_laravel[22m": "[32mcache[39m",
+    },
+    {#5408
+      +"[1mTables_in_laravel[22m": "[32mcache_locks[39m",
+    },
+    {#5407
+      +"[1mTables_in_laravel[22m": "[32mcustomers[39m",
+    },
+    {#5412
+      +"[1mTables_in_laravel[22m": "[32mfailed_jobs[39m",
+    },
+    {#5395
+      +"[1mTables_in_laravel[22m": "[32mjob_batches[39m",
+    },
+    {#5413
+      +"[1mTables_in_laravel[22m": "[32mjobs[39m",
+    },
+    {#5414
+      +"[1mTables_in_laravel[22m": "[32mmigrations[39m",
+    },
+    {#5415
+      +"[1mTables_in_laravel[22m": "[32mpassword_reset_tokens[39m",
+    },
+    {#5416
+      +"[1mTables_in_laravel[22m": "[32msessions[39m",
+    },
+    {#5417
+      +"[1mTables_in_laravel[22m": "[32musers[39m",
+    },
+  ]
+

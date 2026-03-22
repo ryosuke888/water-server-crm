@@ -21,7 +21,7 @@
                         @foreach ($customers as $customer)
                             <tr class="hover:bg-gray-50">
                                 <td class="px-4 py-4 text-gray-700 text-left">
-                                <div class="truncate">{{ $customer->customer_name }}</div>
+                                <div class="truncate">{{ $customer->name }}</div>
                                 </td>
                                 <td class="px-4 py-4 text-gray-700 text-left">
                                     <div class="truncate">{{ $customer->phone_number }}</div>
