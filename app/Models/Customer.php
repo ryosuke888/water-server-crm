@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Customer extends Model
 {
     public const BASIC_FIELDS =[
+        'customer_code',
         'name',
         'phone_number',
         'email',
