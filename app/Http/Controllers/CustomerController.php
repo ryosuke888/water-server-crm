@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateCustomerRequest;
 use App\Models\Customer;
 use App\Services\CustomerService;
 use Exception;
+use Illuminate\Container\Attributes\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -33,8 +34,23 @@ class CustomerController extends Controller
     }
 
     public function update(UpdateCustomerRequest $request, Customer $customer) {
-        $customer->update($request->validated());
-        return view('customers.show', compact('customer'));
+        try {
+            $customer->update($request->validated());
+            return view('customers.show', compact('customer'))->with('success', '顧客情報更新に成功しました。');
+        } catch(Exception $e) {
+            // ログ出力
+            Log::error('顧客情報更新失敗', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'user_id' => auth()->id(),
+                'customer_id' => $customer['id'],
+                'data' => $request->only(['contact_status',]),
+                'url' => $request->url(),
+                'method' => $request->method(),
+            ]);
+            return back()->withInput()->with('error', '顧客情報更新に失敗しました。');
+        }
+
     }
 
     public function store(StoreCustomerRequest $request, CustomerService $customerService) {
@@ -46,6 +62,11 @@ class CustomerController extends Controller
             // ログ出力
             Log::error("顧客登録失敗", [
                 'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'user_id' => auth()->id(),
+                'data' => $request->only(['contact_status',]),
+                'url' => $request->url(),
+                'method' => $request->method(),
             ]);
             return back()->withInput()->with('error', '顧客登録に失敗しました。');
         }

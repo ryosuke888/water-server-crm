@@ -24,6 +24,7 @@
             @endif
 
             <form action="{{ route('customers.store') }}" method="POST" class="space-y-8">
+            @csrf
 
                 <!-- 基本情報 -->
                 <div class="bg-white rounded-2xl shadow-sm ring-1 ring-gray-200">
@@ -115,7 +116,7 @@
                     <div>
                         <label class="block text-sm font-medium mb-1">備考</label>
                         <textarea rows="4"
-                        class="w-full rounded-xl border px-4 py-3 text-sm" name="remarks"></textarea>
+                        class="w-full rounded-xl border px-4 py-3 text-sm" name="remarks">{{ old('remarks') }}</textarea>
                     </div>
 
                     </div>
@@ -137,7 +138,7 @@
 
                         <div>
                             <label class="block text-sm font-medium mb-1">郵便番号</label>
-                            <input type="text" value="{{ old('shipping_postal_code') }}" name="shipping_postal_code" name="shipping_postal_code"
+                            <input type="text" value="{{ old('shipping_postal_code') }}" name="shipping_postal_code"
                             class="w-full rounded-xl border px-4 py-3 text-sm">
                         </div>
 
