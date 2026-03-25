@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('plan_product_prices', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('plan_code')->constrained()->cascadeOnDelete();  // プランコード
-            $table->foreignId('product_code')->constrained()->cascadeOnDelete();  // 商品コード
+            $table->foreignId('plan_id')->constrained()->cascadeOnDelete();  // プランID
+            $table->foreignId('product_id')->constrained()->cascadeOnDelete();  // 商品ID
             $table->integer('price');  // 価格
-            $table->unique(['plan_code', 'product_code']);  // 複合ユニーク制約
+            $table->unique(['plan_id', 'product_id']);  // 複合ユニーク制約
             $table->timestamps();
         });
     }
