@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -20,6 +21,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/customers/show/{customer}', [CustomerController::class, 'show'])->name('customers.show');
     Route::get('/customers/{customer}/edit', [CustomerController::class, 'edit'])->name('customers.edit');
     Route::get('/customers/create', [CustomerController::class, 'create'])->name('customers.create');
+    Route::get('/orders/{customer}/customer_index', [OrderController::class, 'customerIndex'])->name('orders.customer.index');
+    Route::get('/orders/{order}/show', [OrderController::class, 'show'])->name('orders.show');
     Route::post('/customers/{customer}/update', [CustomerController::class, 'update'])->name('customers.update');
     Route::post('/customers/store', [CustomerController::class, 'store'])->name('customers.store');
 });
