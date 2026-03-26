@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Models\Order;
+use App\Models\Plan;
+use App\Models\Product;
 use Illuminate\Database\Eloquent\Model;
 
 class PlanProductPrice extends Model
@@ -11,4 +14,12 @@ class PlanProductPrice extends Model
         'product_id',
         'price',
     ];
+
+    public function products() {
+        return $this->belongsTo(Product::class);
+    }
+
+    public function plans() {
+        return $this->belongsTo(Plan::class);
+    }
 }
