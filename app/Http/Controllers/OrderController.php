@@ -10,14 +10,8 @@ use Illuminate\Http\Request;
 class OrderController extends Controller
 {
     public function customerIndex(Customer $customer) {
-
-        $orders = Order::where('customer_id', $customer->id)->get();
-        foreach ($orders as $order) {
-            $product = Product::where('id', $order->product_id)->firstOrFail();
-            $order->product_name = $product->name;
-        }
-
-        return view('orders.customer_index', compact('customer'))->with(compact('orders'));
+        $customer->load('orders.product');
+        return view('orders.customer_index', compact('customer'));
     }
 
     public function show(Order $order) {
