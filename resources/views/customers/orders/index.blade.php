@@ -73,7 +73,7 @@
                                     <td class="py-3 pr-4">{{ $order->scheduled_shipping_date}}</td>
                                     <td class="px-3">
                                         <div>
-                                            <form action="{{ route('orders.show', $order) }}" method="get">
+                                            <form action="{{ route('orders.show', $customer) }}" method="get">
                                                 <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">詳細</button>
                                             </form>
                                         </div>

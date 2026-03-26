@@ -27,9 +27,10 @@
                             </div>
                         </div>
                     </div>
-                    <a href="{{ route('customers.edit', $customer) }}" class="inline-flex items-center px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700">
-                        編集
-                    </a>
+                    <button type="button" onclick="history.back()"
+                    class="px-5 py-3 text-sm border rounded-xl bg-blue hover:bg-blue-50">
+                    戻る
+                    </button>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
@@ -47,31 +48,59 @@
             <!-- 基本情報 + 配送先 -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-                    <h2 class="text-lg font-semibold text-gray-900 mb-4">基本情報</h2>
+                    <h2 class="text-lg font-semibold text-gray-900 mb-4">注文情報</h2>
                     <div class="space-y-4">
                         <div>
-                            <p class="text-sm text-gray-500">氏名</p>
-                            <p class="text-sm font-medium text-gray-800">{{ $customer->name }}</p>
+                            <p class="text-sm text-gray-500">注文番号</p>
+                            <p class="text-sm font-medium text-gray-800">{{ $order->order_code }}</p>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-500">電話番号</p>
-                            <p class="text-sm font-medium text-gray-800">{{ $customer->phone_number }}</p>
+                            <p class="text-sm text-gray-500">プラン名</p>
+                            <p class="text-sm font-medium text-gray-800">{{ $order->plan->name }}</p>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-500">メールアドレス</p>
-                            <p class="text-sm font-medium text-gray-800">{{ $customer->email }}</p>
+                            <p class="text-sm text-gray-500">商品名</p>
+                            <p class="text-sm font-medium text-gray-800">{{ $order->product->name }}</p>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-500">郵便番号</p>
-                            <p class="text-sm font-medium text-gray-800">{{ $customer->postal_code }}</p>
+                            <p class="text-sm text-gray-500">受注種別</p>
+                            <p class="text-sm font-medium text-gray-800">{{ $order->order_type }}</p>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-500">契約先住所</p>
-                            <p class="text-sm font-medium text-gray-800">{{ $customer->prefecture . $customer->city . $customer->address_line1 . $customer->address_line2 }}</p>
+                            <p class="text-sm text-gray-500">数量</p>
+                            <p class="text-sm font-medium text-gray-800">{{ $order->quantity }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">小計</p>
+                            <p class="text-sm font-medium text-gray-800">{{ $order->unit_price }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">合計</p>
+                            <p class="text-sm font-medium text-gray-800">{{ $order->subtotal_amount }}</p>
                         </div>
                         <div>
                             <p class="text-sm text-gray-500">ステータス</p>
-                            <p class="text-sm font-medium text-gray-800">{{ $customer->contract_status }}</p>
+                            <p class="text-sm font-medium text-gray-800">{{ $order->order_status }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">運送会社</p>
+                            <p class="text-sm font-medium text-gray-800">{{ $order->shipping_company }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">注文日</p>
+                            <p class="text-sm font-medium text-gray-800">{{ $order->order_date }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">配送日</p>
+                            <p class="text-sm font-medium text-gray-800">{{ $order->scheduled_shipping_date}}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">お届け日</p>
+                            <p class="text-sm font-medium text-gray-800">{{ $order->scheduled_delivery_date}}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">備考</p>
+                            <p class="text-sm font-medium text-gray-800">{{ $order->remarks}}</p>
                         </div>
                     </div>
                 </div>
@@ -95,54 +124,6 @@
                 </div>
             </div>
 
-            <!-- 注文情報 -->
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-                <h2 class="text-lg font-semibold text-gray-900 mb-4">注文情報</h2>
-
-                <div class="overflow-x-auto">
-                    <table class="min-w-full text-sm">
-                        <thead>
-                            <tr class="text-left text-gray-500 border-b">
-                                <th class="py-3 pr-4">注文番号</th>
-                                <th class="py-3 pr-4">商品名</th>
-                                <th class="py-3 pr-4">数量</th>
-                                <th class="py-3 pr-4">ステータス</th>
-                                <th class="py-3 pr-4">注文日</th>
-                                <th class="py-3">次回配送日</th>
-                            </tr>
-                        </thead>
-
-                        <tbody class="divide-y divide-gray-100 text-gray-800">
-                            @foreach ($customer->orders as $order)
-                                <tr>
-                                    <td class="py-3 pr-4">{{ $order->order_code}}</td>
-                                    <td class="py-3 pr-4">{{ $order->product->name}}</td>
-                                    <td class="py-3 pr-4">{{ $order->quantity}}</td>
-                                    <td class="py-3 pr-4">
-                                        <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-700">
-                                            {{ $order->order_status}}
-                                        </span>
-                                    </td>
-                                    <td class="py-3 pr-4">{{ $order->order_date}}</td>
-                                    <td class="py-3 pr-4">{{ $order->scheduled_shipping_date}}</td>
-                                    <td class="px-3">
-                                        <div>
-                                            <form action="{{ route('customers.orders.show', [$customer, $order]) }}" method="get">
-                                                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">詳細</button>
-                                            </form>
-                                        </div>
-                                </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- コール履歴 -->
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-
-            </div>
         </div>
     </div>
 </x-app-layout>
