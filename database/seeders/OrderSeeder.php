@@ -18,11 +18,18 @@ class OrderSeeder extends Seeder
     public function run(): void
     {
         $customer = Customer::firstOrFail();
-        $server = Product::where('product_code', 'SRV001')->firstOrFail();
-        $water = Product::where('product_code', 'WTR001')->firstOrFail();
+
+        $products = Product::whereIn('product_code', ['SRV001', 'WTR001'])->get()->keyBy('product_code');
+
+        $server = $products['SRV001'];
+        $water = $products['WTR001'];
+
         $plan = Plan::where('plan_code', 'PLAN003')->firstOrFail();
-        $serverPrice = PlanProductPrice::where('plan_id', $plan->id)->where('product_id', $server->id)->firstOrFail();
-        $waterPrice = PlanProductPrice::where('plan_id', $plan->id)->where('product_id', $water->id)->firstOrFail();
+
+        $planProductPrices = $plan->planProductPrices()->whereIn('product_id', [$server->id, $water->id])->get()->keyBy('product_id');
+
+        $serverPrice = $planProductPrices[$server->id];
+        $waterPrice = $planProductPrices[$water->id];
 
         $collection = collect([
             [

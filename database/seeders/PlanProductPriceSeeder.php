@@ -15,14 +15,19 @@ class PlanProductPriceSeeder extends Seeder
      */
     public function run(): void
     {
-        $standardPlan = Plan::where('plan_code', 'PLAN001')->firstOrFail();
-        $familyPlan = Plan::where('plan_code', 'PLAN002')->firstOrFail();
-        $premiumPlan = Plan::where('plan_code', 'PLAN003')->firstOrFail();
+        $plans = Plan::whereIn('plan_code', ['PLAN001', 'PLAN002', 'PLAN003'])->get()->keyBy('plan_code');
 
-        $standardServer = Product::where('product_code', 'SRV001')->firstOrFail();
-        $stylishServer = Product::where('product_code', 'SRV002')->firstOrFail();
-        $naturalWater = Product::where('product_code', 'WTR001')->firstOrFail();
-        $naturalMineralWater = Product::where('product_code', 'WTR002')->firstOrFail();
+        $standardPlan = $plans['PLAN001'];
+        $familyPlan = $plans['PLAN002'];
+        $premiumPlan = $plans['PLAN003'];
+
+        $products = Product::whereIn('product_code', ['SRV001', 'SRV002', 'WTR001', 'WTR002'])->get()->keyBy('product_code');
+
+        $standardServer = $products['SRV001'];
+        $stylishServer = $products['SRV002'];
+        $naturalWater = $products['WTR001'];
+        $naturalMineralWater = $products['WTR002'];
+
 
         $collection = collect([
             [
