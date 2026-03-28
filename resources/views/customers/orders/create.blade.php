@@ -36,26 +36,21 @@
 
                         <div>
                             <label class="block text-sm font-medium mb-1">プラン名</label>
-                            <select class="w-full rounded-xl border px-4 py-3 text-sm" name="plan_name">
-                                <option value="スタンダードプラン" {{ old('plan_name') }}>スタンダードプラン</option>
-                                <option value="ファミリープラン" {{ old('plan_name') }}>ファミリープラン</option>
-                                <option value="プレミアムプラン" {{ old('plan_name') }}>プレミアムプラン</option>
+                            <select class="w-full rounded-xl border px-4 py-3 text-sm" name="plan_id" id="plan">
+                                <option value="" selected>選択してください</option>
+                                @foreach ($plans as $plan)
+                                    <option value="{{ $plan->id }}" >{{ $plan->name }}</option>
+                                @endforeach
                             </select>
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium mb-1">サーバー</label>
-                            <select class="w-full rounded-xl border px-4 py-3 text-sm" name="server">
-                                <option value="スタンダードサーバー" {{ old('server') }}>スタンダードサーバー</option>
-                                <option value="スタイリッシュサーバー" {{ old('server') }}>スタイリッシュサーバー</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium mb-1">サーバー</label>
-                            <select class="w-full rounded-xl border px-4 py-3 text-sm" name="water">
-                                <option value="ミネラルウォーター" {{ old('water') }}>ミネラルウォーター</option>
-                                <option value="ミネラルナチュラルウォーター" {{ old('water') }}>ミネラルナチュラルウォーター</option>
+                            <label class="block text-sm font-medium mb-1">製品</label>
+                            <select class="w-full rounded-xl border px-4 py-3 text-sm" name="product_id" id="product">
+                                <option value="" selected>選択してください</option>
+                                @foreach ($products as $product)
+                                        <option value="{{ $product->id }}" >{{ $product->name }}</option>
+                                @endforeach
                             </select>
                         </div>
 
@@ -69,33 +64,28 @@
 
                         <div>
                             <label class="block text-sm font-medium mb-1">数量</label>
-                            <input type="text" value="{{ old('quantity') }}" name="quantity"
-                            class="w-full rounded-xl border px-4 py-3 text-sm">
+                            <input type="number" value="{{ old('quantity') }}" name="quantity"
+                            class="w-full rounded-xl border px-4 py-3 text-sm" id="quantity" min="1">
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium mb-1">小計</label>
                             <input type="text" value="{{ old('unit_price') }}" name="unit_price"
-                            class="w-full rounded-xl border px-4 py-3 text-sm">
+                            class="w-full rounded-xl border px-4 py-3 text-sm" id="unit_price" readonly>
                         </div>
 
                         <div class="">
                             <label class="block text-sm font-medium mb-1">合計</label>
                             <input type="text" value="{{ old('subtotal_amount') }}" name="subtotal_amount"
-                            class="w-full rounded-xl border px-4 py-3 text-sm">
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium mb-1">運送会社</label>
-                            <input type="text" value="{{ old('shipping_company') }}" name="shipping_company"
-                            class="w-full rounded-xl border px-4 py-3 text-sm">
+                            class="w-full rounded-xl border px-4 py-3 text-sm" id="subtotal_amount" readonly>
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium mb-1">お届け日</label>
                             <input type="date" value="{{ old('scheduled_delivery_date') }}" name="scheduled_delivery_date"
-                            class="w-full rounded-xl border px-4 py-3 text-sm">
+                            class="w-full rounded-xl border px-4 py-3 text-sm" min="{{ now()->addDays(3)->toDateString() }}">
                         </div>
+                        <input type="hidden" name="customer_id" value="{{ $customer->id }}">
 
                     </div>
                 </div>
@@ -116,4 +106,43 @@
             </form>
         </div>
     </div>
+    <script>
+        const plan = document.getElementById('plan');
+        const product = document.getElementById('product');
+        const quantity = document.getElementById('quantity');
+        let unitPrice = document.getElementById('unit_price');
+        let subtotalAmount = document.getElementById('subtotal_amount');
+
+        const prices = @json($planProductPrices->mapWithKeys(function($item) {
+            return [$item->plan_id . '_' . $item->product_id => $item->price];
+        }));
+
+        function updatePrice() {
+            const planId = plan.value;
+            const productId = product.value;
+            const qty = Number(quantity.value || 0);
+
+            const key = `${planId}_${productId}`;
+
+            if (!planId || !productId) {
+                unitPrice.value = '';
+                return
+            }
+
+            const price = prices[key] ?? 0;
+            unitPrice.value = price;
+
+            if (!planId || !productId || !qty) {
+                subtotalAmount.value = '';
+                return
+            }
+
+            subtotalAmount.value = price * qty;
+        }
+
+        plan.addEventListener('change', updatePrice);
+        product.addEventListener('change', updatePrice);
+        quantity.addEventListener('change', updatePrice);
+
+    </script>
 </x-app-layout>

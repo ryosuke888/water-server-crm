@@ -23,8 +23,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/customers/create', [CustomerController::class, 'create'])->name('customers.create');
     Route::get('/customers/{customer}/orders/index', [OrderController::class, 'index'])->name('customers.orders.index');
     Route::get('/customers/{customer}/orders/{order}/show', [OrderController::class, 'show'])->name('customers.orders.show');
+    Route::get('/customers/{customer}/orders/create', [OrderController::class, 'create'])->name('customers.orders.create');
     Route::post('/customers/{customer}/update', [CustomerController::class, 'update'])->name('customers.update');
     Route::post('/customers/store', [CustomerController::class, 'store'])->name('customers.store');
+    Route::post('/customers/{customer}/orders/store', [OrderController::class, 'store'])->name('customers.orders.store');
 });
 
 require __DIR__.'/auth.php';

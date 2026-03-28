@@ -22,4 +22,8 @@ class PlanProductPrice extends Model
     public function plans() {
         return $this->belongsTo(Plan::class);
     }
+
+    public function order() {
+        return $this->hasMany(Order::class);
+    }
 }
