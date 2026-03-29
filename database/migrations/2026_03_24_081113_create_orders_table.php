@@ -21,7 +21,7 @@ return new class extends Migration
             $table->integer('unit_price')->nullable()->comment('単価');
             $table->integer('subtotal_amount')->nullable()->comment('小計');
             $table->string('order_type')->comment('受注種別'); // 初回、変更、、定期配送
-            $table->string('order_status')->default('受付')->comment('受注ステータス'); //受付、出荷準備中、完了
+            $table->string('order_status')->default('受付')->comment('受注ステータス'); //受付、出荷準備中、キャンセル、完了
             $table->date('order_date')->nullable()->comment('注文日');
             $table->date('scheduled_shipping_date')->nullable()->comment('出荷予定日');
             $table->date('scheduled_delivery_date')->nullable()->comment('配送予定日');

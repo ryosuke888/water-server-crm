@@ -5,6 +5,18 @@
     <div class="min-h-screen bg-gray-50">
         <div class="max-w-7xl mx-auto px-6 py-8 space-y-6 mt-5">
 
+            @if (session('success'))
+                <div class="bg-green-100 text-green-700 p-3 rounded mb-4">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if (session('error'))
+                <div class="bg-red-100 text-red-700 p-3 rounded mb-4">
+                    {{ session('error') }}
+                </div>
+            @endif
+
             <!-- ヘッダー -->
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                 <div class="flex items-start justify-between">
@@ -101,6 +113,11 @@
                         <div>
                             <p class="text-sm text-gray-500">備考</p>
                             <p class="text-sm font-medium text-gray-800">{{ $order->remarks}}</p>
+                        </div>
+                        <div>
+                            <a href="{{ route('customers.orders.edit', [$customer, $order]) }}" class="inline-flex items-center px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700">
+                        編集
+                    </a>
                         </div>
                     </div>
                 </div>
