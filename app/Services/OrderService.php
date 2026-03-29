@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Order;
+use App\Models\OrderHistory;
 use App\Models\PlanProductPrice;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -39,5 +40,46 @@ class OrderService {
         });
 
         return $order;
+    }
+
+    public function update($validated, $customer, $order): Order
+    {
+         return DB::transaction(function () use ($validated, $customer, $order) {
+            $order = $customer->orders()->findOrFail($order->id);
+
+            $orderBefore = $order->only([
+                'product_id',
+                'plan_id',
+                'quantity',
+                'order_status',
+                'scheduled_delivery_date',
+            ]);
+
+            $order->update($validated);
+            $order = $order->refresh();
+
+            $orderAfter = $order->only([
+                'product_id',
+                'plan_id',
+                'quantity',
+                'order_status',
+                'scheduled_delivery_date',
+            ]);
+
+            OrderHistory::create([
+                'customer_id' => $customer->id,
+                'order_id' => $order->id,
+                'user_id' => auth()->id(),
+                'order_code_snapshot' => $order->order_code,
+                'action_type' => 'update',
+                'action_summary' => '受注情報を更新しました',
+                'before_values' => $orderBefore,
+                'after_values'  => $orderAfter,
+                'acted_at' => Carbon::now(),
+            ]);
+
+            return $order;
+        });
+
     }
 }

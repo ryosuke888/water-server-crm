@@ -12,6 +12,7 @@ use App\Models\Product;
 use App\Services\OrderService;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
@@ -44,14 +45,15 @@ class OrderController extends Controller
         return view('customers.orders.create', compact('customer', 'plans', 'products', 'planProductPrices'));
     }
 
-    public function update(UpdateOrderRequest $request, Customer $customer, Order $order) {
+    public function update(UpdateOrderRequest $request, Customer $customer, Order $order, OrderService $orderService) {
         try {
-                $validated = $request->validated();
-                $order->update($validated);
+            $validated = $request->validated();
+            $order = $orderService->update($validated, $customer, $order);
+
             return redirect()->route('customers.orders.show', compact('customer', 'order'))->with('success', '受注更新に成功しました。');
         } catch(Exception $e) {
             // ログ出力
-            Log::error('受注登録失敗', [
+            Log::error('受注更新失敗', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
                 'user_id' => auth()->id(),
@@ -67,8 +69,8 @@ class OrderController extends Controller
 
     public function store(StoreOrderRequest $request, OrderService $orderService, Customer $customer) {
         try {
-            $valideted = $request->validated();
-            $orderService->store($valideted);
+            $validated = $request->validated();
+            $orderService->store($validated);
             return redirect()->route('customers.orders.index', compact('customer'))->with('success', '受注登録に成功しました。');
         } catch (Exception $e) {
             // ログ出力
