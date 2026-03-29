@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Order;
+use App\Models\OrderHistory;
 use Illuminate\Database\Eloquent\Model;
 
 class Customer extends Model
@@ -45,5 +46,9 @@ class Customer extends Model
 
     public function orders() {
         return $this->hasMany(Order::class);
+    }
+
+    public function orderHistories() {
+        return $this->hasMany(OrderHistory::class);
     }
 }

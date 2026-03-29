@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Customer;
+use App\Models\OrderHistory;
 use App\Models\Plan;
 use App\Models\PlanProductPrice;
 use App\Models\Product;
@@ -44,5 +45,9 @@ class Order extends Model
 
     public function planProductPrice() {
         return $this->belongsTo(PlanProductPrice::class);
+    }
+
+    public function orderHistories() {
+        return $this->hasMany(OrderHistory::class);
     }
 }
