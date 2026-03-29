@@ -11,7 +11,7 @@
 - loadを使うとN+1を防げる
 - リレーションでデータ取得がシンプルになる
 
-## 2026-03-29
+## 2026-03-28
 
 ### やったこと
 - redirect と view の違いを理解
@@ -32,3 +32,28 @@
 #### ■ Eager Loading
 ```php
 $planProductPrices->with(['plan', 'product'])->get();
+```
+
+## 2026-03-29
+
+### やったこと
+- マイグレーションの理解（カラム定義・制約）
+- 外部キー制約（foreignId）の実装
+- enumによるステータス管理の設計
+
+---
+
+### 学んだこと
+
+#### ■ protected $casts
+- DBの値を自動的に型変換できる仕組み
+- booleanやdatetimeなどを適切な型で扱える
+
+---
+
+#### ■ foreignId
+- `foreignId()->constrained()` を使うことで、関連テーブルと紐付けできる
+
+```php
+$table->foreignId('customer_id')->constrained();
+```
