@@ -57,3 +57,28 @@ $planProductPrices->with(['plan', 'product'])->get();
 ```php
 $table->foreignId('customer_id')->constrained();
 ```
+
+## 2026-03-30
+
+### やったこと
+- `with` と `load` の違いを理解
+- Enumクラスを作成し、ステータス管理を実装
+
+---
+
+### 学んだこと
+
+#### ■ with と load の違い
+- `with`：クエリ実行時にリレーションを一緒に取得（Eager Loading）
+- `load`：取得済みのモデルに対して後からリレーションを読み込む
+
+#### ■ Enum + casts の連携
+- モデルの $casts に設定することで、自動的にEnumへ変換される
+
+```php
+// with（取得時）
+Customer::with('orders')->get();
+
+// load（取得後）
+$customer->load('orders');
+```
