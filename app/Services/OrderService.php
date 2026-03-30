@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Customer;
 use App\Models\Order;
 use App\Models\OrderHistory;
 use App\Models\PlanProductPrice;
@@ -64,44 +65,91 @@ class OrderService {
         return $order;
     }
 
-    public function update(array $validated, $customer, $order): Order
+    public function update(array $validated, Customer $customer, Order $order): Order
     {
          return DB::transaction(function () use ($validated, $customer, $order) {
-            $order = $customer->orders()->findOrFail($order->id);
+                $order = $customer->orders()->findOrFail($order->id);
 
-            $orderBefore = $order->only([
-                'product_id',
-                'plan_id',
-                'quantity',
-                'order_status',
-                'scheduled_delivery_date',
-            ]);
+                $orderBefore = $order->only([
+                    'product_id',
+                    'plan_id',
+                    'quantity',
+                    'order_status',
+                    'scheduled_delivery_date',
+                ]);
 
-            $order->update($validated);
-            $order = $order->refresh();
+                $order->update($validated);
+                $order = $order->refresh();
 
-            $orderAfter = $order->only([
-                'product_id',
-                'plan_id',
-                'quantity',
-                'order_status',
-                'scheduled_delivery_date',
-            ]);
+                $orderAfter = $order->only([
+                    'product_id',
+                    'plan_id',
+                    'quantity',
+                    'order_status',
+                    'scheduled_delivery_date',
+                ]);
 
-            OrderHistory::create([
-                'customer_id' => $customer->id,
-                'order_id' => $order->id,
-                'user_id' => auth()->id(),
-                'order_code_snapshot' => $order->order_code,
-                'action_type' => 'update',
-                'action_summary' => '受注情報を更新しました',
-                'before_values' => $orderBefore,
-                'after_values'  => $orderAfter,
-                'acted_at' => Carbon::now(),
-            ]);
+                OrderHistory::create([
+                    'customer_id' => $customer->id,
+                    'order_id' => $order->id,
+                    'user_id' => auth()->id(),
+                    'order_code_snapshot' => $order->order_code,
+                    'action_type' => 'update',
+                    'action_summary' => '受注情報を更新しました',
+                    'before_values' => $orderBefore,
+                    'after_values'  => $orderAfter,
+                    'acted_at' => Carbon::now(),
+                ]);
 
-            return $order;
-        });
+                return $order;
+            });
 
+    }
+
+    public function cancel(array $validated, Customer $customer, Order $order): Order
+    {
+        return DB::transaction(function() use($validated, $customer, $order) {
+                $order = $customer->orders()->findOrFail($order->id);
+
+                if ($order->order_status === 'キャンセル') {
+                    throw new \RuntimeException('すでにキャンセル済みの受注です。');
+                }
+
+                $orderBefore = $order->only([
+                    'order_status',
+                    'scheduled_delivery_date',
+                    'scheduled_shipping_date',
+                    'remarks',
+                ]);
+
+                $remarks = $order->remarks ? $order->remarks . "\n[キャンセル理由]:" . $validated['cancel_reason'] : "[キャンセル理由]:" . $validated['cancel_reason'];
+
+                $order->update([
+                    'order_status' => "キャンセル",
+                    'remarks' => $remarks,
+                ]);
+                $order->refresh();
+
+                $orderAfter = $order->only([
+                    'order_status',
+                    'scheduled_delivery_date',
+                    'scheduled_shipping_date',
+                    'remarks',
+                ]);
+
+                OrderHistory::create([
+                    'customer_id' => $customer->id,
+                    'order_id' => $order->id,
+                    'user_id' => auth()->id(),
+                    'order_code_snapshot' => $order->order_code,
+                    'action_type' => 'cancel',
+                    'action_summary' => '受注をキャンセルしました',
+                    'before_values' => $orderBefore,
+                    'after_values'  => $orderAfter,
+                    'acted_at' => Carbon::now(),
+                ]);
+
+                return $order;
+            });
     }
 }

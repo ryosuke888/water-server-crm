@@ -28,7 +28,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/customers/{customer}/update', [CustomerController::class, 'update'])->name('customers.update');
     Route::post('/customers/store', [CustomerController::class, 'store'])->name('customers.store');
     Route::post('/customers/{customer}/orders/store', [OrderController::class, 'store'])->name('customers.orders.store');
-     Route::post('/customers/{customer}/orders/{order}/update', [OrderController::class, 'update'])->name('customers.orders.update');
+    Route::post('/customers/{customer}/orders/{order}/update', [OrderController::class, 'update'])->name('customers.orders.update');
+    Route::patch('/customers/{customer}/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('customers.orders.cancel');
 });
 
 require __DIR__.'/auth.php';

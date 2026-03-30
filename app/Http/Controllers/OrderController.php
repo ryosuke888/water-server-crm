@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CancelOrderRequest;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Customer;
@@ -84,6 +85,23 @@ class OrderController extends Controller
             ]);
             return back()->withInput()->with('error', '受注登録に失敗しました。');
         }
+    }
 
+    public function cancel(CancelOrderRequest $request, Customer $customer, Order $order, OrderService $orderService) {
+        try {
+            $validated = $request->validated();
+            $orderService->cancel($validated, $customer, $order);
+            return redirect()->route('customers.orders.index', compact('customer'))->with('success', 'キャンセルに成功しました');
+        } catch (Exception $e) {
+            Log::error('キャンセル失敗', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'user_id' => auth()->id(),
+                'data' => $request->only(['order_status',]),
+                'url' => $request->url(),
+                'method' => $request->method(),
+            ]);
+            return back()->withInput()->with('error', 'キャンセルに失敗しました');
+        }
     }
 }

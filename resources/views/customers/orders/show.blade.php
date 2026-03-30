@@ -4,6 +4,16 @@
     </x-slot>
     <div class="min-h-screen bg-gray-50">
         <div class="max-w-7xl mx-auto px-6 py-8 space-y-6 mt-5">
+            @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
 
             @if (session('success'))
                 <div class="bg-green-100 text-green-700 p-3 rounded mb-4">
@@ -114,10 +124,98 @@
                             <p class="text-sm text-gray-500">備考</p>
                             <p class="text-sm font-medium text-gray-800">{{ $order->remarks}}</p>
                         </div>
-                        <div>
-                            <a href="{{ route('customers.orders.edit', [$customer, $order]) }}" class="inline-flex items-center px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700">
-                        編集
-                    </a>
+                    </div>
+                    <div>
+                        <a href="{{ route('customers.orders.edit', [$customer, $order]) }}" class="inline-flex items-center px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700">
+                            編集
+                        </a>
+                    </div>
+                    <div x-data="{ openCancelModal: false }">
+                        <div class="flex items-center gap-3">
+
+                            @if ($order->order_status !== 'キャンセル')
+                                <button
+                                    type="button"
+                                    @click="openCancelModal = true"
+                                    class="inline-flex items-center rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+                                >
+                                    キャンセル
+                                </button>
+                            @endif
+                        </div>
+
+                        <div
+                            x-show="openCancelModal"
+                            x-cloak
+                            class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
+                        >
+                            <div
+                                @click.away="openCancelModal = false"
+                                x-show="openCancelModal"
+                                x-transition
+                                class="w-full max-w-lg rounded-2xl bg-white shadow-xl"
+                            >
+                                <div class="border-b px-6 py-4">
+                                    <h2 class="text-lg font-semibold text-gray-900">受注キャンセル</h2>
+                                    <p class="mt-1 text-sm text-gray-500">
+                                        本当にこの受注をキャンセルしますか？理由も記録されます。
+                                    </p>
+                                </div>
+
+                                <form
+                                    action="{{ route('customers.orders.cancel', [$customer, $order]) }}"
+                                    method="POST"
+                                    class="space-y-5 px-6 py-5"
+                                >
+                                    @csrf
+                                    @method('PATCH')
+
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700">
+                                            受注番号
+                                        </label>
+                                        <p class="mt-1 text-sm text-gray-900">{{ $order->order_code }}</p>
+                                    </div>
+
+                                    <div>
+                                        <label for="cancel_reason" class="block text-sm font-medium text-gray-700">
+                                            キャンセル理由 <span class="text-red-500">*</span>
+                                        </label>
+                                        <textarea
+                                            name="cancel_reason"
+                                            id="cancel_reason"
+                                            rows="4"
+                                            class="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500"
+                                            placeholder="例：顧客都合のためキャンセル"
+                                        >{{ old('cancel_reason') }}</textarea>
+
+                                        @error('cancel_reason')
+                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+
+                                    <div class="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
+                                        キャンセル後は受注ステータスが「キャンセル」に変更され、対応履歴に記録されます。
+                                    </div>
+
+                                    <div class="flex justify-end gap-3 pt-2">
+                                        <button
+                                            type="button"
+                                            @click="openCancelModal = false"
+                                            class="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                                        >
+                                            閉じる
+                                        </button>
+
+                                        <button
+                                            type="submit"
+                                            class="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+                                        >
+                                            キャンセルを確定
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
