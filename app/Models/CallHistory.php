@@ -2,8 +2,12 @@
 
 namespace App\Models;
 
+use App\Enums\CallChannel;
 use App\Enums\CallResult;
 use App\Enums\CallType;
+use App\Models\Customer;
+use App\Models\Order;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
 class CallHistory extends Model
@@ -11,6 +15,7 @@ class CallHistory extends Model
     protected $fillable = [
         'customer_id',
         'user_id',
+        'order_id',
         'call_type',
         'call_result',
         'channel',
@@ -23,5 +28,18 @@ class CallHistory extends Model
     protected $casts = [
         'call_type' => CallType::class,
         'call_result' => CallResult::class,
+        'call_channel' => CallChannel::class,
     ];
+
+    public function customer() {
+        return $this->belongsTo(Customer::class);
+    }
+
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
+
+    public function order() {
+        return $this->belongsTo(Order::class);
+    }
 }

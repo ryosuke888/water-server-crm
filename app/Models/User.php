@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\CallHistory;
 use App\Models\OrderHistory;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -33,6 +34,10 @@ class User extends Authenticatable
 
     public function orderHistories() {
         $this->hasMany(OrderHistory::class);
+    }
+
+    public function callHistories() {
+        $this->hasMany(CallHistory::class);
     }
 
 }

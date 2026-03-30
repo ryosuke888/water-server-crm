@@ -26,6 +26,7 @@ class CustomerController extends Controller
     }
 
     public function show(Customer $customer) {
+        $customer = $customer::with('orders', 'callHistories')->findOrFail($customer->id);
         return view('customers.show', compact('customer'));
     }
 

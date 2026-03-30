@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\CallHistory;
 use App\Models\Order;
 use App\Models\OrderHistory;
 use Illuminate\Database\Eloquent\Model;
@@ -50,5 +51,9 @@ class Customer extends Model
 
     public function orderHistories() {
         return $this->hasMany(OrderHistory::class);
+    }
+
+    public function callHistories() {
+        return $this->hasMany(CallHistory::class);
     }
 }
