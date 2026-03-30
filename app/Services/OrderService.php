@@ -33,8 +33,30 @@ class OrderService {
                 'scheduled_shipping_date' => $scheduledShippingDate,
             ]);
 
+
             $order->order_code = 'O' . str_pad((string) $order->id, 8, '0', STR_PAD_LEFT);
             $order->save();
+
+            $order = $order->refresh();
+            $orderAfter = $order->only([
+                'product_id',
+                'plan_id',
+                'quantity',
+                'order_status',
+                'scheduled_delivery_date',
+            ]);
+
+            OrderHistory::create([
+                'customer_id' => $order->customer_id,
+                'order_id' => $order->id,
+                'user_id' => auth()->id(),
+                'order_code_snapshot' => $order->order_code,
+                'action_type' => 'create',
+                'action_summary' => '受注情報を登録しました',
+                'before_values' => null,
+                'after_values'  => $orderAfter,
+                'acted_at' => Carbon::now(),
+            ]);
 
             return $order;
         });
@@ -42,7 +64,7 @@ class OrderService {
         return $order;
     }
 
-    public function update($validated, $customer, $order): Order
+    public function update(array $validated, $customer, $order): Order
     {
          return DB::transaction(function () use ($validated, $customer, $order) {
             $order = $customer->orders()->findOrFail($order->id);
