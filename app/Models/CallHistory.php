@@ -28,7 +28,7 @@ class CallHistory extends Model
     protected $casts = [
         'call_type' => CallType::class,
         'call_result' => CallResult::class,
-        'call_channel' => CallChannel::class,
+        'channel' => CallChannel::class,
     ];
 
     public function customer() {

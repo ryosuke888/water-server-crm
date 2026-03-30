@@ -57,11 +57,11 @@
                                 <div class="space-y-2">
                                     <div class="flex flex-wrap items-center gap-2">
                                         <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-700">
-                                            {{ $callHistory->call_type }}
+                                            {{ $callHistory->call_type->label() }}
                                         </span>
 
                                         <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-amber-100 text-amber-700">
-                                            {{ $callHistory->call_result }}
+                                            {{ $callHistory->call_result->label() }}
                                         </span>
 
                                         <span class="text-xs text-gray-500">
@@ -75,7 +75,7 @@
 
                                     <div class="flex flex-wrap gap-x-6 gap-y-1 text-xs text-gray-500">
                                         <p>対応者：{{ $callHistory->user->name ?? '担当者名' }}</p>
-                                        <p>チャネル：{{ $callHistory->channel ?? '電話' }}</p>
+                                        <p>チャネル：{{ $callHistory->channel->label() ?? '電話' }}</p>
                                         <p>次回対応日：{{ $callHistory->follow_up_date ?? 'なし' }}</p>
                                     </div>
                                 </div>

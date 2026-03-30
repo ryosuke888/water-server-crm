@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
+use App\Models\CallHistory;
 use App\Models\Customer;
 use App\Services\CustomerService;
 use Exception;
@@ -26,7 +27,7 @@ class CustomerController extends Controller
     }
 
     public function show(Customer $customer) {
-        $customer = $customer::with('orders', 'callHistories')->findOrFail($customer->id);
+        $customer->load('orders', 'callHistories');
         return view('customers.show', compact('customer'));
     }
 
