@@ -81,7 +81,7 @@
                                 </div>
 
                                 <div class="shrink-0">
-                                    <a href="#"
+                                    <a href="{{ route('customers.calls.show', [$customer, $callHistory]) }}"
                                        class="inline-flex items-center px-3 py-2 rounded-lg bg-white border border-gray-200 text-gray-700 text-xs font-medium hover:bg-gray-50">
                                         詳細
                                     </a>

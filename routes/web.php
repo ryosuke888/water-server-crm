@@ -27,6 +27,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/customers/{customer}/orders/create', [OrderController::class, 'create'])->name('customers.orders.create');
     Route::get('/customers/{customer}/orders/{order}/edit', [OrderController::class, 'edit'])->name('customers.orders.edit');
     Route::get('/customers/{customer}/calls/index', [CallController::class, 'index'])->name('customers.calls.index');
+    Route::get('/customers/{customer}/calls/{callHistory}/show', [CallController::class, 'show'])->name('customers.calls.show');
+    Route::get('/customers/{customer}/calls/{callHistory}/edit', [CallController::class, 'edit'])->name('customers.calls.edit');
     Route::get('/customers/{customer}/calls/create', [CallController::class, 'create'])->name('customers.calls.create');
     Route::post('/customers/{customer}/update', [CustomerController::class, 'update'])->name('customers.update');
     Route::post('/customers/store', [CustomerController::class, 'store'])->name('customers.store');

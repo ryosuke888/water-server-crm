@@ -16,6 +16,11 @@ class CallController extends Controller
         return view('customers.calls.index', compact('customer'));
     }
 
+    public function show(Customer $customer, CallHistory $callHistory)
+    {
+        return view('customers.calls.show', compact('customer', 'callHistory'));
+    }
+
     public function create(Customer $customer)
     {
         $customer->load('orders.product');
