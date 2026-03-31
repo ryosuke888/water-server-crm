@@ -90,12 +90,21 @@
                         </div>
                     @endforeach
                 </div>
-            </div>
-            <div class="shrink-0">
-                    <a href="{{ route('customers.calls.create', $customer) }}"
-                           class="inline-flex items-center px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700">
-                            コール登録
+
+                <!-- 下部ボタン -->
+                <div class="mt-6 pt-6 border-t border-gray-100 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <a href="{{ route('customers.show', $customer) }}"
+                       class="inline-flex items-center justify-center px-5 py-3 rounded-xl bg-white border border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                        戻る
                     </a>
+
+                    <div class="flex flex-wrap gap-3">
+                        <a href="{{ route('customers.calls.create', $customer) }}"
+                           class="inline-flex items-center px-5 py-3 rounded-xl bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700">
+                            コール登録
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

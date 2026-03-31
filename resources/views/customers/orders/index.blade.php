@@ -43,7 +43,19 @@
 
             <!-- 注文情報 -->
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-                <h2 class="text-lg font-semibold text-gray-900 mb-4">注文情報</h2>
+                <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between mb-5">
+                    <div>
+                        <h2 class="text-lg font-semibold text-gray-900">受注情報</h2>
+                        <p class="text-sm text-gray-500 mt-1">受注内容を確認できます</p>
+                    </div>
+
+                    <div class="flex flex-wrap gap-3">
+                        <a href="{{ route('customers.orders.create', $customer) }}"
+                           class="inline-flex items-center px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700">
+                            受注登録
+                        </a>
+                    </div>
+                </div>
 
                 <div class="overflow-x-auto">
                     <table class="min-w-full text-sm">
@@ -85,6 +97,19 @@
                 </div>
             </div>
 
+            <!-- アクションボタン -->
+            <div class="flex flex-wrap items-center justify-between gap-3">
+                <div>
+
+                </div>
+
+                <div class="flex flex-wrap gap-3">
+                    <button type="button" onclick="history.back()"
+                    class="px-5 py-3 text-sm border rounded-xl bg-white hover:bg-gray-50">
+                    戻る
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 </x-app-layout>
