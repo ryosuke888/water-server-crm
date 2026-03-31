@@ -82,3 +82,22 @@ Customer::with('orders')->get();
 // load（取得後）
 $customer->load('orders');
 ```
+
+## 2026-03-31
+
+### やったこと
+- pagination（ページネーション）の仕組みを理解
+- factory / seeder を使ったテストデータ作成を実装
+
+---
+
+### 学んだこと
+
+#### ■ paginationの仕組み
+- DBからデータを分割して取得する仕組み
+- `limit` と `offset` を使ってデータを取得している
+- `count` クエリで総件数を取得し、ページ数を算出
+
+```php
+Customer::orderBy('id')->paginate(10);
+```
