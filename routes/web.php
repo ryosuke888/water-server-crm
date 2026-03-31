@@ -30,11 +30,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/customers/{customer}/calls/{callHistory}/show', [CallController::class, 'show'])->name('customers.calls.show');
     Route::get('/customers/{customer}/calls/{callHistory}/edit', [CallController::class, 'edit'])->name('customers.calls.edit');
     Route::get('/customers/{customer}/calls/create', [CallController::class, 'create'])->name('customers.calls.create');
-    Route::post('/customers/{customer}/update', [CustomerController::class, 'update'])->name('customers.update');
     Route::post('/customers/store', [CustomerController::class, 'store'])->name('customers.store');
     Route::post('/customers/{customer}/orders/store', [OrderController::class, 'store'])->name('customers.orders.store');
     Route::post('/customers/{customer}/calls/store', [CallController::class, 'store'])->name('customers.calls.store');
     Route::post('/customers/{customer}/orders/{order}/update', [OrderController::class, 'update'])->name('customers.orders.update');
+    Route::patch('/customers/{customer}/update', [CustomerController::class, 'update'])->name('customers.update');
     Route::patch('/customers/{customer}/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('customers.orders.cancel');
     Route::patch('/customers/{customer}/calls/{callHistory}/update', [CallController::class, 'update'])->name('customers.calls.update');
 });

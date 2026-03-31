@@ -13,7 +13,7 @@
 
             <form action="{{ route('customers.update', $customer) }}" method="POST" class="space-y-8">
             @csrf
-            @method('PUT')
+            @method('PATCH')
 
                 <!-- 基本情報 -->
                 <div class="bg-white rounded-2xl shadow-sm ring-1 ring-gray-200">
@@ -117,10 +117,10 @@
                     </div>
                 </div>
 
-                <!-- 注文情報 -->
+                <!-- 配送先情報 -->
                 <div class="bg-white rounded-2xl shadow-sm ring-1 ring-gray-200">
                     <div class="border-b px-6 py-4">
-                        <h2 class="text-lg font-semibold">注文情報</h2>
+                        <h2 class="text-lg font-semibold">配送先情報</h2>
                     </div>
 
                     <div class="grid md:grid-cols-2 gap-6 px-6 py-6">
@@ -163,8 +163,6 @@
 
                     </div>
                 </div>
-
-                <!-- コール情報 -->
 
                 <!-- ボタン -->
                 <div class="flex justify-between items-center">

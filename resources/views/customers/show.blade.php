@@ -236,10 +236,10 @@
                 </div>
 
                 <div class="flex flex-wrap gap-3">
-                    <button type="button" onclick="history.back()"
-                    class="px-5 py-3 text-sm border rounded-xl bg-white hover:bg-gray-50">
-                    戻る
-                    </button>
+                    <a href="{{ route('customers.index', $customer) }}"
+                       class="inline-flex items-center justify-center px-5 py-3 rounded-xl bg-white border border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                        一覧へ戻る
+                    </a>
                 </div>
             </div>
         </div>
