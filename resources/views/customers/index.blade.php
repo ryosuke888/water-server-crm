@@ -95,11 +95,9 @@
                         @endforeach
                     </tbody>
                 </table>
-            </div>
-
-            <!-- ページネーション -->
+                <!-- ページネーション -->
             @if ($customers->hasPages())
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 px-4 py-4">
+                <div class="bg-white shadow-sm border border-gray-100 px-4 py-4">
                     <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
 
                         <div class="text-sm text-gray-500">
@@ -113,6 +111,7 @@
                     </div>
                 </div>
             @endif
+            </div>
 
             <!-- アクションボタン -->
             <div class="flex flex-wrap items-center justify-between gap-3">
