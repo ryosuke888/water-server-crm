@@ -6,9 +6,12 @@ use App\Models\CallHistory;
 use App\Models\Order;
 use App\Models\OrderHistory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Customer extends Model
 {
+    use HasFactory;
+
     public const BASIC_FIELDS =[
         'customer_code',
         'name',
