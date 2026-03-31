@@ -29,6 +29,9 @@ class CallHistory extends Model
         'call_type' => CallType::class,
         'call_result' => CallResult::class,
         'channel' => CallChannel::class,
+        'needs_follow_up' => 'boolean',
+        'called_at' => 'datetime',
+        'follow_up_date' => 'date',
     ];
 
     public function customer() {

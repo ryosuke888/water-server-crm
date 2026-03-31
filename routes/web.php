@@ -36,6 +36,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/customers/{customer}/calls/store', [CallController::class, 'store'])->name('customers.calls.store');
     Route::post('/customers/{customer}/orders/{order}/update', [OrderController::class, 'update'])->name('customers.orders.update');
     Route::patch('/customers/{customer}/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('customers.orders.cancel');
+    Route::patch('/customers/{customer}/calls/{callHistory}/update', [CallController::class, 'update'])->name('customers.calls.update');
 });
 
 require __DIR__.'/auth.php';
