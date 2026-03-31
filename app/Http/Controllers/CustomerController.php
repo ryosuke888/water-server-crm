@@ -17,8 +17,23 @@ use Illuminate\Support\Facades\Log;
 
 class CustomerController extends Controller
 {
-    public function index() {
-        $customers = Customer::all();
+    public function index(Request $request)
+    {
+        if (!$request->query('keyword')) {
+            $customers = Customer::latest()->paginate(10);
+            return view('customers.index', compact('customers'));
+        }
+
+        $customers = Customer::whereAny([
+            'name',
+            'email',
+            'phone_number',
+            'customer_code'
+            ], 'like', '%' . $request->query('keyword') . '%')
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
         return view('customers.index', compact('customers'));
     }
 

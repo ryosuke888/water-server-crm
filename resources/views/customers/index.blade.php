@@ -6,6 +6,53 @@
     <div class="my-8">
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
+            <!-- 顧客検索 -->
+
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+                <form action="{{ route('customers.index') }}" method="GET" class="flex flex-col gap-4 md:flex-row md:items-end">
+                    <div class="flex-1">
+                        <label for="keyword" class="block text-sm font-medium text-gray-700 mb-1">顧客検索</label>
+                        <input
+                            type="text"
+                            name="keyword"
+                            id="keyword"
+                            value="{{ request('keyword') }}"
+                            placeholder="顧客名、電話番号、メールアドレス、顧客IDで検索"
+                            class="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm"
+                        >
+                    </div>
+
+                    <div class="flex gap-3">
+                        <button
+                            type="submit"
+                            class="px-5 py-3 rounded-xl bg-blue-600 text-white text-sm font-medium hover:bg-blue-700"
+                        >
+                            検索
+                        </button>
+
+                        <a
+                            href="{{ route('customers.index') }}"
+                            class="px-5 py-3 rounded-xl border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
+                        >
+                            リセット
+                        </a>
+                    </div>
+                </form>
+            </div>
+
+            <!-- 件数表示 -->
+            <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+                <p class="text-sm text-gray-500">
+                    検索結果：
+                    <span class="font-semibold text-gray-900">{{ $customers->total() }}</span>
+                    件
+                </p>
+
+                <p class="text-sm text-gray-500">
+                    {{ $customers->firstItem() ?? 0 }} - {{ $customers->lastItem() ?? 0 }} 件を表示
+                </p>
+            </div>
+
             <!-- 顧客一覧 -->
             <div class="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-gray-200 mb-5">
                 <table class="w-full divide-y divide-gray-200 text-sm">
@@ -50,16 +97,29 @@
                 </table>
             </div>
 
+            <!-- ページネーション -->
+            @if ($customers->hasPages())
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 px-4 py-4">
+                    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+
+                        <div class="text-sm text-gray-500">
+                            全 {{ $customers->total() }} 件中
+                            {{ $customers->firstItem() ?? 0 }}〜{{ $customers->lastItem() ?? 0 }} 件を表示
+                        </div>
+
+                        <div class="flex items-center justify-center md:justify-end">
+                            {{ $customers->onEachSide(1)->links() }}
+                        </div>
+                    </div>
+                </div>
+            @endif
+
             <!-- アクションボタン -->
             <div class="flex flex-wrap items-center justify-between gap-3">
-                <div class="flex flex-wrap gap-3">
-                    <a href="{{ route('customers.index', $customer) }}"
-                       class="inline-flex items-center justify-center px-5 py-3 rounded-xl bg-white border border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50">
-                        一覧へ戻る
-                    </a>
+                <div>
                 </div>
                 <div class="flex flex-wrap gap-3">
-                    <a href="{{ route('customers.create', $customer) }}"
+                    <a href="{{ route('customers.create') }}"
                         class="inline-flex items-center px-5 py-3 rounded-xl bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700">
                         顧客登録
                     </a>
