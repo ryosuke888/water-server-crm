@@ -14,8 +14,12 @@ class CallController extends Controller
 {
     public function index(Customer $customer)
     {
-        $customer->load('callHistories');
-        return view('customers.calls.index', compact('customer'));
+        $callHistories = CallHistory::query()
+        ->where('customer_id', $customer->id)
+        ->latest()
+        ->paginate(10)
+        ->withQueryString();
+        return view('customers.calls.index', compact('customer', 'callHistories'));
     }
 
     public function show(Customer $customer, CallHistory $callHistory)

@@ -41,6 +41,53 @@
                 </div>
             </div>
 
+            <!-- コール履歴検索 -->
+
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+                <form action="{{ route('customers.calls.index' ,$customer) }}" method="GET" class="flex flex-col gap-4 md:flex-row md:items-end">
+                    <div class="flex-1">
+                        <label for="keyword" class="block text-sm font-medium text-gray-700 mb-1">受注検索</label>
+                        <input
+                            type="text"
+                            name="keyword"
+                            id="keyword"
+                            value="{{ request('keyword') }}"
+                            placeholder="受注IDで検索"
+                            class="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm"
+                        >
+                    </div>
+
+                    <div class="flex gap-3">
+                        <button
+                            type="submit"
+                            class="px-5 py-3 rounded-xl bg-blue-600 text-white text-sm font-medium hover:bg-blue-700"
+                        >
+                            検索
+                        </button>
+
+                        <a
+                            href="{{ route('customers.calls.index' ,$customer) }}"
+                            class="px-5 py-3 rounded-xl border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
+                        >
+                            リセット
+                        </a>
+                    </div>
+                </form>
+            </div>
+
+            <!-- 件数表示 -->
+            <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+                <p class="text-sm text-gray-500">
+                    検索結果：
+                    <span class="font-semibold text-gray-900">{{ $callHistories->total() }}</span>
+                    件
+                </p>
+
+                <p class="text-sm text-gray-500">
+                    {{ $callHistories->firstItem() ?? 0 }} - {{ $callHistories->lastItem() ?? 0 }} 件を表示
+                </p>
+            </div>
+
             <!-- コール履歴 -->
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                 <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between mb-5">
@@ -50,8 +97,9 @@
                     </div>
                 </div>
 
+                <!-- コール履歴一覧 -->
                 <div class="space-y-4">
-                    @foreach ($customer->callHistories as $callHistory)
+                    @foreach ($callHistories as $callHistory)
                         <div class="rounded-xl border border-gray-100 bg-gray-50 p-4 hover:bg-gray-100/60 transition">
                             <div class="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                                 <div class="space-y-2">
@@ -90,6 +138,23 @@
                         </div>
                     @endforeach
                 </div>
+
+                <!-- ページネーション -->
+                @if ($callHistories->hasPages())
+                    <div class="bg-white shadow-sm border border-gray-100 px-4 py-4">
+                        <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+
+                            <div class="text-sm text-gray-500">
+                                全 {{ $callHistories->total() }} 件中
+                                {{ $callHistories->firstItem() ?? 0 }}〜{{ $callHistories->lastItem() ?? 0 }} 件を表示
+                            </div>
+
+                            <div class="flex items-center justify-center md:justify-end">
+                                {{ $callHistories->onEachSide(1)->links() }}
+                            </div>
+                        </div>
+                    </div>
+                @endif
 
                 <!-- 下部ボタン -->
                 <div class="mt-6 pt-6 border-t border-gray-100 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
