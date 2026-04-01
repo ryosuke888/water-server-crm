@@ -101,3 +101,22 @@ $customer->load('orders');
 ```php
 Customer::orderBy('id')->paginate(10);
 ```
+
+## 2026-04-01
+
+### やったこと
+- `when` を使った条件付きクエリの実装
+- CSVファイルの取り込み処理を実装（SplFileObject）
+
+---
+
+### 学んだこと
+
+#### ■ whenを使った条件分岐クエリ
+- 条件がある場合のみクエリを追加できる
+
+```php
+$query->when($keyword, function ($query) use ($keyword) {
+    $query->where('name', 'like', "%{$keyword}%");
+});
+```
