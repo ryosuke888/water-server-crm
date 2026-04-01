@@ -115,7 +115,11 @@
 
             <!-- アクションボタン -->
             <div class="flex flex-wrap items-center justify-between gap-3">
-                <div>
+                <div class="flex flex-wrap gap-3">
+                    <a href="{{ route('customers.import.create') }}"
+                        class="inline-flex items-center px-5 py-3 rounded-xl bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700">
+                        csv取込
+                    </a>
                 </div>
                 <div class="flex flex-wrap gap-3">
                     <a href="{{ route('customers.create') }}"

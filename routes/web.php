@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CallController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\CustomerImportController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Route;
@@ -19,6 +20,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/customers', [CustomerController::class, 'index'])->name('customers.index');
+    Route::get('/customers/import/create', [CustomerImportController::class, 'create'])->name('customers.import.create');
     Route::get('/customers/show/{customer}', [CustomerController::class, 'show'])->name('customers.show');
     Route::get('/customers/{customer}/edit', [CustomerController::class, 'edit'])->name('customers.edit');
     Route::get('/customers/create', [CustomerController::class, 'create'])->name('customers.create');
@@ -34,6 +36,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/customers/{customer}/orders/store', [OrderController::class, 'store'])->name('customers.orders.store');
     Route::post('/customers/{customer}/calls/store', [CallController::class, 'store'])->name('customers.calls.store');
     Route::post('/customers/{customer}/orders/{order}/update', [OrderController::class, 'update'])->name('customers.orders.update');
+    Route::post('/customers/import/store', [CustomerImportController::class, 'store'])->name('customers.import.store');
     Route::patch('/customers/{customer}/update', [CustomerController::class, 'update'])->name('customers.update');
     Route::patch('/customers/{customer}/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('customers.orders.cancel');
     Route::patch('/customers/{customer}/calls/{callHistory}/update', [CallController::class, 'update'])->name('customers.calls.update');
