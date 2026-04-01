@@ -18,13 +18,23 @@ use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
-    public function index(Customer $customer) {
-        $customer->load([
-            'orders.product',
-            'orders.plan',
-            'orders.planProductPrice',
-        ]);
-        return view('customers.orders.index', compact('customer'));
+    public function index(Request $request, Customer $customer)
+    {
+        $keyword = trim((string)$request->query('keyword'));
+        $orders = Order::query()
+        ->where('customer_id', $customer->id)
+        ->with([
+            'product',
+            'plan',
+            'planProductPrice',
+        ])
+        ->when($keyword, function ($query) use ($keyword) {
+            $query->where('order_code', 'like', '%' . $keyword . '%');
+        })
+        ->latest()
+        ->paginate(10)
+        ->withQueryString();
+        return view('customers.orders.index', compact('customer', 'orders'));
     }
 
     public function show(Customer $customer, Order $order) {

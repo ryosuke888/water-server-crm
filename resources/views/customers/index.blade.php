@@ -95,7 +95,7 @@
                         @endforeach
                     </tbody>
                 </table>
-                <!-- ページネーション -->
+            <!-- ページネーション -->
             @if ($customers->hasPages())
                 <div class="bg-white shadow-sm border border-gray-100 px-4 py-4">
                     <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">

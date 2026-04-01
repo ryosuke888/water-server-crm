@@ -41,6 +41,53 @@
                 </div>
             </div>
 
+            <!-- 受注検索 -->
+
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+                <form action="{{ route('customers.orders.index' ,$customer) }}" method="GET" class="flex flex-col gap-4 md:flex-row md:items-end">
+                    <div class="flex-1">
+                        <label for="keyword" class="block text-sm font-medium text-gray-700 mb-1">受注検索</label>
+                        <input
+                            type="text"
+                            name="keyword"
+                            id="keyword"
+                            value="{{ request('keyword') }}"
+                            placeholder="受注IDで検索"
+                            class="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm"
+                        >
+                    </div>
+
+                    <div class="flex gap-3">
+                        <button
+                            type="submit"
+                            class="px-5 py-3 rounded-xl bg-blue-600 text-white text-sm font-medium hover:bg-blue-700"
+                        >
+                            検索
+                        </button>
+
+                        <a
+                            href="{{ route('customers.orders.index' ,$customer) }}"
+                            class="px-5 py-3 rounded-xl border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
+                        >
+                            リセット
+                        </a>
+                    </div>
+                </form>
+            </div>
+
+            <!-- 件数表示 -->
+            <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+                <p class="text-sm text-gray-500">
+                    検索結果：
+                    <span class="font-semibold text-gray-900">{{ $orders->total() }}</span>
+                    件
+                </p>
+
+                <p class="text-sm text-gray-500">
+                    {{ $orders->firstItem() ?? 0 }} - {{ $orders->lastItem() ?? 0 }} 件を表示
+                </p>
+            </div>
+
             <!-- 注文情報 -->
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                 <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between mb-5">
@@ -57,6 +104,7 @@
                     </div>
                 </div>
 
+                <!-- 受注一覧 -->
                 <div class="overflow-x-auto">
                     <table class="min-w-full text-sm">
                         <thead>
@@ -71,7 +119,7 @@
                         </thead>
 
                         <tbody class="divide-y divide-gray-100 text-gray-800">
-                            @foreach ($customer->orders as $order)
+                            @foreach ($orders as $order)
                                 <tr>
                                     <td class="py-3 pr-4">{{ $order->order_code}}</td>
                                     <td class="py-3 pr-4">{{ $order->product->name}}</td>
@@ -95,6 +143,23 @@
                         </tbody>
                     </table>
                 </div>
+
+                 <!-- ページネーション -->
+                @if ($orders->hasPages())
+                    <div class="bg-white shadow-sm border border-gray-100 px-4 py-4">
+                        <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+
+                            <div class="text-sm text-gray-500">
+                                全 {{ $orders->total() }} 件中
+                                {{ $orders->firstItem() ?? 0 }}〜{{ $orders->lastItem() ?? 0 }} 件を表示
+                            </div>
+
+                            <div class="flex items-center justify-center md:justify-end">
+                                {{ $orders->onEachSide(1)->links() }}
+                            </div>
+                        </div>
+                    </div>
+                @endif
             </div>
 
             <!-- アクションボタン -->

@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateCustomerRequest;
 use App\Models\CallHistory;
 use App\Models\Customer;
 use App\Services\CustomerService;
+use App\Models\Order;
 use Exception;
 use Illuminate\Container\Attributes\Auth;
 use Illuminate\Http\Request;
@@ -21,8 +22,8 @@ class CustomerController extends Controller
     {
         $keyword = trim((string) $request->query('keyword'));
         $customers = Customer::query()
-            ->when($request->query('keyword'), function ($query) use($keyword) {
-                return $query->whereAny([
+            ->when($keyword, function ($query) use($keyword) {
+                $query->whereAny([
                 'name',
                 'email',
                 'phone_number',
@@ -41,8 +42,20 @@ class CustomerController extends Controller
     }
 
     public function show(Customer $customer) {
-        $customer->load('orders', 'callHistories');
-        return view('customers.show', compact('customer'));
+        $orders = Order::query()
+        ->where('customer_id', $customer->id)
+        ->with('product')
+        ->latest()
+        ->take(5)
+        ->get();
+
+        $callHistories = CallHistory::query()
+        ->where('customer_id', $customer->id)
+        ->latest()
+        ->take(5)
+        ->get();
+
+        return view('customers.show', compact('customer', 'orders', 'callHistories'));
     }
 
     public function edit(Customer $customer) {

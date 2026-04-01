@@ -133,7 +133,7 @@
                         </thead>
 
                         <tbody class="divide-y divide-gray-100 text-gray-800">
-                            @foreach ($customer->orders as $order)
+                            @foreach ($orders as $order)
                                 <tr>
                                     <td class="py-3 pr-4">{{ $order->order_code}}</td>
                                     <td class="py-3 pr-4">{{ $order->product->name}}</td>
@@ -181,7 +181,7 @@
                 </div>
 
                 <div class="space-y-4">
-                    @foreach ($customer->callHistories as $callHistory)
+                    @foreach ($callHistories as $callHistory)
                         <div class="rounded-xl border border-gray-100 bg-gray-50 p-4 hover:bg-gray-100/60 transition">
                             <div class="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                                 <div class="space-y-2">
