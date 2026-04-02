@@ -22,23 +22,17 @@ class ImportCustomerCsvRequest extends FormRequest
      */
     public function rules(): array
     {
-        // return [
-        //     'name' => 'required|string|max:100',
-        //     'phone_number' => 'required|string|max:20',
-        //     'email' => 'nullable|email|max:255',
-        //     'postal_code' => 'nullable|string|max:8',
-        //     'prefecture' => 'nullable|string|max:20',
-        //     'city' => 'nullable|string|max:100',
-        //     'address_line1' => 'nullable|string|max:255',
-        //     'address_line2' => 'nullable|string|max:255',
-        //     'shipping_name' => 'nullable|string|max:100',
-        //     'shipping_postal_code' => 'nullable|string|max:8',
-        //     'shipping_prefecture' => 'nullable|string|max:20',
-        //     'shipping_city' => 'nullable|string|max:100',
-        //     'shipping_address_line1' => 'nullable|string|max:255',
-        //     'shipping_address_line2' => 'nullable|string|max:255',
-        //     'contract_status' => 'required|string|max:50',
-        //     'remarks' => 'nullable|string',
-        // ];
+        return [
+            'csv_file' => ['required', 'file', 'mimes:csv,txt'],
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'csv_file.required' => 'CSVファイルを選択してください。',
+            'csv_file.file' => 'ファイルを選択してください。',
+            'csv_file.mimes' => 'CSV形式のファイルを選択してください。',
+        ];
     }
 }

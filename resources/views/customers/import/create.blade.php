@@ -38,7 +38,7 @@
                         <p class="font-medium text-gray-800 mb-2">取込フォーマット</p>
                         <p>1行目はヘッダー行を設定してください。</p>
                         <p>文字コードは UTF-8 を想定しています。</p>
-                        <p>customer_code が重複した場合は既存データを更新します。</p>
+                        <p>同時にcsvを更新しないで下さい。</p>
                     </div>
 
                     <div class="flex justify-between items-center">
