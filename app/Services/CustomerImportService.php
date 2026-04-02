@@ -47,11 +47,18 @@ class CustomerImportService {
 
         foreach ($csvFile as $i => $row){
             if ($i === 0) {
-                $header = $row;
+                $header = array_map(fn ($value) => trim((string)$value), $row);
+                // BOM消去
+                $header[0] = preg_replace('/^\xEF\xBB\xBF/', '', $header[0]);
                 continue;
             }
 
-            if(empty(array_filter($row, fn ($value) => $value!== null && $value!== ''))) {
+             $row = array_map(function ($value) {
+                $value = trim((string)$value);
+                return $value === '' ? null : $value;
+            }, $row);
+
+            if(empty(array_filter($row, fn ($value) => $value!== null))) {
                 continue;
             }
 
