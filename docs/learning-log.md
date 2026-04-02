@@ -120,3 +120,23 @@ $query->when($keyword, function ($query) use ($keyword) {
     $query->where('name', 'like', "%{$keyword}%");
 });
 ```
+
+## 2026-04-02
+
+### やったこと
+- CSV処理における配列操作（array_map / array_filter）の理解
+- ヘッダー行とデータ行を組み合わせ配列を作成(array_combine)の理解
+- Validatorを使ったCSVデータのバリデーション実装
+- ループ処理（foreach）の使い分けを整理
+
+---
+
+### 学んだこと
+
+#### ■ array_map / array_filter
+- `array_map`：配列の各要素を変換する
+- `array_filter`：条件に合う要素のみ抽出する
+
+```php
+array_map(fn($value) => trim($value), $row);
+```
