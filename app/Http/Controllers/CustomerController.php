@@ -9,7 +9,6 @@ use App\Models\Customer;
 use App\Services\CustomerService;
 use App\Models\Order;
 use Exception;
-use Illuminate\Container\Attributes\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -20,6 +19,8 @@ class CustomerController extends Controller
 {
     public function index(Request $request)
     {
+        $this->authorize('viewAny', Customer::class);
+
         $keyword = trim((string) $request->query('keyword'));
         $customers = Customer::query()
             ->when($keyword, function ($query) use($keyword) {
@@ -37,13 +38,17 @@ class CustomerController extends Controller
         return view('customers.index', compact('customers'));
     }
 
-    public function create() {
+    public function create()
+    {
+        $this->authorize('create', Customer::class);
         return view('customers.create');
     }
 
-    public function show(Customer $customer) {
-        $orders = Order::query()
-        ->where('customer_id', $customer->id)
+    public function show(Customer $customer)
+    {
+        $this->authorize('view', $customer);
+
+        $orders = $customer->orders()
         ->with('product')
         ->latest()
         ->take(5)
@@ -58,21 +63,26 @@ class CustomerController extends Controller
         return view('customers.show', compact('customer', 'orders', 'callHistories'));
     }
 
-    public function edit(Customer $customer) {
+    public function edit(Customer $customer)
+    {
+        $this->authorize('update', $customer);
         return view('customers.edit', compact('customer'));
     }
 
-    public function update(UpdateCustomerRequest $request, Customer $customer) {
+    public function update(UpdateCustomerRequest $request, Customer $customer)
+    {
+        $this->authorize('update', $customer);
+
         try {
             $customer->update($request->validated());
-            return view('customers.show', compact('customer'))->with('success', '顧客情報更新に成功しました。');
+            return redirect()->route('customers.show', compact('customer'))->with('success', '顧客情報更新に成功しました。');
         } catch(Exception $e) {
             // ログ出力
             Log::error('顧客情報更新失敗', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
                 'user_id' => auth()->id(),
-                'customer_id' => $customer['id'],
+                'customer_id' => $customer->id,
                 'data' => $request->only(['contact_status',]),
                 'url' => $request->url(),
                 'method' => $request->method(),
@@ -82,7 +92,10 @@ class CustomerController extends Controller
 
     }
 
-    public function store(StoreCustomerRequest $request, CustomerService $customerService) {
+    public function store(StoreCustomerRequest $request, CustomerService $customerService)
+    {
+        $this->authorize('create', Customer::class);
+
         try {
             $validated = $request->validated();
             $customer = $customerService->store($validated);

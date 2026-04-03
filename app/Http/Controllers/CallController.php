@@ -14,8 +14,7 @@ class CallController extends Controller
 {
     public function index(Customer $customer)
     {
-        $callHistories = CallHistory::query()
-        ->where('customer_id', $customer->id)
+        $callHistories = $customer->callHistories()
         ->latest()
         ->paginate(10)
         ->withQueryString();

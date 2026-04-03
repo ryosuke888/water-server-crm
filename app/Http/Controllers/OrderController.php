@@ -21,8 +21,7 @@ class OrderController extends Controller
     public function index(Request $request, Customer $customer)
     {
         $keyword = trim((string)$request->query('keyword'));
-        $orders = Order::query()
-        ->where('customer_id', $customer->id)
+        $orders = $customer->orders()
         ->with([
             'product',
             'plan',
