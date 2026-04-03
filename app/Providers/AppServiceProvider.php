@@ -31,10 +31,6 @@ class AppServiceProvider extends ServiceProvider
     {
         Paginator::useTailwind();
 
-        Gate::policy(Customer::class, CustomerPolicy::class);
-        Gate::policy(Order::class, OrderPolicy::class);
-        Gate::policy(CallHistory::class, CallHistoryPolicy::class);
-
         Gate::define('import-customers', function(User $user) {
             return $user->role === Role::ADMIN;
         });
