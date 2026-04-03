@@ -9,12 +9,16 @@ use Illuminate\Validation\ValidationException;
 
 class CustomerImportController extends Controller
 {
-    public function create() {
+    public function create()
+    {
+        $this->authorize('import-customers');
         return view('customers.import.create');
     }
 
     public function store(ImportCustomerCsvRequest $request, CustomerImportService $customerImportService)
     {
+        $this->authorize('import-customers');
+
         try {
             $file = $request->file('csv_file');
             $count = $customerImportService->import($file);

@@ -2,7 +2,16 @@
 
 namespace App\Providers;
 
+use App\Enums\Role;
+use App\Models\CallHistory;
+use App\Models\Customer;
+use App\Models\Order;
+use App\Models\User;
+use App\Policies\CallHistoryPolicy;
+use App\Policies\CustomerPolicy;
+use App\Policies\OrderPolicy;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -21,5 +30,13 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Paginator::useTailwind();
+
+        Gate::policy(Customer::class, CustomerPolicy::class);
+        Gate::policy(Order::class, OrderPolicy::class);
+        Gate::policy(CallHistory::class, CallHistoryPolicy::class);
+
+        Gate::define('import-customers', function(User $user) {
+            return $user->role === Role::ADMIN;
+        });
     }
 }
