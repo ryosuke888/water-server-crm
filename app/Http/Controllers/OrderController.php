@@ -20,6 +20,8 @@ class OrderController extends Controller
 {
     public function index(Request $request, Customer $customer)
     {
+        $this->authorize('viewAny', Order::class);
+
         $keyword = trim((string)$request->query('keyword'));
         $orders = $customer->orders()
         ->with([
@@ -36,11 +38,15 @@ class OrderController extends Controller
         return view('customers.orders.index', compact('customer', 'orders'));
     }
 
-    public function show(Customer $customer, Order $order) {
+    public function show(Customer $customer, Order $order)
+    {
+        $this->authorize('view', $order);
         return view('customers.orders.show', compact('customer', 'order'));
     }
 
-    public function edit(Customer $customer, Order $order) {
+    public function edit(Customer $customer, Order $order)
+    {
+        $this->authorize('update', $order);
         $plans = Plan::where('is_active', true)->get();
         $products = Product::where('is_active', true)->get();
         $planProductPrices = PlanProductPrice::with('plans', 'products')->get();
@@ -48,7 +54,9 @@ class OrderController extends Controller
         return view('customers.orders.edit', compact('customer', 'order' , 'plans', 'products', 'planProductPrices'));
     }
 
-    public function create(Customer $customer) {
+    public function create(Customer $customer)
+    {
+        $this->authorize('create', Order::class);
         $plans = Plan::where('is_active', true)->get();
         $products = Product::where('is_active', true)->get();
         $planProductPrices = PlanProductPrice::with('plans', 'products')->get();
@@ -56,6 +64,7 @@ class OrderController extends Controller
     }
 
     public function update(UpdateOrderRequest $request, Customer $customer, Order $order, OrderService $orderService) {
+        $this->authorize('update', $order);
         try {
             $validated = $request->validated();
             $order = $orderService->update($validated, $customer, $order);
@@ -77,7 +86,9 @@ class OrderController extends Controller
 
     }
 
-    public function store(StoreOrderRequest $request, OrderService $orderService, Customer $customer) {
+    public function store(StoreOrderRequest $request, OrderService $orderService, Customer $customer)
+    {
+        $this->authorize('create', Order::class);
         try {
             $validated = $request->validated();
             $orderService->store($validated);
@@ -96,7 +107,10 @@ class OrderController extends Controller
         }
     }
 
-    public function cancel(CancelOrderRequest $request, Customer $customer, Order $order, OrderService $orderService) {
+    public function cancel(CancelOrderRequest $request, Customer $customer, Order $order, OrderService $orderService)
+    {
+        $this->authorize('delete', $order);
+
         try {
             $validated = $request->validated();
             $orderService->cancel($validated, $customer, $order);

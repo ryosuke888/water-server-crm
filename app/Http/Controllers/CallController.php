@@ -14,6 +14,8 @@ class CallController extends Controller
 {
     public function index(Customer $customer)
     {
+        $this->authorize('viewAny', CallHistory::class);
+
         $callHistories = $customer->callHistories()
         ->latest()
         ->paginate(10)
@@ -23,23 +25,29 @@ class CallController extends Controller
 
     public function show(Customer $customer, CallHistory $callHistory)
     {
+        $this->authorize('view', $callHistory);
         return view('customers.calls.show', compact('customer', 'callHistory'));
     }
 
     public function edit(Customer $customer, CallHistory $callHistory)
     {
+        $this->authorize('update', $callHistory);
         $customer->load('orders.product');
         return view('customers.calls.edit', compact('customer', 'callHistory'));
     }
 
     public function create(Customer $customer)
     {
+        $this->authorize('create', CallHistory::class);
+
         $customer->load('orders.product');
         return view('customers.calls.create', compact('customer'));
     }
 
     public function update(UpdateCallRequest $request, Customer $customer, CallHistory $callHistory)
     {
+        $this->authorize('update', $callHistory);
+
         try {
             $validated = $request->validated();
             $callHistory->update($validated);
@@ -51,6 +59,7 @@ class CallController extends Controller
 
     public function store(StoreCallRequest $request, Customer $customer)
     {
+        $this->authorize('create', CallHistory::class);
         try {
             $validated = $request->validated();
             $validated['user_id'] = auth()->id();

@@ -23,8 +23,9 @@
                 </div>
             @endif
 
-            <form action="{{ route('customers.orders.update', [$customer,$order]) }}" method="POST" class="space-y-8">
-            @csrf
+            @can('update', $order)
+                <form action="{{ route('customers.orders.update', [$customer,$order]) }}" method="POST" class="space-y-8">
+                @csrf
 
                 <!-- 注文情報 -->
                 <div class="bg-white rounded-2xl shadow-sm ring-1 ring-gray-200">
@@ -113,6 +114,7 @@
                 </div>
 
             </form>
+            @endcan
         </div>
     </div>
     <script>

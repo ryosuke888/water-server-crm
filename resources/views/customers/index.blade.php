@@ -85,11 +85,14 @@
                                     <div class="truncate">{{ $customer->created_at->format('Y/m/d') }}</div>
                                 </td>
                                 <td class="px-4 py-4">
-                                    <div>
-                                        <form action="{{ route('customers.show', $customer) }}" method="get">
-                                            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">詳細</button>
-                                        </form>
-                                    </div>
+                                    @can('view', $customer)
+                                        <div>
+                                            <form action="{{ route('customers.show', $customer) }}" method="get">
+                                                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">詳細</button>
+                                            </form>
+                                        </div>
+                                    @endcan
+
                                 </td>
                             </tr>
                         @endforeach
@@ -122,10 +125,12 @@
                     </a>
                 </div>
                 <div class="flex flex-wrap gap-3">
-                    <a href="{{ route('customers.create') }}"
-                        class="inline-flex items-center px-5 py-3 rounded-xl bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700">
-                        顧客登録
-                    </a>
+                    @can('create', App\Models\Customer::class)
+                        <a href="{{ route('customers.create') }}"
+                            class="inline-flex items-center px-5 py-3 rounded-xl bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700">
+                            顧客登録
+                        </a>
+                    @endcan
                 </div>
             </div>
         </div>

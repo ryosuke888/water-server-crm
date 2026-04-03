@@ -28,10 +28,12 @@
                         </div>
                     </div>
                     <div class="flex flex-wrap gap-3">
-                        <a href="{{ route('customers.edit', $customer) }}"
-                        class="inline-flex items-center px-5 py-3 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700">
-                            編集
-                        </a>
+                        @can('update', $customer)
+                            <a href="{{ route('customers.edit', $customer) }}"
+                            class="inline-flex items-center px-5 py-3 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700">
+                                編集
+                            </a>
+                        @endcan
                     </div>
                 </div>
 
@@ -107,13 +109,16 @@
                     </div>
 
                     <div class="flex flex-wrap gap-3">
-                        <a href="{{ route('customers.orders.create', $customer) }}"
-                           class="inline-flex items-center px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700">
-                            受注登録
-                        </a>
+
+                        @can('create', App\Models\Order::class)
+                            <a href="{{ route('customers.orders.create', $customer) }}"
+                            class="inline-flex items-center px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700">
+                                受注登録
+                            </a>
+                        @endcan
 
                         <a href="{{ route('customers.orders.index', $customer) }}"
-                           class="inline-flex items-center px-4 py-2 rounded-lg bg-white border border-gray-200 text-gray-700 text-sm font-medium hover:bg-gray-50">
+                        class="inline-flex items-center px-4 py-2 rounded-lg bg-white border border-gray-200 text-gray-700 text-sm font-medium hover:bg-gray-50">
                             一覧を見る
                         </a>
                     </div>
@@ -146,11 +151,13 @@
                                     <td class="py-3 pr-4">{{ $order->order_date}}</td>
                                     <td class="py-3 pr-4">{{ $order->scheduled_shipping_date}}</td>
                                     <td class="px-3">
-                                        <div>
+                                        @can('view', $order)
+                                              <div>
                                             <form action="{{ route('customers.orders.show', [$customer, $order]) }}" method="get">
                                                 <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">詳細</button>
                                             </form>
                                         </div>
+                                        @endcan
                                 </td>
                                 </tr>
                             @endforeach
@@ -168,13 +175,15 @@
                     </div>
 
                     <div class="flex flex-wrap gap-3">
-                        <a href="{{ route('customers.calls.create', $customer) }}"
-                           class="inline-flex items-center px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700">
-                            コール登録
-                        </a>
+                        @can('create', App\Models\CallHistory::class)
+                            <a href="{{ route('customers.calls.create', $customer) }}"
+                            class="inline-flex items-center px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700">
+                                コール登録
+                            </a>
+                        @endcan
 
                         <a href="{{ route('customers.calls.index', $customer) }}"
-                           class="inline-flex items-center px-4 py-2 rounded-lg bg-white border border-gray-200 text-gray-700 text-sm font-medium hover:bg-gray-50">
+                        class="inline-flex items-center px-4 py-2 rounded-lg bg-white border border-gray-200 text-gray-700 text-sm font-medium hover:bg-gray-50">
                             一覧を見る
                         </a>
                     </div>
@@ -211,10 +220,12 @@
                                 </div>
 
                                 <div class="shrink-0">
-                                    <a href="#"
-                                       class="inline-flex items-center px-3 py-2 rounded-lg bg-white border border-gray-200 text-gray-700 text-xs font-medium hover:bg-gray-50">
-                                        詳細
-                                    </a>
+                                    @can('view', $callHistory)
+                                        <a href="#"
+                                        class="inline-flex items-center px-3 py-2 rounded-lg bg-white border border-gray-200 text-gray-700 text-xs font-medium hover:bg-gray-50">
+                                            詳細
+                                        </a>
+                                    @endcan
                                 </div>
                             </div>
                         </div>
@@ -223,7 +234,7 @@
 
                 <div class="mt-5 pt-5 border-t border-gray-100 text-right">
                     <a href="{{ route('customers.calls.index', $customer) }}"
-                       class="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-700">
+                    class="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-700">
                         すべてのコール履歴を見る
                     </a>
                 </div>

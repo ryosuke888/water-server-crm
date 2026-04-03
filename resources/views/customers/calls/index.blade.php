@@ -129,10 +129,12 @@
                                 </div>
 
                                 <div class="shrink-0">
-                                    <a href="{{ route('customers.calls.show', [$customer, $callHistory]) }}"
-                                       class="inline-flex items-center px-3 py-2 rounded-lg bg-white border border-gray-200 text-gray-700 text-xs font-medium hover:bg-gray-50">
-                                        詳細
-                                    </a>
+                                    @can('view', $callHistory)
+                                        <a href="{{ route('customers.calls.show', [$customer, $callHistory]) }}"
+                                        class="inline-flex items-center px-3 py-2 rounded-lg bg-white border border-gray-200 text-gray-700 text-xs font-medium hover:bg-gray-50">
+                                            詳細
+                                        </a>
+                                    @endcan
                                 </div>
                             </div>
                         </div>
@@ -164,10 +166,12 @@
                     </a>
 
                     <div class="flex flex-wrap gap-3">
-                        <a href="{{ route('customers.calls.create', $customer) }}"
-                           class="inline-flex items-center px-5 py-3 rounded-xl bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700">
-                            コール登録
-                        </a>
+                        @can('create', App\Models\CallHistory::class)
+                            <a href="{{ route('customers.calls.create', $customer) }}"
+                            class="inline-flex items-center px-5 py-3 rounded-xl bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700">
+                                コール登録
+                            </a>
+                        @endcan
                     </div>
                 </div>
             </div>

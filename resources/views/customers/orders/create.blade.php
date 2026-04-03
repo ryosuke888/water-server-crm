@@ -23,87 +23,89 @@
                 </div>
             @endif
 
-            <form action="{{ route('customers.orders.store', $customer) }}" method="POST" class="space-y-8">
-            @csrf
+            @can('create', App\Models\Order::class)
+                <form action="{{ route('customers.orders.store', $customer) }}" method="POST" class="space-y-8">
+                @csrf
 
-                <!-- 注文情報 -->
-                <div class="bg-white rounded-2xl shadow-sm ring-1 ring-gray-200">
-                    <div class="border-b px-6 py-4">
-                        <h2 class="text-lg font-semibold">受注</h2>
+                    <!-- 注文情報 -->
+                    <div class="bg-white rounded-2xl shadow-sm ring-1 ring-gray-200">
+                        <div class="border-b px-6 py-4">
+                            <h2 class="text-lg font-semibold">受注</h2>
+                        </div>
+
+                        <div class="grid md:grid-cols-2 gap-6 px-6 py-6">
+
+                            <div>
+                                <label class="block text-sm font-medium mb-1">プラン名</label>
+                                <select class="w-full rounded-xl border px-4 py-3 text-sm" name="plan_id" id="plan">
+                                    <option value="" selected>選択してください</option>
+                                    @foreach ($plans as $plan)
+                                        <option value="{{ $plan->id }}" >{{ $plan->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium mb-1">製品</label>
+                                <select class="w-full rounded-xl border px-4 py-3 text-sm" name="product_id" id="product">
+                                    <option value="" selected>選択してください</option>
+                                    @foreach ($products as $product)
+                                            <option value="{{ $product->id }}" >{{ $product->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium mb-1">受注種別</label>
+                                <select class="w-full rounded-xl border px-4 py-3 text-sm" name="order_type">
+                                    <option value="初回" {{ old('order_type') }}>初回</option>
+                                    <option value="定期配送" {{ old('order_type') }}>定期配送</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium mb-1">数量</label>
+                                <input type="number" value="{{ old('quantity') }}" name="quantity"
+                                class="w-full rounded-xl border px-4 py-3 text-sm" id="quantity" min="1">
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium mb-1">小計</label>
+                                <input type="text" value="{{ old('unit_price') }}" name="unit_price"
+                                class="w-full rounded-xl border px-4 py-3 text-sm" id="unit_price" readonly>
+                            </div>
+
+                            <div class="">
+                                <label class="block text-sm font-medium mb-1">合計</label>
+                                <input type="text" value="{{ old('subtotal_amount') }}" name="subtotal_amount"
+                                class="w-full rounded-xl border px-4 py-3 text-sm" id="subtotal_amount" readonly>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium mb-1">お届け日</label>
+                                <input type="date" value="{{ old('scheduled_delivery_date') }}" name="scheduled_delivery_date"
+                                class="w-full rounded-xl border px-4 py-3 text-sm" min="{{ now()->addDays(3)->toDateString() }}">
+                            </div>
+                            <input type="hidden" name="customer_id" value="{{ $customer->id }}">
+
+                        </div>
                     </div>
 
-                    <div class="grid md:grid-cols-2 gap-6 px-6 py-6">
+                    <!-- ボタン -->
+                    <div class="flex justify-between items-center">
+                        <button type="button" onclick="history.back()"
+                        class="px-5 py-3 text-sm border rounded-xl bg-white hover:bg-gray-50">
+                        戻る
+                        </button>
 
-                        <div>
-                            <label class="block text-sm font-medium mb-1">プラン名</label>
-                            <select class="w-full rounded-xl border px-4 py-3 text-sm" name="plan_id" id="plan">
-                                <option value="" selected>選択してください</option>
-                                @foreach ($plans as $plan)
-                                    <option value="{{ $plan->id }}" >{{ $plan->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium mb-1">製品</label>
-                            <select class="w-full rounded-xl border px-4 py-3 text-sm" name="product_id" id="product">
-                                <option value="" selected>選択してください</option>
-                                @foreach ($products as $product)
-                                        <option value="{{ $product->id }}" >{{ $product->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium mb-1">受注種別</label>
-                            <select class="w-full rounded-xl border px-4 py-3 text-sm" name="order_type">
-                                <option value="初回" {{ old('order_type') }}>初回</option>
-                                <option value="定期配送" {{ old('order_type') }}>定期配送</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium mb-1">数量</label>
-                            <input type="number" value="{{ old('quantity') }}" name="quantity"
-                            class="w-full rounded-xl border px-4 py-3 text-sm" id="quantity" min="1">
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium mb-1">小計</label>
-                            <input type="text" value="{{ old('unit_price') }}" name="unit_price"
-                            class="w-full rounded-xl border px-4 py-3 text-sm" id="unit_price" readonly>
-                        </div>
-
-                        <div class="">
-                            <label class="block text-sm font-medium mb-1">合計</label>
-                            <input type="text" value="{{ old('subtotal_amount') }}" name="subtotal_amount"
-                            class="w-full rounded-xl border px-4 py-3 text-sm" id="subtotal_amount" readonly>
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium mb-1">お届け日</label>
-                            <input type="date" value="{{ old('scheduled_delivery_date') }}" name="scheduled_delivery_date"
-                            class="w-full rounded-xl border px-4 py-3 text-sm" min="{{ now()->addDays(3)->toDateString() }}">
-                        </div>
-                        <input type="hidden" name="customer_id" value="{{ $customer->id }}">
-
+                        <button type="submit"
+                        class="px-6 py-3 text-sm font-semibold text-white bg-blue-600 rounded-xl hover:bg-blue-700">
+                        登録
+                        </button>
                     </div>
-                </div>
 
-                <!-- ボタン -->
-                <div class="flex justify-between items-center">
-                    <button type="button" onclick="history.back()"
-                    class="px-5 py-3 text-sm border rounded-xl bg-white hover:bg-gray-50">
-                    戻る
-                    </button>
-
-                    <button type="submit"
-                    class="px-6 py-3 text-sm font-semibold text-white bg-blue-600 rounded-xl hover:bg-blue-700">
-                    登録
-                    </button>
-                </div>
-
-            </form>
+                </form>
+            @endcan
         </div>
     </div>
     <script>

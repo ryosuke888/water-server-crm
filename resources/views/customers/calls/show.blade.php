@@ -164,15 +164,19 @@
                     </a>
 
                     <div class="flex flex-wrap gap-3">
-                        <a href="{{ route('customers.calls.edit', [$customer, $callHistory]) }}"
-                           class="inline-flex items-center px-5 py-3 rounded-xl bg-blue-600 text-white text-sm font-medium hover:bg-blue-700">
-                            編集する
-                        </a>
+                        @can('update', $callHistory)
+                            <a href="{{ route('customers.calls.edit', [$customer, $callHistory]) }}"
+                            class="inline-flex items-center px-5 py-3 rounded-xl bg-blue-600 text-white text-sm font-medium hover:bg-blue-700">
+                                編集する
+                            </a>
+                        @endcan
 
-                        <a href="{{ route('customers.calls.create', $customer) }}"
-                           class="inline-flex items-center px-5 py-3 rounded-xl bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700">
-                            新規コール登録
-                        </a>
+                        @can('create', App\Models\CallHistory::class)
+                            <a href="{{ route('customers.calls.create', $customer) }}"
+                            class="inline-flex items-center px-5 py-3 rounded-xl bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700">
+                                新規コール登録
+                            </a>
+                        @endcan
                     </div>
                 </div>
             </div>

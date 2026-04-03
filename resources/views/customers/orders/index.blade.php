@@ -97,10 +97,12 @@
                     </div>
 
                     <div class="flex flex-wrap gap-3">
-                        <a href="{{ route('customers.orders.create', $customer) }}"
-                           class="inline-flex items-center px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700">
-                            受注登録
-                        </a>
+                        @can('create', App\Models\Order::class)
+                            <a href="{{ route('customers.orders.create', $customer) }}"
+                            class="inline-flex items-center px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700">
+                                受注登録
+                            </a>
+                        @endcan
                     </div>
                 </div>
 
@@ -133,9 +135,11 @@
                                     <td class="py-3 pr-4">{{ $order->scheduled_shipping_date}}</td>
                                     <td class="px-3">
                                         <div>
-                                            <form action="{{ route('customers.orders.show', [$customer, $order]) }}" method="get">
-                                                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">詳細</button>
-                                            </form>
+                                            @can('view', $order)
+                                                <form action="{{ route('customers.orders.show', [$customer, $order]) }}" method="get">
+                                                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">詳細</button>
+                                                </form>
+                                            @endcan
                                         </div>
                                 </td>
                                 </tr>
