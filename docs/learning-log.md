@@ -140,3 +140,21 @@ $query->when($keyword, function ($query) use ($keyword) {
 ```php
 array_map(fn($value) => trim($value), $row);
 ```
+
+## 2026-04-03
+
+### やったこと
+- Policy / Gate を使った権限制御の実装
+- Bladeでの権限による表示制御の実装
+- ServiceProviderでのGate定義を理解
+
+---
+
+### 学んだこと
+
+#### ■ Policyによる認可
+- コントローラーで認可処理を実行
+
+```php
+$this->authorize('update', $order);
+```
