@@ -10,30 +10,31 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class OrderService {
-    public function store(array $data): Order
+    public function store(array $validated): Order
     {
-        $order = DB::transaction(function () use ($data) {
-            $planProductPrice = PlanProductPrice::where('plan_id', $data['plan_id'])->where('product_id', $data['product_id'])->firstOrFail();
+        $order = DB::transaction(function () use ($validated) {
+            $planProductPrice = PlanProductPrice::where('plan_id', $validated['plan_id'])->where('product_id', $validated['product_id'])->firstOrFail();
 
-            $scheduledDeliveryDate = Carbon::parse($data['scheduled_delivery_date']);
+            $scheduledDeliveryDate = Carbon::parse($validated['scheduled_delivery_date']);
             $scheduledShippingDate = $scheduledDeliveryDate->copy()->subDays(3)->toDateString();
 
-            $order = Order::create([
-                'customer_id' => $data['customer_id'],
-                'product_id' => $data['product_id'],
-                'plan_id' => $data['plan_id'],
-                'order_type' => $data['order_type'],
-                'quantity' => $data['quantity'],
-                'remarks' => $data['remarks'] ?? null,
-                'scheduled_delivery_date' => $data['scheduled_delivery_date'],
+            $data = [
+                'customer_id' => $validated['customer_id'],
+                'product_id' => $validated['product_id'],
+                'plan_id' => $validated['plan_id'],
+                'order_type' => $validated['order_type'],
+                'quantity' => $validated['quantity'],
+                'remarks' => $validated['remarks'] ?? null,
+                'scheduled_delivery_date' => $validated['scheduled_delivery_date'],
                 'unit_price' => $planProductPrice->price,
-                'subtotal_amount' => $planProductPrice->price * $data['quantity'],
+                'subtotal_amount' => $planProductPrice->price * $validated['quantity'],
                 'order_status' => '受付',
                 'shipping_company' => 'ヤマト運輸',
                 'order_date' => now()->toDateString(),
                 'scheduled_shipping_date' => $scheduledShippingDate,
-            ]);
+            ];
 
+            $order = Order::create($data);
 
             $order->order_code = 'O' . str_pad((string) $order->id, 8, '0', STR_PAD_LEFT);
             $order->save();
@@ -70,6 +71,10 @@ class OrderService {
          return DB::transaction(function () use ($validated, $customer, $order) {
                 $order = $customer->orders()->findOrFail($order->id);
 
+                $planProductPrice = PlanProductPrice::where('plan_id', $validated['plan_id'])->where('product_id', $validated['product_id'])->firstOrFail();
+                $scheduledDeliveryDate = Carbon::parse($validated['scheduled_delivery_date']);
+                $scheduledShippingDate = $scheduledDeliveryDate->copy()->subDays(3)->toDateString();
+
                 $orderBefore = $order->only([
                     'product_id',
                     'plan_id',
@@ -78,7 +83,21 @@ class OrderService {
                     'scheduled_delivery_date',
                 ]);
 
-                $order->update($validated);
+                $data = [
+                    'product_id' => $validated['product_id'],
+                    'plan_id' => $validated['plan_id'],
+                    'order_type' => $validated['order_type'],
+                    'quantity' => $validated['quantity'],
+                    'remarks' => $validated['remarks'] ?? null,
+                    'scheduled_delivery_date' => $validated['scheduled_delivery_date'],
+                    'unit_price' => $planProductPrice->price,
+                    'subtotal_amount' => $planProductPrice->price * $validated['quantity'],
+                    'order_status' => $validated['order_status'],
+                    'shipping_company' => 'ヤマト運輸',
+                    'scheduled_shipping_date' => $scheduledShippingDate,
+                ];
+
+                $order->update($data);
                 $order = $order->refresh();
 
                 $orderAfter = $order->only([

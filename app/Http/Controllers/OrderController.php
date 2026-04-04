@@ -40,7 +40,10 @@ class OrderController extends Controller
 
     public function show(Customer $customer, Order $order)
     {
+        $order = $customer->orders()->findOrFail($order->id);
+
         $this->authorize('view', $order);
+
         return view('customers.orders.show', compact('customer', 'order'));
     }
 
@@ -91,6 +94,8 @@ class OrderController extends Controller
         $this->authorize('create', Order::class);
         try {
             $validated = $request->validated();
+            $validated['customer_id'] = $customer->id();
+
             $orderService->store($validated);
             return redirect()->route('customers.orders.index', compact('customer'))->with('success', '受注登録に成功しました。');
         } catch (Exception $e) {

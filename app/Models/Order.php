@@ -23,8 +23,8 @@ class Order extends Model
         'subtotal_amount',
         'order_status',
         'order_date',
-        'scheduled_shipping_date',
-        'scheduled_delivery_date',
+        'scheduled_shipping_date',  //出荷日
+        'scheduled_delivery_date',  //配送日
         'shipping_company',
         'tracking_number',
         'shipping_status',

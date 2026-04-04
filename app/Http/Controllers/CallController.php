@@ -25,7 +25,12 @@ class CallController extends Controller
 
     public function show(Customer $customer, CallHistory $callHistory)
     {
+        $callHistory = $customer->callHistories()
+            ->with('user')
+            ->findOrFail($callHistory->id);
+
         $this->authorize('view', $callHistory);
+
         return view('customers.calls.show', compact('customer', 'callHistory'));
     }
 
@@ -63,6 +68,8 @@ class CallController extends Controller
         try {
             $validated = $request->validated();
             $validated['user_id'] = auth()->id();
+            $validated['customer_id'] = $customer->id;
+
             CallHistory::create($validated);
             return redirect()->route('customers.calls.index', $customer)->with('success', 'コール履歴登録に成功しました');
         } catch (Exception $e) {

@@ -4,16 +4,6 @@
     </x-slot>
     <div class="min-h-screen bg-gray-50">
         <div class="max-w-7xl mx-auto px-6 py-8 space-y-6 mt-5">
-            @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
 
             @if (session('success'))
                 <div class="bg-green-100 text-green-700 p-3 rounded mb-4">

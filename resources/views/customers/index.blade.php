@@ -6,6 +6,18 @@
     <div class="my-8">
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
+            @if (session('success'))
+                <div class="bg-green-100 text-green-700 p-3 rounded mb-4">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if (session('error'))
+                <div class="bg-red-100 text-red-700 p-3 rounded mb-4">
+                    {{ session('error') }}
+                </div>
+            @endif
+
             <!-- 顧客検索 -->
 
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">

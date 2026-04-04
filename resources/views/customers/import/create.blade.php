@@ -6,18 +6,14 @@
                 <p class="mt-1 text-sm text-gray-500">CSVファイルから顧客情報を一括登録します</p>
 
                 @if (session('success'))
-                    <div class="mt-4 rounded-xl bg-green-100 p-3 text-green-700">
-                        {{ session('success') }}
-                    </div>
+                <div class="bg-green-100 text-green-700 p-3 rounded mb-4">
+                    {{ session('success') }}
+                </div>
                 @endif
 
-                @if ($errors->any())
-                    <div class="mt-4 rounded-xl bg-red-100 p-3 text-red-700">
-                        <ul class="list-disc pl-5">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
+                @if (session('error'))
+                    <div class="bg-red-100 text-red-700 p-3 rounded mb-4">
+                        {{ session('error') }}
                     </div>
                 @endif
 
@@ -32,6 +28,9 @@
                             accept=".csv,text/csv"
                             class="block w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm"
                         >
+                        @error('csv_file')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <div class="rounded-xl bg-gray-50 p-4 text-sm text-gray-600">

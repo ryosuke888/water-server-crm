@@ -11,15 +11,6 @@
                 <h1 class="text-2xl font-bold text-gray-900">コール履歴登録</h1>
                 <p class="mt-1 text-sm text-gray-500">顧客対応の内容を登録します</p>
             </div>
-             @if ($errors->any()) <!-- エラーが出たときに表示される部分 -->
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
 
             <!-- メッセージ -->
             @if (session('success'))
@@ -83,6 +74,9 @@
                                         <option value="{{ $callType->value }}">{{ $callType->label() }}</option>
                                     @endforeach
                                 </select>
+                                @error('call_type')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
 
                             <div>
@@ -93,6 +87,9 @@
                                         <option value="{{ $callResult->value }}">{{ $callResult->label() }}</option>
                                     @endforeach
                                 </select>
+                                @error('call_result')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
 
                             <div>
@@ -102,6 +99,9 @@
                                         <option value="{{ $callChannel->value }}" selected>{{ $callChannel->label() }}</option>
                                     @endforeach
                                 </select>
+                                @error('channel')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
 
                             <div>
@@ -111,6 +111,9 @@
                                     name="called_at"
                                     class="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                                 >
+                                @error('plan_id')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
 
                             <div class="md:col-span-2">
@@ -124,6 +127,9 @@
                                     @endforeach
                                 </select>
                                 <p class="mt-2 text-xs text-gray-500">受注に関する問い合わせの場合のみ選択してください</p>
+                                @error('order_id')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
 
                             <div class="md:col-span-2">
@@ -134,6 +140,9 @@
                                     class="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                                     placeholder="例：顧客より配送日変更の依頼あり。4/24予定を4/27へ変更希望。"
                                 ></textarea>
+                                @error('call_summary')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
 
                             <div>
@@ -142,6 +151,9 @@
                                     <option value="0" selected>不要</option>
                                     <option value="1">必要</option>
                                 </select>
+                                @error('needs_follow_up')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
 
                             <div>
@@ -151,6 +163,9 @@
                                     name="follow_up_date"
                                     class="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                                 >
+                                @error('follow_up_date')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
                             <input type="hidden" name="customer_id" value="{{ $customer->id }}">
                         </div>

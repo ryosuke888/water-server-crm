@@ -25,7 +25,7 @@
 
             @can('create', App\Models\Order::class)
                 <form action="{{ route('customers.orders.store', $customer) }}" method="POST" class="space-y-8">
-                @csrf
+                    @csrf
 
                     <!-- 注文情報 -->
                     <div class="bg-white rounded-2xl shadow-sm ring-1 ring-gray-200">
@@ -43,6 +43,9 @@
                                         <option value="{{ $plan->id }}" >{{ $plan->name }}</option>
                                     @endforeach
                                 </select>
+                                @error('plan_id')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
 
                             <div>
@@ -53,6 +56,9 @@
                                             <option value="{{ $product->id }}" >{{ $product->name }}</option>
                                     @endforeach
                                 </select>
+                                @error('product_id')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
 
                             <div>
@@ -61,30 +67,45 @@
                                     <option value="初回" {{ old('order_type') }}>初回</option>
                                     <option value="定期配送" {{ old('order_type') }}>定期配送</option>
                                 </select>
+                                @error('order_type')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
 
                             <div>
                                 <label class="block text-sm font-medium mb-1">数量</label>
                                 <input type="number" value="{{ old('quantity') }}" name="quantity"
                                 class="w-full rounded-xl border px-4 py-3 text-sm" id="quantity" min="1">
+                                @error('quantity')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
 
                             <div>
                                 <label class="block text-sm font-medium mb-1">小計</label>
                                 <input type="text" value="{{ old('unit_price') }}" name="unit_price"
                                 class="w-full rounded-xl border px-4 py-3 text-sm" id="unit_price" readonly>
+                                @error('unit_price')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
 
                             <div class="">
                                 <label class="block text-sm font-medium mb-1">合計</label>
                                 <input type="text" value="{{ old('subtotal_amount') }}" name="subtotal_amount"
                                 class="w-full rounded-xl border px-4 py-3 text-sm" id="subtotal_amount" readonly>
+                                @error('subtotal_amount')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
 
                             <div>
                                 <label class="block text-sm font-medium mb-1">お届け日</label>
                                 <input type="date" value="{{ old('scheduled_delivery_date') }}" name="scheduled_delivery_date"
                                 class="w-full rounded-xl border px-4 py-3 text-sm" min="{{ now()->addDays(3)->toDateString() }}">
+                                @error('scheduled_delivery_date')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
                             <input type="hidden" name="customer_id" value="{{ $customer->id }}">
 

@@ -172,8 +172,6 @@
                         </div>
                     </div>
 
-                    <input type="hidden" name="customer_id" value="{{ $customer->id }}">
-
                     <div class="flex items-center justify-between">
                         <button type="button" onclick="history.back()"
                         class="px-5 py-3 text-sm border rounded-xl bg-blue hover:bg-blue-50">

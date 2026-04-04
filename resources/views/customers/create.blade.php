@@ -39,18 +39,27 @@
                                 <label class="block text-sm font-medium mb-1">顧客名</label>
                                 <input type="text" value="{{ old('name') }}" name="name" required
                                 class="w-full rounded-xl border px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-200">
+                                @error('name')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
 
                             <div>
                                 <label class="block text-sm font-medium mb-1">電話番号</label>
                                 <input type="text" value="{{ old('phone_number') }}" name="phone_number" required
                                 class="w-full rounded-xl border px-4 py-3 text-sm">
+                                @error('phone_number')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
 
                             <div>
                                 <label class="block text-sm font-medium mb-1">メール</label>
                                 <input type="email" value="{{ old('email') }}" name="email"
                                 class="w-full rounded-xl border px-4 py-3 text-sm">
+                                @error('email')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
 
                         </div>
@@ -68,30 +77,45 @@
                             <label class="block text-sm font-medium mb-1">郵便番号</label>
                             <input type="text" value="{{ old('postal_code') }}" name="postal_code"
                             class="w-full rounded-xl border px-4 py-3 text-sm">
+                            @error('postal_code')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium mb-1">都道府県</label>
                             <input type="text" value="{{ old('prefecture') }}" name="prefecture"
                             class="w-full rounded-xl border px-4 py-3 text-sm">
+                            @error('prefecture')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium mb-1">市区町村</label>
                             <input type="text" value="{{ old('city') }}" name="city"
                             class="w-full rounded-xl border px-4 py-3 text-sm">
+                            @error('city')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium mb-1">番地</label>
                             <input type="text" value="{{ old('address_line1') }}" name="address_line1"
                             class="w-full rounded-xl border px-4 py-3 text-sm">
+                            @error('address_line1')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium mb-1">建物名・部屋番号</label>
                             <input type="text" value="{{ old('address_line2') }}" name="address_line2"
                             class="w-full rounded-xl border px-4 py-3 text-sm">
+                            @error('address_line2')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         </div>
@@ -112,12 +136,18 @@
                                 <option value="契約中" {{ old('contract_status') === '契約中' ? 'selected' : '' }}>契約中</option>
                                 <option value="解約済" {{ old('contract_status') === '解約済' ? 'selected' : '' }}>解約済</option>
                             </select>
+                            @error('contract_status')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium mb-1">備考</label>
                             <textarea rows="4"
                             class="w-full rounded-xl border px-4 py-3 text-sm" name="remarks">{{ old('remarks') }}</textarea>
+                            @error('remarks')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         </div>
@@ -135,36 +165,54 @@
                                 <label class="block text-sm font-medium mb-1">配送先氏名</label>
                                 <input type="text" value="{{ old('shipping_name') }}" name="shipping_name"
                                 class="w-full rounded-xl border px-4 py-3 text-sm">
+                                @error('shipping_name')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
 
                             <div>
                                 <label class="block text-sm font-medium mb-1">郵便番号</label>
                                 <input type="text" value="{{ old('shipping_postal_code') }}" name="shipping_postal_code"
                                 class="w-full rounded-xl border px-4 py-3 text-sm">
+                                @error('shipping_postal_code')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
 
                             <div>
                                 <label class="block text-sm font-medium mb-1">都道府県</label>
                                 <input type="text" value="{{ old('shipping_prefecture') }}" name="shipping_prefecture" name="shipping_prefecture"
                                 class="w-full rounded-xl border px-4 py-3 text-sm">
+                                @error('shipping_prefecture')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
 
                             <div>
                                 <label class="block text-sm font-medium mb-1">市区町村</label>
                                 <input type="text" value="{{ old('shipping_city') }}" name="shipping_city" name="shipping_city"
                                 class="w-full rounded-xl border px-4 py-3 text-sm">
+                                @error('shipping_city')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
 
                             <div>
                                 <label class="block text-sm font-medium mb-1">番地</label>
                                 <input type="text" value="{{ old('shipping_address_line1') }}" name="shipping_address_line1" name="shipping_address_line1"
                                 class="w-full rounded-xl border px-4 py-3 text-sm">
+                                @error('shipping_address_line1')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
 
                             <div class="">
                                 <label class="block text-sm font-medium mb-1">建物名・部屋番号</label>
                                 <input type="text" value="{{ old('shipping_address_line2') }}" name="shipping_address_line2" name="shipping_address_line2"
                                 class="w-full rounded-xl border px-4 py-3 text-sm">
+                                @error('shipping_address_line2')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
 
                         </div>

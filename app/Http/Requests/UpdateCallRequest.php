@@ -23,7 +23,6 @@ class UpdateCallRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'customer_id' => ['required', 'integer', 'exists:customers,id'],
             'order_id' => ['nullable', 'integer', 'exists:orders,id'],
 
             'call_type' => ['required', 'string'],
