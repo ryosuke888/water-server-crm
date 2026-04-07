@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\OrderStatus;
+use App\Enums\OrderType;
 use App\Models\CallHistory;
 use App\Models\Customer;
 use App\Models\OrderHistory;
@@ -30,6 +32,11 @@ class Order extends Model
         'shipping_status',
         'api_synced_at',
         'remarks',
+    ];
+
+    protected $casts = [
+        'order_type' => OrderType::class,
+        'order_status' => OrderStatus::class,
     ];
 
     public function customer() {

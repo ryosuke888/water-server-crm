@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\CustomerContactStatus;
 use App\Models\CallHistory;
 use App\Models\Order;
 use App\Models\OrderHistory;
@@ -46,6 +47,10 @@ class Customer extends Model
         ...self::ADDRESS_FIELDS,
         ...self::SHIPPING_ADDRESS_FIELDS,
         ...self::CALL_INFORMATION_FIELDS,
+    ];
+
+    protected $casts = [
+        'contact_status' => CustomerContactStatus::class,
     ];
 
     public function orders() {

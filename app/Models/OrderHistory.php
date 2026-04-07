@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\OrderHistoryActionType;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\User;
@@ -23,6 +24,7 @@ class OrderHistory extends Model
     ];
 
     protected $casts = [
+        'action_type' => OrderHistoryActionType::class,
         'before_values' => 'array',
         'after_values' => 'array',
         'acted_at' => 'datetime'

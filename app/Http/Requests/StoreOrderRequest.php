@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\OrderType;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
 
 class StoreOrderRequest extends FormRequest
 {
@@ -31,7 +33,7 @@ class StoreOrderRequest extends FormRequest
             'unit_price' => ['nullable', 'integer', 'min:0'],
             'subtotal_amount' => ['nullable', 'integer', 'min:0'],
 
-            'order_type' => ['required', 'string', 'in:初回,定期配送'],
+            'order_type' => ['required', new Enum(OrderType::class)],
             'scheduled_delivery_date' => ['required', 'date', 'after_or_equal:' . now()->addDays(3)->toDateString()],
         ];
     }

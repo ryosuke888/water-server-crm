@@ -2,8 +2,11 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\OrderStatus;
+use App\Enums\OrderType;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
 
 class UpdateOrderRequest extends FormRequest
 {
@@ -30,8 +33,8 @@ class UpdateOrderRequest extends FormRequest
             'unit_price' => ['nullable', 'integer', 'min:0'],
             'subtotal_amount' => ['nullable', 'integer', 'min:0'],
 
-            'order_status' => ['required', 'string', 'in:受付済,出荷準備中,出荷済,キャンセル'],
-            'order_type' => ['required', 'string', 'in:初回,変更,定期配送'],
+            'order_status' => ['required', new Enum(OrderStatus::class)],
+            'order_type' => ['required', new Enum(OrderType::class)],
             'scheduled_delivery_date' => ['required', 'date', 'after_or_equal:' . now()->addDays(3)->toDateString()],
         ];
     }

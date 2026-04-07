@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\CustomerContactStatus;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
 
 class StoreCustomerRequest extends FormRequest
 {
@@ -37,7 +39,7 @@ class StoreCustomerRequest extends FormRequest
             'shipping_city' => 'nullable|string|max:100',
             'shipping_address_line1' => 'nullable|string|max:255',
             'shipping_address_line2' => 'nullable|string|max:255',
-            'contract_status' => 'required|string|max:50',
+            'contract_status' => ['required', new Enum(CustomerContactStatus::class)],
             'remarks' => 'nullable|string',
         ];
     }

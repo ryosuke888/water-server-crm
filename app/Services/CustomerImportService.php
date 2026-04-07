@@ -2,9 +2,11 @@
 
 namespace App\Services;
 
+use App\Enums\CustomerContactStatus;
 use App\Models\Customer;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rules\Enum;
 use SplFileObject;
 
 class CustomerImportService {
@@ -39,7 +41,7 @@ class CustomerImportService {
             'shipping_city' => 'nullable|string|max:100',
             'shipping_address_line1' => 'nullable|string|max:255',
             'shipping_address_line2' => 'nullable|string|max:255',
-            'contract_status' => 'required|string|max:50',
+            'contract_status' => ['required', new Enum(CustomerContactStatus::class)],
             'remarks' => 'nullable|string',
         ];
 

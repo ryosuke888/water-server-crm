@@ -2,8 +2,12 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\CallChannel;
+use App\Enums\CallResult;
+use App\Enums\CallType;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
 
 class StoreCallRequest extends FormRequest
 {
@@ -26,9 +30,9 @@ class StoreCallRequest extends FormRequest
             'customer_id' => ['required', 'integer', 'exists:customers,id'],
             'order_id' => ['nullable', 'integer', 'exists:orders,id'],
 
-            'call_type' => ['required', 'string'],
-            'call_result' => ['required', 'string'],
-            'channel' => ['required', 'string'],
+            'call_type' => ['required', new Enum(CallType::class)],
+            'call_result' => ['required', new Enum(CallResult::class)],
+            'channel' => ['required', new Enum(CallChannel::class)],
 
             'call_summary' => ['required', 'string', 'max:1000'],
 
