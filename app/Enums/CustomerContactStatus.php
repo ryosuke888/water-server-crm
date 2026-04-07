@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum CustomerContactStatus: string
+enum CustomerContractStatus: string
 {
     case PROSPECT = 'PROSPECT';
     case ACTIVE = 'ACTIVE';

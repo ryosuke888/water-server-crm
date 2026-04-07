@@ -83,7 +83,7 @@ class CustomerController extends Controller
                 'trace' => $e->getTraceAsString(),
                 'user_id' => auth()->id(),
                 'customer_id' => $customer->id,
-                'data' => $request->only(['contact_status',]),
+                'data' => $request->only(['contract_status',]),
                 'url' => $request->url(),
                 'method' => $request->method(),
             ]);
@@ -106,7 +106,7 @@ class CustomerController extends Controller
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
                 'user_id' => auth()->id(),
-                'data' => $request->only(['contact_status',]),
+                'data' => $request->only(['contract_status',]),
                 'url' => $request->url(),
                 'method' => $request->method(),
             ]);

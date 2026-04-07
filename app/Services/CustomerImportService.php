@@ -2,11 +2,12 @@
 
 namespace App\Services;
 
-use App\Enums\CustomerContactStatus;
+use App\Enums\CustomerContractStatus;
 use App\Models\Customer;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rules\Enum;
+use Illuminate\Validation\ValidationException;
 use SplFileObject;
 
 class CustomerImportService {
@@ -28,8 +29,8 @@ class CustomerImportService {
 
         $validationRules = [
             'name' => 'required|string|max:100',
-            'phone_number' => 'required|string|max:20',
-            'email' => 'nullable|email|max:255',
+            'phone_number' => ['required', 'string', 'max:20', 'unique:customers,phone_number'],
+            'email' => ['nullable', 'email', 'max:255', 'unique:customers,email'],
             'postal_code' => 'nullable|string|max:8',
             'prefecture' => 'nullable|string|max:20',
             'city' => 'nullable|string|max:100',
@@ -41,11 +42,14 @@ class CustomerImportService {
             'shipping_city' => 'nullable|string|max:100',
             'shipping_address_line1' => 'nullable|string|max:255',
             'shipping_address_line2' => 'nullable|string|max:255',
-            'contract_status' => ['required', new Enum(CustomerContactStatus::class)],
+            'contract_status' => ['required', new Enum(CustomerContractStatus::class)],
             'remarks' => 'nullable|string',
         ];
 
         $sequence = 1;
+
+        $usedPhoneNumbers = [];
+        $usedEmails = [];
 
         foreach ($csvFile as $i => $row){
             if ($i === 0) {
@@ -70,11 +74,36 @@ class CustomerImportService {
 
             $record = array_combine($header, $row);
 
+            // 電話番号の正規化
+            $record['phone_number'] = preg_replace('/[^0-9]/', '', (string) $record['phone_number']);
+
             // csvデータのvalidationチェック
-            $validator = Validator::make($record, $validationRules)->stopOnFirstFailure();
+            $validator = Validator::make($record, $validationRules, [
+                'phone_number.unique' => '電話番号が既に登録されています。',
+                'email.unique' => 'メールアドレスが既に登録されています。',
+            ])->stopOnFirstFailure();
 
             if ($validator->fails()) {
-                throw new \Illuminate\Validation\ValidationException($validator);
+                throw new ValidationException($validator);
+            }
+
+            // csv電話番号重複チェック
+            if (in_array($record['phone_number'], $usedPhoneNumbers, true)) {
+                throw ValidationException::withMessages([
+                    'phone_number' => ($i + 1) . ['行目の電話番号がCSV内で重複しています。'],
+                ]);
+            }
+
+            // csvメールアドレス重複チェック
+            if (!empty($record['email']) && in_array($record['email'], $usedEmails, true)) {
+                throw ValidationException::withMessages([
+                    'email' => ($i + 1) . ['行目のメールアドレスがCSV内で重複しています。'],
+                ]);
+            }
+
+            $usedPhoneNumbers[] = $record['phone_number'];
+            if (!empty($record['email'])) {
+                $usedEmails[] = $record['email'];
             }
 
             $record['created_at'] = $now;
