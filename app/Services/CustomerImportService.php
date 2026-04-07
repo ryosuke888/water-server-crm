@@ -10,6 +10,8 @@ use Illuminate\Validation\Rules\Enum;
 use Illuminate\Validation\ValidationException;
 use SplFileObject;
 
+use function Symfony\Component\String\s;
+
 class CustomerImportService {
     public function import($file): int
     {
@@ -53,15 +55,16 @@ class CustomerImportService {
 
         foreach ($csvFile as $i => $row){
             if ($i === 0) {
-                $header = array_map(fn ($value) => trim((string)$value), $row);
+                $header = array_map(function ($value) {
+                    return $this->normalizeCsvValue($value);
+                }, $row);
                 // BOM消去
                 $header[0] = preg_replace('/^\xEF\xBB\xBF/', '', $header[0]);
                 continue;
             }
 
              $row = array_map(function ($value) {
-                $value = trim((string)$value);
-                return $value === '' ? null : $value;
+                return $this->normalizeCsvValue($value);
             }, $row);
 
             if(empty(array_filter($row, fn ($value) => $value!== null))) {
@@ -119,5 +122,14 @@ class CustomerImportService {
         });
 
         return count($data);
+    }
+
+    private function normalizeCsvValue($value): string
+    {
+        $value = (string)$value;
+        $value = str_replace('\xE3\x80\x80', ' ', $value);  // 全角スペースを半角へ変換
+        $value = trim($value); // 前後の空白除去
+
+        return $value === '' ? null : $value;
     }
 }
