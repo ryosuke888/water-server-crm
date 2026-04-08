@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Enums\OrderHistoryActionType;
+use App\Enums\OrderStatus;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\OrderHistory;
@@ -53,7 +55,7 @@ class OrderService {
                 'order_id' => $order->id,
                 'user_id' => auth()->id(),
                 'order_code_snapshot' => $order->order_code,
-                'action_type' => 'create',
+                'action_type' => OrderHistoryActionType::CREATE,
                 'action_summary' => '受注情報を登録しました',
                 'before_values' => null,
                 'after_values'  => $orderAfter,
@@ -113,7 +115,7 @@ class OrderService {
                     'order_id' => $order->id,
                     'user_id' => auth()->id(),
                     'order_code_snapshot' => $order->order_code,
-                    'action_type' => 'update',
+                    'action_type' => OrderHistoryActionType::UPDATE,
                     'action_summary' => '受注情報を更新しました',
                     'before_values' => $orderBefore,
                     'after_values'  => $orderAfter,
@@ -144,7 +146,7 @@ class OrderService {
                 $remarks = $order->remarks ? $order->remarks . "\n[キャンセル理由]:" . $validated['cancel_reason'] : "[キャンセル理由]:" . $validated['cancel_reason'];
 
                 $order->update([
-                    'order_status' => "キャンセル",
+                    'order_status' => OrderStatus::CANCELED,
                     'remarks' => $remarks,
                 ]);
                 $order->refresh();
@@ -161,7 +163,7 @@ class OrderService {
                     'order_id' => $order->id,
                     'user_id' => auth()->id(),
                     'order_code_snapshot' => $order->order_code,
-                    'action_type' => 'cancel',
+                    'action_type' => OrderHistoryActionType::CANCEL,
                     'action_summary' => '受注をキャンセルしました',
                     'before_values' => $orderBefore,
                     'after_values'  => $orderAfter,

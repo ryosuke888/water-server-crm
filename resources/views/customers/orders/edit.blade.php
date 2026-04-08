@@ -63,9 +63,9 @@
                             <div>
                                 <label class="block text-sm font-medium mb-1">受注種別</label>
                                 <select class="w-full rounded-xl border px-4 py-3 text-sm" name="order_type">
-                                    <option value="初回" {{ old('order_type', $order->order_type) === '初回' ? 'selected' : '' }}>初回</option>
-                                    <option value="変更" {{ old('order_type', $order->order_type) === '変更' ? 'selected' : '' }}>変更</option>
-                                    <option value="定期配送" {{ old('order_type', $order->order_type) === '定期配送' ? 'selected' : '' }}>定期配送</option>
+                                    <option value="{{ App\Enums\OrderType::INITIAL }}" {{ old('order_type', $order->order_type->value) === App\Enums\OrderType::INITIAL ? 'selected' : '' }}>初回</option>
+                                    <option value="{{ App\Enums\OrderType::CHANGE }}" {{ old('order_type', $order->order_type->value) === App\Enums\OrderType::CHANGE ? 'selected' : '' }}>変更</option>
+                                    <option value="{{ App\Enums\OrderType::REGULAR }}" {{ old('order_type', $order->order_type->value) === App\Enums\OrderType::REGULAR ? 'selected' : '' }}>定期配送</option>
                                 </select>
                                 @error('order_type')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -75,10 +75,10 @@
                             <div>
                                 <label class="block text-sm font-medium mb-1">受注ステータス</label>
                                 <select class="w-full rounded-xl border px-4 py-3 text-sm" name="order_status">
-                                    <option value="受付済" {{ old('order_status', $order->order_status) === '受付済' ? 'selected' : '' }}>受付済</option>
-                                    <option value="出荷準備中" {{ old('order_status', $order->order_status) === '出荷準備中' ? 'selected' : '' }}>出荷準備中</option>
-                                    <option value="出荷済" {{ old('order_status', $order->order_status) === '出荷済' ? 'selected' : '' }}>出荷済</option>
-                                    <option value="キャンセル" {{ old('order_status', $order->order_status) === 'キャンセル' ? 'selected' : '' }}>キャンセル</option>
+                                    <option value="{{ App\Enums\OrderStatus::RECEIVED }}" {{ old('order_status', $order->order_status->value) === App\Enums\OrderStatus::RECEIVED ? 'selected' : '' }}>受付済</option>
+                                    <option value="{{ App\Enums\OrderStatus::PREPARING }}" {{ old('order_status', $order->order_status->value) === App\Enums\OrderStatus::PREPARING ? 'selected' : '' }}>出荷準備中</option>
+                                    <option value="{{ App\Enums\OrderStatus::COMPLETED }}" {{ old('order_status', $order->order_status->value) === App\Enums\OrderStatus::COMPLETED ? 'selected' : '' }}>出荷済</option>
+                                    <option value="{{ App\Enums\OrderStatus::CANCELED }}" {{ old('order_status', $order->order_status->value) === App\Enums\OrderStatus::CANCELED ? 'selected' : '' }}>キャンセル</option>
                                 </select>
                                 @error('order_status')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>

@@ -5,6 +5,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\CustomerImportController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\OrderHistoryController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -24,6 +25,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/customers/show/{customer}', [CustomerController::class, 'show'])->name('customers.show');
     Route::get('/customers/{customer}/edit', [CustomerController::class, 'edit'])->name('customers.edit');
     Route::get('/customers/create', [CustomerController::class, 'create'])->name('customers.create');
+    Route::get('/customers/{customer}/order-histories/index', [OrderHistoryController::class, 'index'])->name('customers.order-histories.index');
+    Route::get('/customers/{customer}/order-histories/{orderHistory}/show', [OrderHistoryController::class, 'show'])->name('customers.order-histories.show');
     Route::get('/customers/{customer}/orders/index', [OrderController::class, 'index'])->name('customers.orders.index');
     Route::get('/customers/{customer}/orders/{order}/show', [OrderController::class, 'show'])->name('customers.orders.show');
     Route::get('/customers/{customer}/orders/create', [OrderController::class, 'create'])->name('customers.orders.create');
