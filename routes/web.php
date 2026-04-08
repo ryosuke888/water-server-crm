@@ -17,32 +17,56 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::get('/customers', [CustomerController::class, 'index'])->name('customers.index');
-    Route::get('/customers/import/create', [CustomerImportController::class, 'create'])->name('customers.import.create');
-    Route::get('/customers/show/{customer}', [CustomerController::class, 'show'])->name('customers.show');
-    Route::get('/customers/{customer}/edit', [CustomerController::class, 'edit'])->name('customers.edit');
-    Route::get('/customers/create', [CustomerController::class, 'create'])->name('customers.create');
-    Route::get('/customers/{customer}/order-histories/index', [OrderHistoryController::class, 'index'])->name('customers.order-histories.index');
-    Route::get('/customers/{customer}/order-histories/{orderHistory}/show', [OrderHistoryController::class, 'show'])->name('customers.order-histories.show');
-    Route::get('/customers/{customer}/orders/index', [OrderController::class, 'index'])->name('customers.orders.index');
-    Route::get('/customers/{customer}/orders/{order}/show', [OrderController::class, 'show'])->name('customers.orders.show');
-    Route::get('/customers/{customer}/orders/create', [OrderController::class, 'create'])->name('customers.orders.create');
-    Route::get('/customers/{customer}/orders/{order}/edit', [OrderController::class, 'edit'])->name('customers.orders.edit');
-    Route::get('/customers/{customer}/calls/index', [CallController::class, 'index'])->name('customers.calls.index');
-    Route::get('/customers/{customer}/calls/{callHistory}/show', [CallController::class, 'show'])->name('customers.calls.show');
-    Route::get('/customers/{customer}/calls/{callHistory}/edit', [CallController::class, 'edit'])->name('customers.calls.edit');
-    Route::get('/customers/{customer}/calls/create', [CallController::class, 'create'])->name('customers.calls.create');
-    Route::post('/customers/store', [CustomerController::class, 'store'])->name('customers.store');
-    Route::post('/customers/{customer}/orders/store', [OrderController::class, 'store'])->name('customers.orders.store');
-    Route::post('/customers/{customer}/calls/store', [CallController::class, 'store'])->name('customers.calls.store');
-    Route::patch('/customers/{customer}/orders/{order}/update', [OrderController::class, 'update'])->name('customers.orders.update');
-    Route::post('/customers/import/store', [CustomerImportController::class, 'store'])->name('customers.import.store');
-    Route::patch('/customers/{customer}/update', [CustomerController::class, 'update'])->name('customers.update');
-    Route::patch('/customers/{customer}/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('customers.orders.cancel');
-    Route::patch('/customers/{customer}/calls/{callHistory}/update', [CallController::class, 'update'])->name('customers.calls.update');
+    // profile
+    Route::prefix('profile')->name('profile.')->group(function () {
+        Route::get('', [ProfileController::class, 'edit'])->name('edit');
+        Route::patch('', [ProfileController::class, 'update'])->name('update');
+        Route::delete('', [ProfileController::class, 'destroy'])->name('destroy');
+    });
+
+    // customers
+    Route::prefix('customers')->name('customers.')->group(function () {
+        Route::get('/', [CustomerController::class, 'index'])->name('index');
+        Route::get('/create', [CustomerController::class, 'create'])->name('create');
+        Route::post('/', [CustomerController::class, 'store'])->name('store');
+        Route::get('/{customer}', [CustomerController::class, 'show'])->name('show');
+        Route::get('/{customer}/edit', [CustomerController::class, 'edit'])->name('edit');
+        Route::patch('/{customer}', [CustomerController::class, 'update'])->name('update');
+    });
+
+    // customer import
+    Route::prefix('customers/import')->name('customers.import.')->group(function () {
+        Route::get('/', [CustomerImportController::class, 'create'])->name('create');
+        Route::post('/', [CustomerImportController::class, 'store'])->name('store');
+    });
+
+    // orders
+    Route::prefix('customers/{customer}/orders')->name('customers.orders.')->group(function () {
+        Route::get('/', [OrderController::class, 'index'])->name('index');
+        Route::get('/create', [OrderController::class, 'create'])->name('create');
+        Route::post('/', [OrderController::class, 'store'])->name('store');
+        Route::get('/{order}', [OrderController::class, 'show'])->name('show');
+        Route::get('/{order}/edit', [OrderController::class, 'edit'])->name('edit');
+        Route::patch('/{order}', [OrderController::class, 'update'])->name('update');
+        Route::patch('/{order}/cancel', [OrderController::class, 'cancel'])->name('cancel');
+    });
+
+    // order histories
+    Route::prefix('customers/{customer}/order-histories')->name('customers.order-histories.')->group(function () {
+        Route::get('/', [OrderHistoryController::class, 'index'])->name('index');
+        Route::get('/{orderHistory}', [OrderHistoryController::class, 'show'])->name('show');
+    });
+
+
+    // calls
+    Route::prefix('customers/{customer}/calls')->name('customers.calls.')->group(function () {
+        Route::get('/', [CallController::class, 'index'])->name('index');
+        Route::get('/create', [CallController::class, 'create'])->name('create');
+        Route::post('/', [CallController::class, 'store'])->name('store');
+        Route::get('/{callHistory}', [CallController::class, 'show'])->name('show');
+        Route::get('/{callHistory}/edit', [CallController::class, 'edit'])->name('edit');
+        Route::patch('/{callHistory}', [CallController::class, 'update'])->name('update');
+    });
 });
 
 require __DIR__.'/auth.php';
