@@ -19,4 +19,14 @@ enum OrderStatus: string
         };
     }
 
+    public function canTransitionTo($to): bool
+    {
+        return match($this) {
+            self::RECEIVED => in_array($to, [self::RECEIVED, self::CANCELED], true),
+            self::PREPARING => in_array($to, [self::COMPLETED, self::CANCELED], true),
+            self::COMPLETED => false,
+            self::CANCELED => $to === self::RECEIVED,
+        };
+    }
+
 }

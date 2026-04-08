@@ -15,6 +15,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
+use RuntimeException;
 
 class OrderController extends Controller
 {
@@ -73,6 +74,8 @@ class OrderController extends Controller
             $order = $orderService->update($validated, $customer, $order);
 
             return redirect()->route('customers.orders.show', compact('customer', 'order'))->with('success', '受注更新に成功しました。');
+        } catch(RuntimeException $e) {
+            return back()->withInput()->with('error', $e->getMessage());
         } catch(Exception $e) {
             // ログ出力
             Log::error('受注更新失敗', [

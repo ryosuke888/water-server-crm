@@ -10,6 +10,7 @@ use App\Models\OrderHistory;
 use App\Models\PlanProductPrice;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use RuntimeException;
 
 class OrderService {
     public function store(array $validated): Order
@@ -72,6 +73,10 @@ class OrderService {
     {
          return DB::transaction(function () use ($validated, $customer, $order) {
                 $order = $customer->orders()->findOrFail($order->id);
+
+                if (!$order->order_status->canTransitionTo($validated['order_status'])) {
+                    throw new RuntimeException('このステータスは変更できません。');
+                }
 
                 $planProductPrice = PlanProductPrice::where('plan_id', $validated['plan_id'])->where('product_id', $validated['product_id'])->firstOrFail();
                 $scheduledDeliveryDate = Carbon::parse($validated['scheduled_delivery_date']);
