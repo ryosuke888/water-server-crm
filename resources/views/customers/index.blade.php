@@ -91,7 +91,7 @@
                                     <div class="truncate">{{ $customer->email }}</div>
                                 </td>
                                 <td class="px-4 py-4 text-gray-700 text-left">
-                                    <div class="truncate">{{ $customer->contract_status }}</div>
+                                    <div class="truncate">{{ $customer->contract_status?->label() }}</div>
                                 </td>
                                 <td class="px-4 py-4 text-gray-700 text-left">
                                     <div class="truncate">{{ $customer->created_at->format('Y/m/d') }}</div>
