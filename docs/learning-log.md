@@ -158,3 +158,20 @@ array_map(fn($value) => trim($value), $row);
 ```php
 $this->authorize('update', $order);
 ```
+
+## 2026-04-08
+
+### やったこと
+- Featureテストの基本的な流れを理解
+- OrderStatusの状態遷移のルールを追加
+- ルーティングの整理
+
+---
+
+### 学んだこと
+
+#### ■　状態遷移のルール
+- Enumを用いてルール実装
+
+
+
