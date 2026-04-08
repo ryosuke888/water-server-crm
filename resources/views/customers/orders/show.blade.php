@@ -74,7 +74,7 @@
                                 <div x-data="{ openCancelModal: false }">
                                     <div class="flex items-center gap-3">
 
-                                        @if ($order->order_status !== 'キャンセル')
+                                        @if ($order->order_status->label() !== App\Enums\OrderStatus::CANCELED)
                                             <button
                                                 type="button"
                                                 @click="openCancelModal = true"
@@ -177,7 +177,7 @@
                         </div>
                         <div>
                             <p class="text-sm text-gray-500">受注種別</p>
-                            <p class="text-sm font-medium text-gray-800">{{ $order->order_type }}</p>
+                            <p class="text-sm font-medium text-gray-800">{{ $order->order_type->label() }}</p>
                         </div>
                         <div>
                             <p class="text-sm text-gray-500">数量</p>
@@ -193,7 +193,7 @@
                         </div>
                         <div>
                             <p class="text-sm text-gray-500">ステータス</p>
-                            <p class="text-sm font-medium text-gray-800">{{ $order->order_status }}</p>
+                            <p class="text-sm font-medium text-gray-800">{{ $order->order_status->label() }}</p>
                         </div>
                         <div>
                             <p class="text-sm text-gray-500">運送会社</p>

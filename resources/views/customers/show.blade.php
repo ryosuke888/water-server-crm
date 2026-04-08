@@ -24,16 +24,16 @@
                         <div>
                             <div class="flex items-center gap-3">
                                 <h1 class="text-2xl font-bold text-gray-900">{{ $customer->name }}</h1>
-                                @if ($customer->contract_status === "解約済")
+                                @if ($customer->contract_status->value === App\Enums\CustomerContractStatus::CANCELED)
                                 <span class="px-3 py-1 text-xs font-medium rounded-full bg-red-100 text-red-700">
-                                    {{ $customer->contract_status }}
+                                    {{ $customer->contract_status->label() }}
                                 </span>
                                 @else
                                 @endif
                             </div>
                             <div>
                                 <p class="text-sm text-gray-500 mt-1">顧客ID: {{ $customer->customer_code }}</p>
-                                <p class="text-sm text-gray-500 mt-1">ステータス: {{ $customer->contract_status }}</p>
+                                <p class="text-sm text-gray-500 mt-1">ステータス: {{ $customer->contract_status->label() }}</p>
                                 <p class="text-sm text-gray-500">登録日: {{ $customer->created_at->format('Y/m/d'); }}</p>
                                 <p class="text-sm text-gray-500">更新日: {{ $customer->updated_at->format('Y/m/d'); }}</p>
                             </div>
@@ -88,7 +88,7 @@
                         </div>
                         <div>
                             <p class="text-sm text-gray-500">ステータス</p>
-                            <p class="text-sm font-medium text-gray-800">{{ $customer->contract_status }}</p>
+                            <p class="text-sm font-medium text-gray-800">{{ $customer->contract_status->label() }}</p>
                         </div>
                     </div>
                 </div>
@@ -157,7 +157,7 @@
                                     <td class="py-3 pr-4">{{ $order->quantity}}</td>
                                     <td class="py-3 pr-4">
                                         <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-700">
-                                            {{ $order->order_status}}
+                                            {{ $order->order_status->label() }}
                                         </span>
                                     </td>
                                     <td class="py-3 pr-4">{{ $order->order_date}}</td>

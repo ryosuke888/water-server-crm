@@ -140,7 +140,7 @@
                                     <td class="py-3 pr-4">{{ $order->quantity}}</td>
                                     <td class="py-3 pr-4">
                                         <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-700">
-                                            {{ $order->order_status}}
+                                            {{ $order->order_status->label() }}
                                         </span>
                                     </td>
                                     <td class="py-3 pr-4">{{ $order->order_date}}</td>
