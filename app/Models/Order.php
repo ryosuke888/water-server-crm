@@ -10,10 +10,13 @@ use App\Models\OrderHistory;
 use App\Models\Plan;
 use App\Models\PlanProductPrice;
 use App\Models\Product;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'order_code',
         'customer_id',

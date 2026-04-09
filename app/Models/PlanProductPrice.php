@@ -5,10 +5,13 @@ namespace App\Models;
 use App\Models\Order;
 use App\Models\Plan;
 use App\Models\Product;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class PlanProductPrice extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'plan_id',
         'product_id',

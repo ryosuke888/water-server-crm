@@ -31,7 +31,7 @@ class OrderService {
                 'scheduled_delivery_date' => $validated['scheduled_delivery_date'],
                 'unit_price' => $planProductPrice->price,
                 'subtotal_amount' => $planProductPrice->price * $validated['quantity'],
-                'order_status' => '受付',
+                'order_status' => OrderStatus::RECEIVED,
                 'shipping_company' => 'ヤマト運輸',
                 'order_date' => now()->toDateString(),
                 'scheduled_shipping_date' => $scheduledShippingDate,

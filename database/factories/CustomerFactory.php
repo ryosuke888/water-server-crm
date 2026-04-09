@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\CustomerContractStatus;
 use App\Models\Customer;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -23,7 +24,7 @@ class CustomerFactory extends Factory
             'name_kana' => mb_convert_kana(fake()->name(), 'K'),
             'phone_number' => '080' . fake()->numerify('########'),
             'email' => fake()->unique()->safeEmail(),
-            'contract_status' => '未契約',
+            'contract_status' => CustomerContractStatus::PROSPECT,
 
             'postal_code' =>  fake()->numerify('#######'),
             'prefecture' => fake()->randomElement([
