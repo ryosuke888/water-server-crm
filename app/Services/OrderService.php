@@ -139,8 +139,14 @@ class OrderService {
         return DB::transaction(function() use($validated, $customer, $order) {
                 $order = $customer->orders()->findOrFail($order->id);
 
-                if ($order->order_status === 'キャンセル') {
+                $toStatus = OrderStatus::CANCELED;
+
+                if ($order->order_status === $toStatus) {
                     throw new \RuntimeException('すでにキャンセル済みの受注です。');
+                }
+
+                if (!$order->order_status->canTransitionTo($toStatus)) {
+                    throw new RuntimeException('このステータスは変更できません。');
                 }
 
                 $orderBefore = $order->only([
