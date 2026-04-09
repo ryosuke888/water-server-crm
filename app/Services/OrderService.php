@@ -74,7 +74,9 @@ class OrderService {
          return DB::transaction(function () use ($validated, $customer, $order) {
                 $order = $customer->orders()->findOrFail($order->id);
 
-                if (!$order->order_status->canTransitionTo($validated['order_status'])) {
+                $toStatus = OrderStatus::from($validated['order_status']);
+
+                if (!$order->order_status->canTransitionTo($toStatus)) {
                     throw new RuntimeException('このステータスは変更できません。');
                 }
 
