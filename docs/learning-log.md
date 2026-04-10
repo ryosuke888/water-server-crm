@@ -189,12 +189,11 @@ $this->authorize('update', $order);
 #### ■ Factory
 - stateを利用し、様々な状態のテストケースを作成
 
-## 2026-04-11
+## 2026-04-10
 
 ### やったこと
 - FeatureテストでCSVアップロード処理を実装
 - UploadedFile::fake() を使ったファイルテストを実装
-- CSVデータのバリデーション処理を追加
 
 ---
 
