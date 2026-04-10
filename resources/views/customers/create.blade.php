@@ -132,9 +132,9 @@
                         <div>
                             <label class="block text-sm font-medium mb-1">ステータス</label>
                             <select class="w-full rounded-xl border px-4 py-3 text-sm" name="contract_status">
-                                <option value="未契約" {{ old('contract_status') === '未契約' ? 'selected' : '' }}>未契約</option>
-                                <option value="契約中" {{ old('contract_status') === '契約中' ? 'selected' : '' }}>契約中</option>
-                                <option value="解約済" {{ old('contract_status') === '解約済' ? 'selected' : '' }}>解約済</option>
+                                <option value="{{ App\Enums\CustomerContractStatus::PROSPECT }}" {{ old('contract_status') === App\Enums\CustomerContractStatus::PROSPECT ? 'selected' : '' }}>未契約</option>
+                                <option value="{{ App\Enums\CustomerContractStatus::ACTIVE }}" {{ old('contract_status') === App\Enums\CustomerContractStatus::ACTIVE ? 'selected' : '' }}>契約中</option>
+                                <option value="{{ App\Enums\CustomerContractStatus::CANCELED }}" {{ old('contract_status') === App\Enums\CustomerContractStatus::CANCELED ? 'selected' : '' }}>解約済</option>
                             </select>
                             @error('contract_status')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
