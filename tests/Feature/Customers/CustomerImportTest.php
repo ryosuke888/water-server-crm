@@ -49,7 +49,7 @@ class CustomerImportTest extends TestCase
             'remarks' => 'テスト備考',
         ]);
 
-        $customer = Customer::first();
+        $customer = Customer::firstOrFail();
 
         $this->assertNull($customer->address_line2);
         $this->assertNull($customer->shipping_address_line2);
