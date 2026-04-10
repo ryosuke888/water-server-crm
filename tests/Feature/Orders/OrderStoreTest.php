@@ -89,6 +89,7 @@ class OrderStoreTest extends TestCase
             $this->makeOrderPayLoad($customer, $plan, $product, $quantity));
 
         $response->assertForbidden();
+        $this->assertDatabaseCount('orders', 0);
     }
 
     private function prepareOrderMasterData(): array
