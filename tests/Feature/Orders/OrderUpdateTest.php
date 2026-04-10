@@ -39,7 +39,7 @@ class OrderUpdateTest extends TestCase
         $response = $this->actingAs($user)->post(route('customers.orders.store', $customer), [
             'customer_id' => $customer->id,
             'plan_id' => $initialPlan->id,
-            'product_id' => $initialPlan->id,
+            'product_id' => $initialProduct->id,
             'quantity' => 2,
             'order_type' => OrderType::INITIAL->value,
             'scheduled_delivery_date' => '2026-04-20',
