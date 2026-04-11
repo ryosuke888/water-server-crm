@@ -16,9 +16,7 @@ class CustomerStoreTest extends TestCase
 
     public function test_admin_can_store_customer()
     {
-        $user = User::factory()->create([
-            'role' => Role::ADMIN->value,
-        ]);
+        $user = $this->makeUser(Role::ADMIN);
 
         $customer = Customer::factory()->make();
 
@@ -46,9 +44,7 @@ class CustomerStoreTest extends TestCase
 
     public function test_viewer_cannot_store_customer()
     {
-        $user = User::factory()->create([
-            'role' => Role::VIEWER->value,
-        ]);
+        $user = $this->makeUser(Role::VIEWER);
 
         $customer = Customer::factory()->make();
 
@@ -57,6 +53,93 @@ class CustomerStoreTest extends TestCase
 
         $response->assertForbidden();
         $this->assertDatabaseCount('customers', 0);
+    }
+
+    public function test_cannot_store_customer_when_name_is_empty()
+    {
+        $user = $this->makeUser(Role::ADMIN);
+
+        $customer = Customer::factory()->make();
+
+        $customer->name = '';
+
+        $response = $this->from(route('customers.create'))->actingAs($user)->post(route('customers.store'),
+            $this->makeCustomerPayload($customer));
+
+        $response->assertRedirect(route('customers.create'));
+        $response->assertSessionHasErrors('name');
+        $this->assertDatabaseCount('customers', 0);
+    }
+
+    public function test_cannot_store_customer_when_phone_number_is_empty()
+    {
+        $user = $this->makeUser(Role::ADMIN);
+
+        $customer = Customer::factory()->make();
+
+        $customer->phone_number = '';
+
+        $response = $this->from(route('customers.create'))->actingAs($user)->post(route('customers.store'),
+            $this->makeCustomerPayload($customer));
+
+        $response->assertRedirect(route('customers.create'));
+        $response->assertSessionHasErrors('phone_number');
+        $this->assertDatabaseCount('customers', 0);
+    }
+
+    public function test_cannot_store_customer_when_email_is_invalid()
+    {
+        $user = $this->makeUser(Role::ADMIN);
+
+        $customer = Customer::factory()->make();
+
+        $customer->email = 'invalid-email';
+
+        $response = $this->from(route('customers.create'))->actingAs($user)->post(route('customers.store'),
+            $this->makeCustomerPayload($customer));
+
+        $response->assertRedirect(route('customers.create'));
+        $response->assertSessionHasErrors('email');
+        $this->assertDatabaseCount('customers', 0);
+    }
+
+    public function test_cannot_store_customer_when_phone_number_invalid()
+    {
+        $user = $this->makeUser(Role::ADMIN);
+
+        $customer = Customer::factory()->make();
+
+        $customer->phone_number = '1234567';
+
+        $response = $this->from(route('customers.create'))->actingAs($user)->post(route('customers.store'),
+            $this->makeCustomerPayload($customer));
+
+        $response->assertRedirect(route('customers.create'));
+        $response->assertSessionHasErrors('phone_number');
+        $this->assertDatabaseCount('customers', 0);
+    }
+
+    public function test_cannot_store_customer_when_postal_code_invalid()
+    {
+        $user = $this->makeUser(Role::ADMIN);
+
+        $customer = Customer::factory()->make();
+
+        $customer->postal_code = '12345678';
+
+        $response = $this->from(route('customers.create'))->actingAs($user)->post(route('customers.store'),
+            $this->makeCustomerPayload($customer));
+
+        $response->assertRedirect(route('customers.create'));
+        $response->assertSessionHasErrors('postal_code');
+        $this->assertDatabaseCount('customers', 0);
+    }
+
+    private function makeUser(Role $role): User
+    {
+        return User::factory()->create([
+            'role' => $role->value,
+        ]);
     }
 
     private function makeCustomerPayload(Customer $customer): array

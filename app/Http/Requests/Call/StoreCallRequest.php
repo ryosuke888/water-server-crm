@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Call;
 
 use App\Enums\CallChannel;
 use App\Enums\CallResult;
@@ -9,7 +9,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
 
-class UpdateCallRequest extends FormRequest
+class StoreCallRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,6 +27,7 @@ class UpdateCallRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'customer_id' => ['required', 'integer', 'exists:customers,id'],
             'order_id' => ['nullable', 'integer', 'exists:orders,id'],
 
             'call_type' => ['required', new Enum(CallType::class)],

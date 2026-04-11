@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreCallRequest;
-use App\Http\Requests\UpdateCallRequest;
+use App\Http\Requests\Call\StoreCallRequest;
+use App\Http\Requests\Call\UpdateCallRequest;
 use App\Models\CallHistory;
 use App\Models\Customer;
 use Exception;

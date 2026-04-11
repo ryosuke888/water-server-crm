@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Order;
 
 use App\Enums\OrderType;
 use Illuminate\Contracts\Validation\ValidationRule;
