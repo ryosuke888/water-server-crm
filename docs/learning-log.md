@@ -205,3 +205,17 @@ $this->authorize('update', $order);
 ```php
 UploadedFile::fake()->createWithContent('test.csv', $csvContent);
 ```
+
+## 2026-04-11
+
+### やったこと
+- 親Requestを使ったバリデーションの実装と継承
+- バリデーションエラーの例外処理を理解
+- ValidationExceptionを用いたエラーハンドリングを実装
+
+---
+
+### 学んだこと
+
+#### ■ 抽象クラスの役割
+- `basicRules()` にバリデーションルールを定義し子クラスで継承
