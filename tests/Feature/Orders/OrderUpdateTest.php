@@ -130,7 +130,89 @@ class OrderUpdateTest extends TestCase
         ]);
     }
 
+    public function test_cannot_update_order_when_quantity_is_invalid()
+    {
+        $user = User::factory()->create([
+            'role' => Role::ADMIN->value,
+        ]);
 
+        $customer = Customer::factory()->create();
+
+        ['plan' => $initialPlan, 'product' => $initialProduct, 'planProductPrice' => $initialPlanProductPrice] = $this->prepareOrderMasterData();
+
+        $response = $this->actingAs($user)->post(route('customers.orders.store', $customer),
+            $this->makeOrderPayload($customer, $initialPlan, $initialProduct, 2));
+
+        $response->assertRedirect(route('customers.orders.index', $customer));
+
+        $order = Order::firstOrFail();
+
+        ['plan' => $updatedPlan, 'product' => $updatedProduct, 'planProductPrice' => $updatedPlanProductPrice] = $this->prepareOrderMasterData();
+
+        $quantity = 0;
+
+        $response = $this->from(route('customers.orders.show', compact('customer', 'order')))->actingAs($user)->patch(route('customers.orders.update', compact('customer', 'order')),
+            $this->updateOrderPayload($updatedPlan, $updatedProduct, $quantity));
+
+        $response->assertRedirect(route('customers.orders.show', compact('customer', 'order')));
+        $response->assertSessionHasErrors('quantity');
+
+        $this->assertDatabaseHas('orders', [
+            'customer_id' => $customer->id,
+            'plan_id' => $initialPlan->id,
+            'product_id' => $initialProduct->id,
+            'quantity' => 2,
+            'order_status' => OrderStatus::RECEIVED->value,
+        ]);
+
+        $this->assertDatabaseMissing('order_histories', [
+            'order_id' => $order->id,
+            'action_type' => OrderHistoryActionType::UPDATE->value,
+        ]);
+    }
+
+    public function test_cannot_update_order_when_scheduled_delivery_date_is_invalid()
+    {
+        $user = User::factory()->create([
+            'role' => Role::ADMIN->value,
+        ]);
+
+        $customer = Customer::factory()->create();
+
+        ['plan' => $initialPlan, 'product' => $initialProduct, 'planProductPrice' => $initialPlanProductPrice] = $this->prepareOrderMasterData();
+
+        $response = $this->actingAs($user)->post(route('customers.orders.store', $customer),
+            $this->makeOrderPayload($customer, $initialPlan, $initialProduct, 2));
+
+        $response->assertRedirect(route('customers.orders.index', $customer));
+
+        $order = Order::firstOrFail();
+
+        ['plan' => $updatedPlan, 'product' => $updatedProduct, 'planProductPrice' => $updatedPlanProductPrice] = $this->prepareOrderMasterData();
+
+        $quantity = 3;
+
+        $response = $this->from(route('customers.orders.show', compact('customer', 'order')))->actingAs($user)->patch(route('customers.orders.update', compact('customer', 'order')),
+            array_merge($this->updateOrderPayload($updatedPlan, $updatedProduct, $quantity), [
+                'scheduled_delivery_date' => now()->addDays(2)->toDateString(),
+            ]));
+
+        $response->assertRedirect(route('customers.orders.show', compact('customer', 'order')));
+        $response->assertSessionHasErrors('scheduled_delivery_date');
+
+        $this->assertDatabaseHas('orders', [
+            'customer_id' => $customer->id,
+            'plan_id' => $initialPlan->id,
+            'product_id' => $initialProduct->id,
+            'quantity' => 2,
+            'order_status' => OrderStatus::RECEIVED->value,
+        ]);
+
+        $this->assertDatabaseMissing('order_histories', [
+            'order_id' => $order->id,
+            'action_type' => OrderHistoryActionType::UPDATE->value,
+        ]);
+    }
 
     private function prepareOrderMasterData(): array
     {

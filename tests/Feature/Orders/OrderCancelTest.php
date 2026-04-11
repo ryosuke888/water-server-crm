@@ -40,8 +40,10 @@ class OrderCancelTest extends TestCase
 
         $order = Order::firstOrFail();
 
-        $this->actingAs($user)->patch(route('customers.orders.cancel', compact('customer', 'order')),
+        $response = $this->actingAs($user)->patch(route('customers.orders.cancel', compact('customer', 'order')),
             $this->cancelOrderPayload());
+
+        $response->assertRedirect(route('customers.orders.index', $customer));
 
         $this->assertDatabaseHas('orders', [
             'customer_id' => $customer->id,
@@ -125,6 +127,47 @@ class OrderCancelTest extends TestCase
         }
     }
 
+    public function test_cannot_cancel_order_when_the_reason_is_empty()
+    {
+        $user = User::factory()->create([
+            'role' => Role::ADMIN->value,
+        ]);
+
+        $customer = Customer::factory()->create();
+
+        ['plan' =>$plan, 'product' => $product, 'planProductPrice' => $planProductPrice] = $this->prepareOrderMasterData();
+
+        $quantity = 2;
+
+        $response = $this->actingAs($user)->post(route('customers.orders.store', $customer),
+            $this->makeOrderPayload($customer, $plan, $product, $quantity));
+
+        $response->assertRedirect(route('customers.orders.index', $customer));
+
+        $order = Order::firstOrFail();
+
+        $response = $this->from(route('customers.orders.show', compact('customer', 'order')))->actingAs($user)->patch(route('customers.orders.cancel', compact('customer', 'order')),
+            array_merge($this->cancelOrderPayload(), [
+                'cancel_reason' => '',
+            ]));
+
+        $response->assertRedirect(route('customers.orders.show', compact('customer', 'order')));
+        $response->assertSessionHasErrors('cancel_reason');
+
+        $this->assertDatabaseHas('orders', [
+                'customer_id' => $customer->id,
+                'plan_id' => $plan->id,
+                'product_id' => $product->id,
+                'quantity' => $quantity,
+                'order_status' => OrderStatus::RECEIVED->value,
+            ]);
+
+            $this->assertDatabaseMissing('order_histories', [
+                'customer_id' => $customer->id,
+                'action_type' => OrderHistoryActionType::CANCEL->value,
+            ]);
+    }
+
     private function prepareOrderMasterData(): array
     {
         $plan = Plan::factory()->create();
@@ -154,7 +197,7 @@ class OrderCancelTest extends TestCase
     private function cancelOrderPayload(): array
     {
         return  [
-            'cancel_reason' => 'お客様都合のためキャンセル。'
+            'cancel_reason' => 'お客様都合のためキャンセル。',
         ];
     }
 }

@@ -3,11 +3,11 @@
 namespace App\Http\Requests\Order;
 
 use App\Enums\OrderType;
+use App\Http\Requests\Order\OrderRequest;
 use Illuminate\Contracts\Validation\ValidationRule;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
 
-class StoreOrderRequest extends FormRequest
+class StoreOrderRequest extends OrderRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,17 +24,8 @@ class StoreOrderRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        return array_merge($this->basicRules(), [
             'customer_id' => ['required', 'integer', 'exists:customers,id'],
-            'plan_id' => ['nullable', 'integer', 'exists:plans,id'],
-            'product_id' => ['required', 'integer', 'exists:products,id'],
-
-            'quantity' => ['required', 'integer', 'min:1'],
-            'unit_price' => ['nullable', 'integer', 'min:0'],
-            'subtotal_amount' => ['nullable', 'integer', 'min:0'],
-
-            'order_type' => ['required', new Enum(OrderType::class)],
-            'scheduled_delivery_date' => ['required', 'date', 'after_or_equal:' . now()->addDays(3)->toDateString()],
-        ];
+        ]);
     }
 }

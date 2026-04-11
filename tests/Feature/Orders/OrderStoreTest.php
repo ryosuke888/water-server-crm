@@ -92,6 +92,46 @@ class OrderStoreTest extends TestCase
         $this->assertDatabaseCount('orders', 0);
     }
 
+    public function test_cannot_store_order_when_quantity_is_invalid()
+    {
+        $user = User::factory()->create([
+            'role' => Role::VIEWER->value,
+        ]);
+
+        ['customer' => $customer, 'plan' => $plan, 'product' => $product] = $this->prepareOrderMasterData();
+
+
+        $quantity = 0;
+
+        $response = $this->from(route('customers.orders.create', $customer))->actingAs($user)->post(route('customers.orders.store', $customer),
+            $this->makeOrderPayLoad($customer, $plan, $product, $quantity));
+
+        $response->assertRedirect(route('customers.orders.create', $customer));
+        $response->assertSessionHasErrors('quantity');
+        $this->assertDatabaseCount('orders', 0);
+    }
+
+    public function test_cannot_store_order_when_scheduled_delivery_date_is_invalid()
+    {
+        $user = User::factory()->create([
+            'role' => Role::VIEWER->value,
+        ]);
+
+        ['customer' => $customer, 'plan' => $plan, 'product' => $product] = $this->prepareOrderMasterData();
+
+
+        $quantity = 2;
+
+        $response = $this->from(route('customers.orders.create', $customer))->actingAs($user)->post(route('customers.orders.store', $customer),
+            array_merge($this->makeOrderPayLoad($customer, $plan, $product, $quantity), [
+                'scheduled_delivery_date' => now()->addDays(2)->toDateString(),
+            ]));
+
+        $response->assertRedirect(route('customers.orders.create', $customer));
+        $response->assertSessionHasErrors('scheduled_delivery_date');
+        $this->assertDatabaseCount('orders', 0);
+    }
+
     private function prepareOrderMasterData(): array
     {
         $customer = Customer::factory()->create();

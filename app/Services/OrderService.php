@@ -10,6 +10,7 @@ use App\Models\OrderHistory;
 use App\Models\PlanProductPrice;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 use RuntimeException;
 
 class OrderService {
@@ -19,6 +20,11 @@ class OrderService {
             $planProductPrice = PlanProductPrice::where('plan_id', $validated['plan_id'])->where('product_id', $validated['product_id'])->firstOrFail();
 
             $scheduledDeliveryDate = Carbon::parse($validated['scheduled_delivery_date']);
+
+            if ($scheduledDeliveryDate < now()->addDays(3)) {
+                throw new ValidationException('配送日は3日後以降');
+            }
+
             $scheduledShippingDate = $scheduledDeliveryDate->copy()->subDays(3)->toDateString();
 
             $data = [
@@ -82,6 +88,11 @@ class OrderService {
 
                 $planProductPrice = PlanProductPrice::where('plan_id', $validated['plan_id'])->where('product_id', $validated['product_id'])->firstOrFail();
                 $scheduledDeliveryDate = Carbon::parse($validated['scheduled_delivery_date']);
+
+                if ($scheduledDeliveryDate < now()->addDays(3)) {
+                    throw new ValidationException('配送日は3日後以降');
+                }
+
                 $scheduledShippingDate = $scheduledDeliveryDate->copy()->subDays(3)->toDateString();
 
                 $orderBefore = $order->only([

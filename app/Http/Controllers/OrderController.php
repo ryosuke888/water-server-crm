@@ -15,6 +15,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 use RuntimeException;
 
 class OrderController extends Controller
@@ -74,6 +75,8 @@ class OrderController extends Controller
             $order = $orderService->update($validated, $customer, $order);
 
             return redirect()->route('customers.orders.show', compact('customer', 'order'))->with('success', '受注更新に成功しました。');
+        } catch(ValidationException $e) {
+            return back()->withInput()->with('error', $e->getMessage());
         } catch(RuntimeException $e) {
             return back()->withInput()->with('error', $e->getMessage());
         } catch(Exception $e) {
@@ -101,6 +104,8 @@ class OrderController extends Controller
 
             $orderService->store($validated);
             return redirect()->route('customers.orders.index', compact('customer'))->with('success', '受注登録に成功しました。');
+        } catch(ValidationException $e) {
+            return back()->withInput()->with('error', $e->getMessage());
         } catch (Exception $e) {
             // ログ出力
             Log::error('受注登録失敗', [
@@ -123,6 +128,8 @@ class OrderController extends Controller
             $validated = $request->validated();
             $orderService->cancel($validated, $customer, $order);
             return redirect()->route('customers.orders.index', compact('customer'))->with('success', 'キャンセルに成功しました');
+        } catch(RuntimeException $e) {
+            return back()->withInput()->with('error', $e->getMessage());
         } catch (Exception $e) {
             Log::error('キャンセル失敗', [
                 'error' => $e->getMessage(),
