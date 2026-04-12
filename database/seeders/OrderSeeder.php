@@ -5,10 +5,9 @@ namespace Database\Seeders;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Plan;
-use App\Models\PlanProductPrice;
 use App\Models\Product;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Carbon;
 
 class OrderSeeder extends Seeder
 {
@@ -62,8 +61,8 @@ class OrderSeeder extends Seeder
                 'subtotal_amount' => 2 * $waterPrice->price,
                 'order_status' => '受付',
                 'order_date' => now()->toDateString(),
-                'scheduled_shipping_date' => now()->addDays(7)->toDateString(),
-                'scheduled_delivery_date' => now()->addDays(10)->toDateString(),
+                'scheduled_shipping_date' => Carbon::now()->addDays(7)->toDateString(),
+                'scheduled_delivery_date' => Carbon::now()->addDays(10)->toDateString(),
                 'shipping_company' => 'ヤマト運輸',
                 'tracking_number' => null,
                 'shipping_status' => '未連携',

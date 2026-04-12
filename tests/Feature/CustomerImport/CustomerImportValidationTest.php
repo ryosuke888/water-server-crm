@@ -6,7 +6,6 @@ use App\Enums\Role;
 use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
 use Tests\TestCase;
 
@@ -265,13 +264,6 @@ class CustomerImportValidationTest extends TestCase
     private function makeCsvSameEmailInDataFile(): UploadedFile
     {
         $row = '山田太郎,09012341234,test1@example.com,1234567,東京都,新宿区,1-1-1,,山田太郎,1234567,東京都,新宿区,1-1-1,,PROSPECT,テスト備考';
-        $content = self::CSV_HEADER . "\n" . self::CSV_ROW_BASIC_EXAMPLE . "\n" . $row;
-        return UploadedFile::fake()->createWithContent('customers.csv', $content);
-    }
-
-    private function makeCsvSamePhoneNumberInDataBaseFile(): UploadedFile
-    {
-        $row = '山田太郎,09012345678,test2@example.com,1234567,東京都,新宿区,1-1-1,,山田太郎,1234567,東京都,新宿区,1-1-1,,PROSPECT,テスト備考';
         $content = self::CSV_HEADER . "\n" . self::CSV_ROW_BASIC_EXAMPLE . "\n" . $row;
         return UploadedFile::fake()->createWithContent('customers.csv', $content);
     }

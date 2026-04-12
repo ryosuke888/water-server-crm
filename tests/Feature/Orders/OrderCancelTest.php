@@ -14,7 +14,7 @@ use App\Models\PlanProductPrice;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Carbon;
 use Tests\TestCase;
 
 class OrderCancelTest extends TestCase
@@ -23,22 +23,15 @@ class OrderCancelTest extends TestCase
 
     public function test_admin_can_cancel_order()
     {
-        $user = User::factory()->create([
-            'role' => Role::ADMIN->value,
-        ]);
+        $user= $this->makeUser(Role::ADMIN);
 
         $customer = Customer::factory()->create();
 
-        ['plan' =>$plan, 'product' => $product, 'planProductPrice' => $planProductPrice] = $this->prepareOrderMasterData();
+        ['plan' =>$plan, 'product' => $product] = $this->prepareOrderMasterData();
 
         $quantity = 2;
 
-        $response = $this->actingAs($user)->post(route('customers.orders.store', $customer),
-            $this->makeOrderPayload($customer, $plan, $product, $quantity));
-
-        $response->assertRedirect(route('customers.orders.index', $customer));
-
-        $order = Order::firstOrFail();
+        $order = $this->makeOrder($customer, $plan, $product, $quantity);
 
         $response = $this->actingAs($user)->patch(route('customers.orders.cancel', compact('customer', 'order')),
             $this->cancelOrderPayload());
@@ -50,15 +43,8 @@ class OrderCancelTest extends TestCase
             'plan_id' => $plan->id,
             'product_id' => $product->id,
             'quantity' => $quantity,
-            'unit_price' => $planProductPrice->price,
-            'subtotal_amount' => $planProductPrice->price * $quantity,
-            'order_type' => OrderType::INITIAL->value,
             'order_status' => OrderStatus::CANCELED->value,
-            'shipping_company' => 'ヤマト運輸',
             'remarks' => '[キャンセル理由]:お客様都合のためキャンセル。',
-            'order_date' => now()->toDateString(),
-            'scheduled_delivery_date' => now()->addDays(10)->toDateString(),
-            'scheduled_shipping_date' => now()->addDays(7)->toDateString(),
         ]);
 
         $this->assertDatabaseHas('order_histories', [
@@ -76,16 +62,14 @@ class OrderCancelTest extends TestCase
 
         $this->assertNull($beforeValues['remarks']);
         $this->assertEquals(OrderStatus::CANCELED->value, $afterValues['order_status']);
-        $this->assertEquals(now()->addDays(10)->toDateString(), $afterValues['scheduled_delivery_date']);
-        $this->assertEquals(now()->addDays(7)->toDateString(), $afterValues['scheduled_shipping_date']);
+        $this->assertEquals(Carbon::now()->addDays(10)->toDateString(), $afterValues['scheduled_delivery_date']);
+        $this->assertEquals(Carbon::now()->addDays(7)->toDateString(), $afterValues['scheduled_shipping_date']);
         $this->assertEquals('[キャンセル理由]:お客様都合のためキャンセル。', $afterValues['remarks']);
     }
 
     public function test_general_user_cannot_cancel_order()
     {
-        $admin = User::factory()->create([
-            'role' => Role::ADMIN->value,
-        ]);
+        $admin= $this->makeUser(Role::ADMIN);
 
         $customer = Customer::factory()->create();
 
@@ -93,20 +77,12 @@ class OrderCancelTest extends TestCase
 
         $quantity = 2;
 
-       $order = Order::factory()->create([
-            'customer_id' => $customer->id,
-            'plan_id' => $plan->id,
-            'product_id' => $product->id,
-            'quantity' => $quantity,
-            'order_status' => OrderStatus::RECEIVED->value,
-        ]);
+        $order = $this->makeOrder($customer, $plan, $product, $quantity);
 
         $roles = [Role::VIEWER, Role::SALES, Role::OPERATOR];
 
         foreach ($roles as $role) {
-            $user = User::factory()->create([
-                'role' => $role->value,
-            ]);
+            $user = $this->makeUser($role);
 
             $response = $this->actingAs($user)->patch(route('customers.orders.cancel', compact('customer', 'order')),
             $this->cancelOrderPayload());
@@ -125,14 +101,13 @@ class OrderCancelTest extends TestCase
                 'customer_id' => $customer->id,
                 'action_type' => OrderHistoryActionType::CANCEL->value,
             ]);
+            $this->assertDatabaseCount('order_histories', 0);
         }
     }
 
     public function test_guest_cannot_cancel_order()
     {
-        $admin = User::factory()->create([
-            'role' => Role::ADMIN->value,
-        ]);
+        $admin= $this->makeUser(Role::ADMIN);
 
         $customer = Customer::factory()->create();
 
@@ -140,13 +115,7 @@ class OrderCancelTest extends TestCase
 
         $quantity = 2;
 
-        $order = Order::factory()->create([
-            'customer_id' => $customer->id,
-            'plan_id' => $plan->id,
-            'product_id' => $product->id,
-            'quantity' => $quantity,
-            'order_status' => OrderStatus::RECEIVED->value,
-        ]);
+        $order = $this->makeOrder($customer, $plan, $product, $quantity);
 
         $response = $this->patch(route('customers.orders.cancel', compact('customer', 'order')),
         $this->cancelOrderPayload());
@@ -165,26 +134,20 @@ class OrderCancelTest extends TestCase
             'customer_id' => $customer->id,
             'action_type' => OrderHistoryActionType::CANCEL->value,
         ]);
+        $this->assertDatabaseCount('order_histories', 0);
     }
 
     public function test_cannot_cancel_order_when_the_reason_is_empty()
     {
-        $user = User::factory()->create([
-            'role' => Role::ADMIN->value,
-        ]);
+        $user= $this->makeUser(Role::ADMIN);
 
         $customer = Customer::factory()->create();
 
-        ['plan' =>$plan, 'product' => $product, 'planProductPrice' => $planProductPrice] = $this->prepareOrderMasterData();
+        ['plan' =>$plan, 'product' => $product] = $this->prepareOrderMasterData();
 
         $quantity = 2;
 
-        $response = $this->actingAs($user)->post(route('customers.orders.store', $customer),
-            $this->makeOrderPayload($customer, $plan, $product, $quantity));
-
-        $response->assertRedirect(route('customers.orders.index', $customer));
-
-        $order = Order::firstOrFail();
+        $order = $this->makeOrder($customer, $plan, $product, $quantity);
 
         $response = $this->from(route('customers.orders.show', compact('customer', 'order')))->actingAs($user)->patch(route('customers.orders.cancel', compact('customer', 'order')),
             array_merge($this->cancelOrderPayload(), [
@@ -195,17 +158,38 @@ class OrderCancelTest extends TestCase
         $response->assertSessionHasErrors('cancel_reason');
 
         $this->assertDatabaseHas('orders', [
-                'customer_id' => $customer->id,
-                'plan_id' => $plan->id,
-                'product_id' => $product->id,
-                'quantity' => $quantity,
-                'order_status' => OrderStatus::RECEIVED->value,
-            ]);
+            'customer_id' => $customer->id,
+            'plan_id' => $plan->id,
+            'product_id' => $product->id,
+            'quantity' => $quantity,
+            'order_status' => OrderStatus::RECEIVED->value,
+        ]);
 
-            $this->assertDatabaseMissing('order_histories', [
-                'customer_id' => $customer->id,
-                'action_type' => OrderHistoryActionType::CANCEL->value,
-            ]);
+        $this->assertDatabaseMissing('order_histories', [
+            'customer_id' => $customer->id,
+            'action_type' => OrderHistoryActionType::CANCEL->value,
+        ]);
+        $this->assertDatabaseCount('order_histories', 0);
+    }
+
+    private function makeOrder(Customer $customer, Plan $plan, Product $product, int $quantity): Order
+    {
+        return Order::factory()->create([
+            'customer_id' => $customer->id,
+            'plan_id' => $plan->id,
+            'product_id' => $product->id,
+            'quantity' => $quantity,
+            'order_status' => OrderStatus::RECEIVED->value,
+            'scheduled_delivery_date' => Carbon::now()->addDays(10)->toDateString(),
+            'scheduled_shipping_date' => Carbon::now()->addDays(7)->toDateString(),
+        ]);
+    }
+
+    private function makeUser(Role $role): User
+    {
+        return User::factory()->create([
+            'role' => $role->value,
+        ]);
     }
 
     private function prepareOrderMasterData(): array
@@ -230,7 +214,7 @@ class OrderCancelTest extends TestCase
             'product_id' => $product->id,
             'quantity' => $quantity,
             'order_type' => OrderType::INITIAL->value,
-            'scheduled_delivery_date' => now()->addDays(10)->toDateString(),
+            'scheduled_delivery_date' => Carbon::now()->addDays(10)->toDateString(),
         ];
     }
 

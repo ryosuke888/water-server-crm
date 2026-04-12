@@ -9,6 +9,7 @@ use App\Models\Order;
 use App\Models\Plan;
 use App\Models\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Carbon;
 
 /**
  * @extends Factory<Order>
@@ -30,8 +31,8 @@ class OrderFactory extends Factory
             'order_type' => OrderType::INITIAL,
             'quantity' => 2,
             'order_status' => OrderStatus::RECEIVED,
-            'scheduled_shipping_date' => now()->addDays(7)->toDateString(),  //出荷日
-            'scheduled_delivery_date' => now()->addDays(10)->toDateString(),  //配送日
+            'scheduled_shipping_date' => Carbon::now()->addDays(7)->toDateString(),  //出荷日
+            'scheduled_delivery_date' => Carbon::now()->addDays(10)->toDateString(),  //配送日
             'shipping_company' => 'ヤマト運輸',
             'remarks' => null,
         ];

@@ -4,10 +4,8 @@ namespace Tests\Feature\Customers;
 
 use App\Enums\Role;
 use App\Models\Customer;
-use App\Models\Order;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class CustomerStoreTest extends TestCase
@@ -144,6 +142,50 @@ class CustomerStoreTest extends TestCase
         $response->assertRedirect(route('customers.create'));
         $response->assertSessionHasErrors('postal_code');
         $this->assertDatabaseCount('customers', 0);
+    }
+
+    public function test_cannot_store_customer_when_same_phone_number_is_in_database()
+    {
+        $user = $this->makeUser(Role::ADMIN);
+
+        Customer::factory()->create([
+            'phone_number' => '08012345678',
+            'email' => 'test1@example.com',
+        ]);
+
+        $customer = Customer::factory()->make([
+            'phone_number' => '08012345678',
+            'email' => 'test2@example.com',
+        ]);
+
+        $response = $this->from(route('customers.create'))->actingAs($user)->post(route('customers.store'),
+            $this->makeCustomerPayload($customer));
+
+        $response->assertRedirect(route('customers.create'));
+        $response->assertSessionHasErrors('phone_number');
+        $this->assertDatabaseCount('customers', 1);
+    }
+
+    public function test_cannot_store_customer_when_same_email_is_in_database()
+    {
+        $user = $this->makeUser(Role::ADMIN);
+
+        Customer::factory()->create([
+            'phone_number' => '08012341234',
+            'email' => 'test1@example.com',
+        ]);
+
+        $customer = Customer::factory()->make([
+            'phone_number' => '08012345678',
+            'email' => 'test1@example.com',
+        ]);
+
+        $response = $this->from(route('customers.create'))->actingAs($user)->post(route('customers.store'),
+            $this->makeCustomerPayload($customer));
+
+        $response->assertRedirect(route('customers.create'));
+        $response->assertSessionHasErrors('email');
+        $this->assertDatabaseCount('customers', 1);
     }
 
     private function makeUser(Role $role): User

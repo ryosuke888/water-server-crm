@@ -14,7 +14,7 @@ use App\Models\PlanProductPrice;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Carbon;
 use Tests\TestCase;
 
 class OrderUpdateTest extends TestCase
@@ -23,9 +23,7 @@ class OrderUpdateTest extends TestCase
 
     public function test_admin_can_update_order()
     {
-        $user = User::factory()->create([
-            'role' => Role::ADMIN->value,
-        ]);
+        $user = $this->makeUser(Role::ADMIN);
 
         $customer = Customer::factory()->create();
 
@@ -57,8 +55,8 @@ class OrderUpdateTest extends TestCase
             'order_status' => OrderStatus::PREPARING->value,
             'shipping_company' => 'ヤマト運輸',
             'remarks' => null,
-            'scheduled_delivery_date' => now()->addDays(10)->toDateString(),
-            'scheduled_shipping_date' => now()->addDays(7)->toDateString(),
+            'scheduled_delivery_date' => Carbon::now()->addDays(10)->toDateString(),
+            'scheduled_shipping_date' => Carbon::now()->addDays(7)->toDateString(),
         ]);
 
         $this->assertDatabaseHas('order_histories', [
@@ -82,14 +80,12 @@ class OrderUpdateTest extends TestCase
         $this->assertEquals($updatedPlan->id, $afterValues['plan_id']);
         $this->assertEquals($quantity, $afterValues['quantity']);
         $this->assertEquals(OrderStatus::PREPARING->value, $afterValues['order_status']);
-        $this->assertEquals(now()->addDays(10)->toDateString(), $afterValues['scheduled_delivery_date']);
+        $this->assertEquals(Carbon::now()->addDays(10)->toDateString(), $afterValues['scheduled_delivery_date']);
     }
 
     public function test_viewer_cannot_update_order()
     {
-        $admin = User::factory()->create([
-            'role' => Role::ADMIN->value,
-        ]);
+        $admin= $this->makeUser(Role::ADMIN);
 
         $customer = Customer::factory()->create();
 
@@ -105,9 +101,7 @@ class OrderUpdateTest extends TestCase
 
         $quantity = 3;
 
-        $viewer = User::factory()->create([
-            'role' => Role::VIEWER->value,
-        ]);
+        $viewer= $this->makeUser(Role::VIEWER);
 
         $response = $this->actingAs($viewer)->patch(route('customers.orders.update', compact('customer', 'order')),
             $this->updateOrderPayload($updatedPlan, $updatedProduct, $quantity));
@@ -126,13 +120,12 @@ class OrderUpdateTest extends TestCase
             'order_id' => $order->id,
             'action_type' => OrderHistoryActionType::UPDATE->value,
         ]);
+        $this->assertDatabaseCount('order_histories', 0);
     }
 
     public function test_guest_cannot_update_order()
     {
-        $admin = User::factory()->create([
-            'role' => Role::ADMIN->value,
-        ]);
+        $admin= $this->makeUser(Role::ADMIN);
 
         $customer = Customer::factory()->create();
 
@@ -165,13 +158,12 @@ class OrderUpdateTest extends TestCase
             'order_id' => $order->id,
             'action_type' => OrderHistoryActionType::UPDATE->value,
         ]);
+        $this->assertDatabaseCount('order_histories', 0);
     }
 
     public function test_cannot_update_order_when_quantity_is_invalid()
     {
-        $user = User::factory()->create([
-            'role' => Role::ADMIN->value,
-        ]);
+        $user = $this->makeUser(Role::ADMIN);
 
         $customer = Customer::factory()->create();
 
@@ -205,13 +197,12 @@ class OrderUpdateTest extends TestCase
             'order_id' => $order->id,
             'action_type' => OrderHistoryActionType::UPDATE->value,
         ]);
+        $this->assertDatabaseCount('order_histories', 0);
     }
 
     public function test_cannot_update_order_when_scheduled_delivery_date_is_invalid()
     {
-        $user = User::factory()->create([
-            'role' => Role::ADMIN->value,
-        ]);
+        $user = $this->makeUser(Role::ADMIN);
 
         $customer = Customer::factory()->create();
 
@@ -247,6 +238,14 @@ class OrderUpdateTest extends TestCase
             'order_id' => $order->id,
             'action_type' => OrderHistoryActionType::UPDATE->value,
         ]);
+        $this->assertDatabaseCount('order_histories', 0);
+    }
+
+    private function makeUser(Role $role): User
+    {
+        return User::factory()->create([
+            'role' => $role->value,
+        ]);
     }
 
     private function prepareOrderMasterData(): array
@@ -269,7 +268,7 @@ class OrderUpdateTest extends TestCase
             'product_id' => $product->id,
             'quantity' => $quantity,
             'order_type' => OrderType::INITIAL->value,
-            'scheduled_delivery_date' => now()->addDays(10)->toDateString(),
+            'scheduled_delivery_date' => Carbon::now()->addDays(10)->toDateString(),
         ];
     }
 
@@ -281,7 +280,7 @@ class OrderUpdateTest extends TestCase
             'quantity' => $quantity,
             'order_type' => OrderType::REGULAR->value,
             'order_status' => OrderStatus::PREPARING->value,
-            'scheduled_delivery_date' => now()->addDays(10)->toDateString(),
+            'scheduled_delivery_date' => Carbon::now()->addDays(10)->toDateString(),
         ];
     }
 }

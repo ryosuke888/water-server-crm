@@ -14,7 +14,7 @@ use App\Models\PlanProductPrice;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Carbon;
 use Tests\TestCase;
 
 class OrderStoreTest extends TestCase
@@ -23,16 +23,14 @@ class OrderStoreTest extends TestCase
 
     public function test_admin_can_store_order()
     {
-        $user = User::factory()->create([
-            'role' => Role::ADMIN->value,
-        ]);
+        $user = $this->makeUser(Role::ADMIN);
 
         ['customer' => $customer, 'plan' => $plan, 'product' => $product, 'planProductPrice' => $planProductPrice] = $this->prepareOrderMasterData();
 
         $quantity = 2;
 
         $response = $this->actingAs($user)->post(route('customers.orders.store', $customer),
-            $this->makeOrderPayLoad($customer, $plan, $product, $quantity));
+            $this->makeOrderPayload($customer, $plan, $product, $quantity));
 
         $response->assertRedirect(route('customers.orders.index', $customer));
         $this->assertDatabaseHas('orders', [
@@ -47,8 +45,8 @@ class OrderStoreTest extends TestCase
             'shipping_company' => 'ヤマト運輸',
             'remarks' => null,
             'order_date' => now()->toDateString(),
-            'scheduled_delivery_date' => now()->addDays(10)->toDateString(),
-            'scheduled_shipping_date' => now()->addDays(7)->toDateString(),
+            'scheduled_delivery_date' => Carbon::now()->addDays(10)->toDateString(),
+            'scheduled_shipping_date' => Carbon::now()->addDays(7)->toDateString(),
         ]);
 
         $order = Order::firstOrFail();
@@ -71,22 +69,19 @@ class OrderStoreTest extends TestCase
         $this->assertEquals($plan->id, $afterValues['plan_id']);
         $this->assertEquals($quantity, $afterValues['quantity']);
         $this->assertEquals(OrderStatus::RECEIVED->value, $afterValues['order_status']);
-        $this->assertEquals(now()->addDays(10)->toDateString(), $afterValues['scheduled_delivery_date']);
+        $this->assertEquals(Carbon::now()->addDays(10)->toDateString(), $afterValues['scheduled_delivery_date']);
     }
 
     public function test_viewer_cannot_store_order()
     {
-        $user = User::factory()->create([
-            'role' => Role::VIEWER->value,
-        ]);
+        $user = $this->makeUser(Role::VIEWER);
 
         ['customer' => $customer, 'plan' => $plan, 'product' => $product] = $this->prepareOrderMasterData();
-
 
         $quantity = 2;
 
         $response = $this->actingAs($user)->post(route('customers.orders.store', $customer),
-            $this->makeOrderPayLoad($customer, $plan, $product, $quantity));
+            $this->makeOrderPayload($customer, $plan, $product, $quantity));
 
         $response->assertForbidden();
         $this->assertDatabaseCount('orders', 0);
@@ -99,7 +94,7 @@ class OrderStoreTest extends TestCase
         $quantity = 2;
 
         $response = $this->post(route('customers.orders.store', $customer),
-            $this->makeOrderPayLoad($customer, $plan, $product, $quantity));
+            $this->makeOrderPayload($customer, $plan, $product, $quantity));
 
         $response->assertRedirect(route('login'));
         $this->assertDatabaseCount('orders', 0);
@@ -107,9 +102,7 @@ class OrderStoreTest extends TestCase
 
     public function test_cannot_store_order_when_quantity_is_invalid()
     {
-        $user = User::factory()->create([
-            'role' => Role::ADMIN->value,
-        ]);
+        $user = $this->makeUser(Role::ADMIN);
 
         ['customer' => $customer, 'plan' => $plan, 'product' => $product] = $this->prepareOrderMasterData();
 
@@ -117,7 +110,7 @@ class OrderStoreTest extends TestCase
         $quantity = 0;
 
         $response = $this->from(route('customers.orders.create', $customer))->actingAs($user)->post(route('customers.orders.store', $customer),
-            $this->makeOrderPayLoad($customer, $plan, $product, $quantity));
+            $this->makeOrderPayload($customer, $plan, $product, $quantity));
 
         $response->assertRedirect(route('customers.orders.create', $customer));
         $response->assertSessionHasErrors('quantity');
@@ -126,9 +119,7 @@ class OrderStoreTest extends TestCase
 
     public function test_cannot_store_order_when_scheduled_delivery_date_is_invalid()
     {
-        $user = User::factory()->create([
-            'role' => Role::ADMIN->value,
-        ]);
+        $user = $this->makeUser(Role::ADMIN);
 
         ['customer' => $customer, 'plan' => $plan, 'product' => $product] = $this->prepareOrderMasterData();
 
@@ -136,13 +127,20 @@ class OrderStoreTest extends TestCase
         $quantity = 2;
 
         $response = $this->from(route('customers.orders.create', $customer))->actingAs($user)->post(route('customers.orders.store', $customer),
-            array_merge($this->makeOrderPayLoad($customer, $plan, $product, $quantity), [
+            array_merge($this->makeOrderPayload($customer, $plan, $product, $quantity), [
                 'scheduled_delivery_date' => now()->addDays(2)->toDateString(),
             ]));
 
         $response->assertRedirect(route('customers.orders.create', $customer));
         $response->assertSessionHasErrors('scheduled_delivery_date');
         $this->assertDatabaseCount('orders', 0);
+    }
+
+    private function makeUser(Role $role): User
+    {
+        return User::factory()->create([
+            'role' => $role->value,
+        ]);
     }
 
     private function prepareOrderMasterData(): array
@@ -160,7 +158,7 @@ class OrderStoreTest extends TestCase
         return compact('customer', 'product', 'plan', 'planProductPrice');
     }
 
-    private function makeOrderPayLoad (Customer $customer, Plan $plan, Product $product, int $quantity): array
+    private function makeOrderPayload (Customer $customer, Plan $plan, Product $product, int $quantity): array
     {
         return [
             'customer_id' => $customer->id,
@@ -168,7 +166,7 @@ class OrderStoreTest extends TestCase
             'product_id' => $product->id,
             'quantity' => $quantity,
             'order_type' => OrderType::INITIAL->value,
-            'scheduled_delivery_date' => now()->addDays(10)->toDateString(),
+            'scheduled_delivery_date' => Carbon::now()->addDays(10)->toDateString(),
         ];
     }
 }
