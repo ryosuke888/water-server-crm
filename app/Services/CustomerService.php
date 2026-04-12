@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Enums\CustomerContractStatus;
 use App\Models\Customer;
 use Illuminate\Support\Facades\DB;
 

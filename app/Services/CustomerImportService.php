@@ -4,13 +4,12 @@ namespace App\Services;
 
 use App\Enums\CustomerContractStatus;
 use App\Models\Customer;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rules\Enum;
 use Illuminate\Validation\ValidationException;
 use SplFileObject;
-
-use function Symfony\Component\String\s;
 
 class CustomerImportService {
     private const EXPECTED_HEADERS = [
@@ -32,7 +31,7 @@ class CustomerImportService {
         'remarks',
     ];
 
-    public function import($file): int
+    public function import(UploadedFile $file): int
     {
         $filePath = $file->getRealPath();
         $csvFile = new SplFileObject($filePath);
@@ -142,7 +141,7 @@ class CustomerImportService {
                 'postal_code.regex' => '郵便番号は7桁の数字で入力してください。',
                 'shipping_postal_code.regex' => '配送先郵便番号は7桁の数字で入力してください。',
                 'contract_status.enum' => '契約ステータスの値が不正です。',
-            ])->stopOnFirstFailure();
+            ]);
 
             if ($validator->fails()) {
                 throw ValidationException::withMessages([
