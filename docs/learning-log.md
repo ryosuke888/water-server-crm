@@ -219,3 +219,12 @@ UploadedFile::fake()->createWithContent('test.csv', $csvContent);
 
 #### ■ 抽象クラスの役割
 - `basicRules()` にバリデーションルールを定義し子クラスで継承
+
+## 2026-04-12
+
+### やったこと
+- Featureテストの修正
+- OrderServiceのリファクタリング
+
+### 気づき
+- バリデーション・処理・登録を分離する必要性を理解を深めた
