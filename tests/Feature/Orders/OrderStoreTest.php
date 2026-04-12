@@ -57,7 +57,7 @@ class OrderStoreTest extends TestCase
             'user_id' => $user->id,
             'order_code_snapshot' => $order->order_code,
             'action_type' => OrderHistoryActionType::CREATE->value,
-            'action_summary' => '受注情報を登録しました',
+            'action_summary' => '受注情報を登録しました。',
         ]);
 
         $orderHistory = OrderHistory::firstOrFail();

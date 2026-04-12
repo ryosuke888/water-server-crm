@@ -13,6 +13,7 @@ use App\Models\Plan;
 use App\Models\PlanProductPrice;
 use App\Models\Product;
 use App\Models\User;
+use Illuminate\Foundation\Testing\Concerns\WithoutExceptionHandlingHandler;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
 use Tests\TestCase;
@@ -65,7 +66,7 @@ class OrderUpdateTest extends TestCase
             'user_id' => $user->id,
             'order_code_snapshot' => $order->order_code,
             'action_type' => OrderHistoryActionType::UPDATE->value,
-            'action_summary' => '受注情報を更新しました',
+            'action_summary' => '受注情報を更新しました。',
         ]);
 
         $orderHistory = OrderHistory::where('action_type', OrderHistoryActionType::UPDATE->value)->firstOrFail();

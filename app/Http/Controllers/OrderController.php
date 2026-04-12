@@ -68,11 +68,13 @@ class OrderController extends Controller
         return view('customers.orders.create', compact('customer', 'plans', 'products', 'planProductPrices'));
     }
 
-    public function update(UpdateOrderRequest $request, Customer $customer, Order $order, OrderService $orderService) {
+    public function update(UpdateOrderRequest $request, Customer $customer, Order $order, OrderService $orderService)
+    {
         $this->authorize('update', $order);
         try {
             $validated = $request->validated();
-            $order = $orderService->update($validated, $customer, $order);
+            $userId = auth()->id();
+            $order = $orderService->update($validated, $customer, $order, $userId);
 
             return redirect()->route('customers.orders.show', compact('customer', 'order'))->with('success', '受注更新に成功しました。');
         } catch(ValidationException $e) {
@@ -101,8 +103,9 @@ class OrderController extends Controller
         try {
             $validated = $request->validated();
             $validated['customer_id'] = $customer->id;
+            $userId = auth()->id();
 
-            $orderService->store($validated);
+            $orderService->store($validated, $userId);
             return redirect()->route('customers.orders.index', compact('customer'))->with('success', '受注登録に成功しました。');
         } catch(ValidationException $e) {
             return back()->withInput()->with('error', $e->getMessage());
@@ -126,7 +129,8 @@ class OrderController extends Controller
 
         try {
             $validated = $request->validated();
-            $orderService->cancel($validated, $customer, $order);
+            $userId = auth()->id();
+            $orderService->cancel($validated, $customer, $order, $userId);
             return redirect()->route('customers.orders.index', compact('customer'))->with('success', 'キャンセルに成功しました');
         } catch(RuntimeException $e) {
             return back()->withInput()->with('error', $e->getMessage());

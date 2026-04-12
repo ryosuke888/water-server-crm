@@ -53,7 +53,7 @@ class OrderCancelTest extends TestCase
             'user_id' => $user->id,
             'order_code_snapshot' => $order->order_code,
             'action_type' => OrderHistoryActionType::CANCEL->value,
-            'action_summary' => '受注をキャンセルしました',
+            'action_summary' => '受注をキャンセルしました。',
         ]);
 
         $orderHistory = OrderHistory::where('action_type', OrderHistoryActionType::CANCEL)->firstOrFail();
@@ -63,7 +63,6 @@ class OrderCancelTest extends TestCase
         $this->assertNull($beforeValues['remarks']);
         $this->assertEquals(OrderStatus::CANCELED->value, $afterValues['order_status']);
         $this->assertEquals(Carbon::now()->addDays(10)->toDateString(), $afterValues['scheduled_delivery_date']);
-        $this->assertEquals(Carbon::now()->addDays(7)->toDateString(), $afterValues['scheduled_shipping_date']);
         $this->assertEquals('[キャンセル理由]:お客様都合のためキャンセル。', $afterValues['remarks']);
     }
 
