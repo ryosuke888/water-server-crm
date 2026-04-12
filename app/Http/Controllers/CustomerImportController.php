@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ImportCustomerCsvRequest;
 use App\Services\CustomerImportService;
-use Exception;
 use Illuminate\Validation\ValidationException;
 
 class CustomerImportController extends Controller
@@ -25,7 +24,7 @@ class CustomerImportController extends Controller
             return redirect()->route('customers.index')->with('success', $count . '件のCSVデータを取り込みました');
         } catch (ValidationException $e) {
             throw $e;
-        } catch (Exception $e) {
+        } catch (\Throwable $e) {
             return back()->withInput()->with('error', 'csvの取り込みに失敗しました。');
         }
     }
