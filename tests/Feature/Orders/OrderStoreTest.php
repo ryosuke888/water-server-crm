@@ -92,10 +92,23 @@ class OrderStoreTest extends TestCase
         $this->assertDatabaseCount('orders', 0);
     }
 
+    public function test_guest_cannot_store_order()
+    {
+        ['customer' => $customer, 'plan' => $plan, 'product' => $product] = $this->prepareOrderMasterData();
+
+        $quantity = 2;
+
+        $response = $this->post(route('customers.orders.store', $customer),
+            $this->makeOrderPayLoad($customer, $plan, $product, $quantity));
+
+        $response->assertRedirect(route('login'));
+        $this->assertDatabaseCount('orders', 0);
+    }
+
     public function test_cannot_store_order_when_quantity_is_invalid()
     {
         $user = User::factory()->create([
-            'role' => Role::VIEWER->value,
+            'role' => Role::ADMIN->value,
         ]);
 
         ['customer' => $customer, 'plan' => $plan, 'product' => $product] = $this->prepareOrderMasterData();
@@ -114,7 +127,7 @@ class OrderStoreTest extends TestCase
     public function test_cannot_store_order_when_scheduled_delivery_date_is_invalid()
     {
         $user = User::factory()->create([
-            'role' => Role::VIEWER->value,
+            'role' => Role::ADMIN->value,
         ]);
 
         ['customer' => $customer, 'plan' => $plan, 'product' => $product] = $this->prepareOrderMasterData();

@@ -55,6 +55,17 @@ class CustomerStoreTest extends TestCase
         $this->assertDatabaseCount('customers', 0);
     }
 
+    public function test_guest_cannot_store_customer()
+    {
+        $customer = Customer::factory()->make();
+
+        $response = $this->post(route('customers.store'),
+            $this->makeCustomerPayload($customer));
+
+        $response->assertRedirect(route('login'));
+        $this->assertDatabaseCount('customers', 0);
+    }
+
     public function test_cannot_store_customer_when_name_is_empty()
     {
         $user = $this->makeUser(Role::ADMIN);

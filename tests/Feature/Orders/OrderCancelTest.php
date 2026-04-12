@@ -89,16 +89,17 @@ class OrderCancelTest extends TestCase
 
         $customer = Customer::factory()->create();
 
-        ['plan' =>$plan, 'product' => $product, 'planProductPrice' => $planProductPrice] = $this->prepareOrderMasterData();
+        ['plan' =>$plan, 'product' => $product] = $this->prepareOrderMasterData();
 
         $quantity = 2;
 
-        $response = $this->actingAs($admin)->post(route('customers.orders.store', $customer),
-            $this->makeOrderPayload($customer, $plan, $product, $quantity));
-
-        $response->assertRedirect(route('customers.orders.index', $customer));
-
-        $order = Order::firstOrFail();
+       $order = Order::factory()->create([
+            'customer_id' => $customer->id,
+            'plan_id' => $plan->id,
+            'product_id' => $product->id,
+            'quantity' => $quantity,
+            'order_status' => OrderStatus::RECEIVED->value,
+        ]);
 
         $roles = [Role::VIEWER, Role::SALES, Role::OPERATOR];
 
@@ -125,6 +126,45 @@ class OrderCancelTest extends TestCase
                 'action_type' => OrderHistoryActionType::CANCEL->value,
             ]);
         }
+    }
+
+    public function test_guest_cannot_cancel_order()
+    {
+        $admin = User::factory()->create([
+            'role' => Role::ADMIN->value,
+        ]);
+
+        $customer = Customer::factory()->create();
+
+        ['plan' =>$plan, 'product' => $product] = $this->prepareOrderMasterData();
+
+        $quantity = 2;
+
+        $order = Order::factory()->create([
+            'customer_id' => $customer->id,
+            'plan_id' => $plan->id,
+            'product_id' => $product->id,
+            'quantity' => $quantity,
+            'order_status' => OrderStatus::RECEIVED->value,
+        ]);
+
+        $response = $this->patch(route('customers.orders.cancel', compact('customer', 'order')),
+        $this->cancelOrderPayload());
+
+        $response->assertRedirect(route('login'));
+
+        $this->assertDatabaseHas('orders', [
+            'customer_id' => $customer->id,
+            'plan_id' => $plan->id,
+            'product_id' => $product->id,
+            'quantity' => $quantity,
+            'order_status' => OrderStatus::RECEIVED->value,
+        ]);
+
+        $this->assertDatabaseMissing('order_histories', [
+            'customer_id' => $customer->id,
+            'action_type' => OrderHistoryActionType::CANCEL->value,
+        ]);
     }
 
     public function test_cannot_cancel_order_when_the_reason_is_empty()

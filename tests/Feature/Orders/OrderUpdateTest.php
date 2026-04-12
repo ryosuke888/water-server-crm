@@ -29,14 +29,13 @@ class OrderUpdateTest extends TestCase
 
         $customer = Customer::factory()->create();
 
-        ['plan' => $initialPlan, 'product' => $initialProduct, 'planProductPrice' => $initialPlanProductPrice] = $this->prepareOrderMasterData();
+        ['plan' => $initialPlan, 'product' => $initialProduct] = $this->prepareOrderMasterData();
 
-        $response = $this->actingAs($user)->post(route('customers.orders.store', $customer),
-            $this->makeOrderPayload($customer, $initialPlan, $initialProduct, 2));
-
-        $response->assertRedirect(route('customers.orders.index', $customer));
-
-        $order = Order::firstOrFail();
+        $order = Order::factory()->create([
+            'customer_id' => $customer->id,
+            'plan_id' => $initialPlan->id,
+            'product_id' => $initialProduct->id,
+        ]);
 
         ['plan' => $updatedPlan, 'product' => $updatedProduct, 'planProductPrice' => $updatedPlanProductPrice] = $this->prepareOrderMasterData();
 
@@ -94,12 +93,13 @@ class OrderUpdateTest extends TestCase
 
         $customer = Customer::factory()->create();
 
-        ['plan' => $initialPlan, 'product' => $initialProduct, 'planProductPrice' => $initialPlanProductPrice] = $this->prepareOrderMasterData();
+        ['plan' => $initialPlan, 'product' => $initialProduct] = $this->prepareOrderMasterData();
 
-        $response = $this->actingAs($admin)->post(route('customers.orders.store', $customer),
-            $this->makeOrderPayload($customer, $initialPlan, $initialProduct, 2));
-
-        $response->assertRedirect(route('customers.orders.index', $customer));
+        $order = Order::factory()->create([
+            'customer_id' => $customer->id,
+            'plan_id' => $initialPlan->id,
+            'product_id' => $initialProduct->id,
+        ]);
 
         ['plan' => $updatedPlan, 'product' => $updatedProduct] = $this->prepareOrderMasterData();
 
@@ -109,12 +109,49 @@ class OrderUpdateTest extends TestCase
             'role' => Role::VIEWER->value,
         ]);
 
-        $order = Order::firstOrFail();
-
         $response = $this->actingAs($viewer)->patch(route('customers.orders.update', compact('customer', 'order')),
             $this->updateOrderPayload($updatedPlan, $updatedProduct, $quantity));
 
         $response->assertForbidden();
+
+        $this->assertDatabaseHas('orders', [
+            'customer_id' => $customer->id,
+            'plan_id' => $initialPlan->id,
+            'product_id' => $initialProduct->id,
+            'quantity' => 2,
+            'order_status' => OrderStatus::RECEIVED->value,
+        ]);
+
+        $this->assertDatabaseMissing('order_histories', [
+            'order_id' => $order->id,
+            'action_type' => OrderHistoryActionType::UPDATE->value,
+        ]);
+    }
+
+    public function test_guest_cannot_update_order()
+    {
+        $admin = User::factory()->create([
+            'role' => Role::ADMIN->value,
+        ]);
+
+        $customer = Customer::factory()->create();
+
+        ['plan' => $initialPlan, 'product' => $initialProduct,] = $this->prepareOrderMasterData();
+
+        $order = Order::factory()->create([
+            'customer_id' => $customer->id,
+            'plan_id' => $initialPlan->id,
+            'product_id' => $initialProduct->id,
+        ]);
+
+        ['plan' => $updatedPlan, 'product' => $updatedProduct] = $this->prepareOrderMasterData();
+
+        $quantity = 3;
+
+        $response = $this->patch(route('customers.orders.update', compact('customer', 'order')),
+            $this->updateOrderPayload($updatedPlan, $updatedProduct, $quantity));
+
+        $response->assertRedirect(route('login'));
 
         $this->assertDatabaseHas('orders', [
             'customer_id' => $customer->id,
@@ -138,14 +175,13 @@ class OrderUpdateTest extends TestCase
 
         $customer = Customer::factory()->create();
 
-        ['plan' => $initialPlan, 'product' => $initialProduct, 'planProductPrice' => $initialPlanProductPrice] = $this->prepareOrderMasterData();
+        ['plan' => $initialPlan, 'product' => $initialProduct] = $this->prepareOrderMasterData();
 
-        $response = $this->actingAs($user)->post(route('customers.orders.store', $customer),
-            $this->makeOrderPayload($customer, $initialPlan, $initialProduct, 2));
-
-        $response->assertRedirect(route('customers.orders.index', $customer));
-
-        $order = Order::firstOrFail();
+        $order = Order::factory()->create([
+            'customer_id' => $customer->id,
+            'plan_id' => $initialPlan->id,
+            'product_id' => $initialProduct->id,
+        ]);
 
         ['plan' => $updatedPlan, 'product' => $updatedProduct, 'planProductPrice' => $updatedPlanProductPrice] = $this->prepareOrderMasterData();
 
@@ -179,14 +215,13 @@ class OrderUpdateTest extends TestCase
 
         $customer = Customer::factory()->create();
 
-        ['plan' => $initialPlan, 'product' => $initialProduct, 'planProductPrice' => $initialPlanProductPrice] = $this->prepareOrderMasterData();
+        ['plan' => $initialPlan, 'product' => $initialProduct] = $this->prepareOrderMasterData();
 
-        $response = $this->actingAs($user)->post(route('customers.orders.store', $customer),
-            $this->makeOrderPayload($customer, $initialPlan, $initialProduct, 2));
-
-        $response->assertRedirect(route('customers.orders.index', $customer));
-
-        $order = Order::firstOrFail();
+        $order = Order::factory()->create([
+            'customer_id' => $customer->id,
+            'plan_id' => $initialPlan->id,
+            'product_id' => $initialProduct->id,
+        ]);
 
         ['plan' => $updatedPlan, 'product' => $updatedProduct, 'planProductPrice' => $updatedPlanProductPrice] = $this->prepareOrderMasterData();
 
