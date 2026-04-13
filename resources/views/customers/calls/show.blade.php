@@ -5,17 +5,8 @@
     <div class="min-h-screen bg-gray-50">
         <div class="max-w-7xl mx-auto px-6 py-8 space-y-6 mt-5">
 
-            @if (session('success'))
-                <div class="bg-green-100 text-green-700 p-3 rounded mb-4">
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            @if (session('error'))
-                <div class="bg-red-100 text-red-700 p-3 rounded mb-4">
-                    {{ session('error') }}
-                </div>
-            @endif
+            <x-flash-message type="success" :message="session('success')" />
+            <x-flash-message type="error" :message="session('error')" />
 
             <!-- 顧客ヘッダー -->
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">

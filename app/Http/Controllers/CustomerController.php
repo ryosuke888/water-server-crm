@@ -7,7 +7,6 @@ use App\Http\Requests\Customer\UpdateCustomerRequest;
 use App\Models\CallHistory;
 use App\Models\Customer;
 use App\Services\CustomerService;
-use App\Models\Order;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;

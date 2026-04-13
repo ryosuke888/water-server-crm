@@ -13,17 +13,8 @@
             </div>
 
             <!-- メッセージ -->
-            @if (session('success'))
-                <div class="mb-4 rounded-xl bg-green-100 p-3 text-green-700">
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            @if (session('error'))
-                <div class="mb-4 rounded-xl bg-red-100 p-3 text-red-700">
-                    {{ session('error') }}
-                </div>
-            @endif
+            <x-flash-message type="success" :message="session('success')" />
+            <x-flash-message type="error" :message="session('error')" />
 
             @can('create', App\Models\CallHistory::class)
                 <form action="{{ route('customers.calls.store', $customer) }}" method="POST" class="space-y-8">
@@ -74,9 +65,7 @@
                                         <option value="{{ $callType->value }}">{{ $callType->label() }}</option>
                                     @endforeach
                                 </select>
-                                @error('call_type')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
+                                <x-input-error name="call_type" />
                             </div>
 
                             <div>
@@ -87,10 +76,7 @@
                                         <option value="{{ $callResult->value }}">{{ $callResult->label() }}</option>
                                     @endforeach
                                 </select>
-                                @error('call_result')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
-                            </div>
+                                <x-input-error name="call_result" />
 
                             <div>
                                 <label class="mb-1 block text-sm font-medium text-gray-700">対応チャネル</label>
@@ -99,9 +85,7 @@
                                         <option value="{{ $callChannel->value }}" selected>{{ $callChannel->label() }}</option>
                                     @endforeach
                                 </select>
-                                @error('channel')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
+                                <x-input-error name="channel" />
                             </div>
 
                             <div>
@@ -111,9 +95,7 @@
                                     name="called_at"
                                     class="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                                 >
-                                @error('plan_id')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
+                                <x-input-error name="called_at" />
                             </div>
 
                             <div class="md:col-span-2">
@@ -127,9 +109,7 @@
                                     @endforeach
                                 </select>
                                 <p class="mt-2 text-xs text-gray-500">受注に関する問い合わせの場合のみ選択してください</p>
-                                @error('order_id')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
+                                <x-input-error name="order_id" />
                             </div>
 
                             <div class="md:col-span-2">
@@ -140,9 +120,7 @@
                                     class="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                                     placeholder="例：顧客より配送日変更の依頼あり。4/24予定を4/27へ変更希望。"
                                 ></textarea>
-                                @error('call_summary')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
+                                <x-input-error name="call_summary" />
                             </div>
 
                             <div>
@@ -151,9 +129,7 @@
                                     <option value="0" selected>不要</option>
                                     <option value="1">必要</option>
                                 </select>
-                                @error('needs_follow_up')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
+                                <x-input-error name="needs_follow_up" />
                             </div>
 
                             <div>
@@ -163,9 +139,7 @@
                                     name="follow_up_date"
                                     class="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                                 >
-                                @error('follow_up_date')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
+                                <x-input-error name="follow_up_date" />
                             </div>
                             <input type="hidden" name="customer_id" value="{{ $customer->id }}">
                         </div>

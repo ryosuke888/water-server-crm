@@ -24,6 +24,12 @@ Route::middleware('auth')->group(function () {
         Route::delete('', [ProfileController::class, 'destroy'])->name('destroy');
     });
 
+    // customer import
+    Route::prefix('customers/import')->name('customers.import.')->group(function () {
+        Route::get('/', [CustomerImportController::class, 'create'])->name('create');
+        Route::post('/', [CustomerImportController::class, 'store'])->name('store');
+    });
+
     // customers
     Route::prefix('customers')->name('customers.')->group(function () {
         Route::get('/', [CustomerController::class, 'index'])->name('index');
@@ -32,12 +38,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/{customer}', [CustomerController::class, 'show'])->name('show');
         Route::get('/{customer}/edit', [CustomerController::class, 'edit'])->name('edit');
         Route::patch('/{customer}', [CustomerController::class, 'update'])->name('update');
-    });
-
-    // customer import
-    Route::prefix('customers/import')->name('customers.import.')->group(function () {
-        Route::get('/', [CustomerImportController::class, 'create'])->name('create');
-        Route::post('/', [CustomerImportController::class, 'store'])->name('store');
     });
 
     // orders

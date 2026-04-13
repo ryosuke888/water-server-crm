@@ -9,17 +9,8 @@
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
             {{-- メッセージ --}}
-            @if (session('success'))
-                <div class="bg-green-100 text-green-700 p-3 rounded mb-4">
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            @if (session('error'))
-                <div class="bg-red-100 text-red-700 p-3 rounded mb-4">
-                    {{ session('error') }}
-                </div>
-            @endif
+            <x-flash-message type="success" :message="session('success')" />
+            <x-flash-message type="error" :message="session('error')" />
 
             {{-- 件数 --}}
             <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between mb-4">
