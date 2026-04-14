@@ -65,7 +65,7 @@
                                         <option value="{{ $callType->value }}">{{ $callType->label() }}</option>
                                     @endforeach
                                 </select>
-                                <x-input-error name="call_type" />
+                                <x-input-error :messages="$errors->get('call_type')" />
                             </div>
 
                             <div>
@@ -76,7 +76,7 @@
                                         <option value="{{ $callResult->value }}">{{ $callResult->label() }}</option>
                                     @endforeach
                                 </select>
-                                <x-input-error name="call_result" />
+                                <x-input-error :messages="$errors->get('call_result')" />
 
                             <div>
                                 <label class="mb-1 block text-sm font-medium text-gray-700">対応チャネル</label>
@@ -85,7 +85,7 @@
                                         <option value="{{ $callChannel->value }}" selected>{{ $callChannel->label() }}</option>
                                     @endforeach
                                 </select>
-                                <x-input-error name="channel" />
+                                <x-input-error :messages="$errors->get('channel')" />
                             </div>
 
                             <div>
@@ -95,7 +95,7 @@
                                     name="called_at"
                                     class="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                                 >
-                                <x-input-error name="called_at" />
+                                <x-input-error :messages="$errors->get('called_at')" />
                             </div>
 
                             <div class="md:col-span-2">
@@ -109,7 +109,7 @@
                                     @endforeach
                                 </select>
                                 <p class="mt-2 text-xs text-gray-500">受注に関する問い合わせの場合のみ選択してください</p>
-                                <x-input-error name="order_id" />
+                                <x-input-error :messages="$errors->get('order_id')" />
                             </div>
 
                             <div class="md:col-span-2">
@@ -120,7 +120,7 @@
                                     class="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                                     placeholder="例：顧客より配送日変更の依頼あり。4/24予定を4/27へ変更希望。"
                                 ></textarea>
-                                <x-input-error name="call_summary" />
+                                <x-input-error :messages="$errors->get('call_summary')" />
                             </div>
 
                             <div>
@@ -129,7 +129,7 @@
                                     <option value="0" selected>不要</option>
                                     <option value="1">必要</option>
                                 </select>
-                                <x-input-error name="needs_follow_up" />
+                                <x-input-error :messages="$errors->get('needs_follow_up')" />
                             </div>
 
                             <div>
@@ -139,7 +139,7 @@
                                     name="follow_up_date"
                                     class="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                                 >
-                                <x-input-error name="follow_up_date" />
+                                <x-input-error :messages="$errors->get('follow_up_date')" />
                             </div>
                             <input type="hidden" name="customer_id" value="{{ $customer->id }}">
                         </div>
@@ -161,6 +161,7 @@
                         >
                             登録
                         </button>
+                        {{-- <x-praimay-button>登録</x-praimay-button> --}}
                     </div>
                 </form>
             @endcan

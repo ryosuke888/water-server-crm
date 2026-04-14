@@ -37,21 +37,21 @@
                             <label class="block text-sm font-medium mb-1">顧客名</label>
                             <input type="text" value="{{ old('name', $customer->name) }}"  name="name" required
                             class="w-full rounded-xl border px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-200">
-                            <x-input-error name="name" />
+                            <x-input-error :messages="$errors->get('name')" />
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium mb-1">電話番号</label>
                             <input type="text" value="{{ old('phone_number', $customer->phone_number) }}"  name="phone_number" required
                             class="w-full rounded-xl border px-4 py-3 text-sm">
-                            <x-input-error name="phone_number" />
+                            <x-input-error :messages="$errors->get('phone_number')" />
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium mb-1">メール</label>
                             <input type="email" value="{{ old('email', $customer->email) }}" name="email"
                             class="w-full rounded-xl border px-4 py-3 text-sm">
-                            <x-input-error name="email" />
+                            <x-input-error :messages="$errors->get('email')" />
                         </div>
 
                         </div>
@@ -69,35 +69,35 @@
                             <label class="block text-sm font-medium mb-1">郵便番号</label>
                             <input type="text" value="{{ old('postal_code', $customer->postal_code) }}" name="postal_code"
                             class="w-full rounded-xl border px-4 py-3 text-sm">
-                            <x-input-error name="postal_code" />
+                            <x-input-error :messages="$errors->get('postal_code')" />
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium mb-1">都道府県</label>
                             <input type="text" value="{{ old('prefecture', $customer->prefecture) }}" name="prefecture"
                             class="w-full rounded-xl border px-4 py-3 text-sm">
-                            <x-input-error name="prefecture" />
+                            <x-input-error :messages="$errors->get('prefecture')" />
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium mb-1">市区町村</label>
                             <input type="text" value="{{ old('city', $customer->city) }}" name="city"
                             class="w-full rounded-xl border px-4 py-3 text-sm">
-                            <x-input-error name="city" />
+                            <x-input-error :messages="$errors->get('city')" />
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium mb-1">番地</label>
                             <input type="text" value="{{ old('address_line1', $customer->address_line1) }}" name="address_line1"
                             class="w-full rounded-xl border px-4 py-3 text-sm">
-                            <x-input-error name="address_line1" />
+                            <x-input-error :messages="$errors->get('address_line1')" />
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium mb-1">建物名・部屋番号</label>
                             <input type="text" value="{{ old('address_line2', $customer->address_line2) }}" name="address_line2"
                             class="w-full rounded-xl border px-4 py-3 text-sm">
-                            <x-input-error name="address_line2" />
+                            <x-input-error :messages="$errors->get('address_line2')" />
                         </div>
 
                         </div>
@@ -118,14 +118,14 @@
                                 <option value="{{ App\Enums\CustomerContractStatus::ACTIVE }}" {{ old('contract_status', $customer->contract_status) === App\Enums\CustomerContractStatus::ACTIVE ? 'selected' : '' }}>契約中</option>
                                 <option value="{{ App\Enums\CustomerContractStatus::CANCELED }}" {{ old('contract_status', $customer->contract_status) === App\Enums\CustomerContractStatus::CANCELED ? 'selected' : '' }}>解約済</option>
                             </select>
-                            <x-input-error name="contract_status" />
+                            <x-input-error :messages="$errors->get('contract_status')" />
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium mb-1">備考</label>
                             <textarea rows="4"
                             class="w-full rounded-xl border px-4 py-3 text-sm" name="remarks">{{ old('remarks', $customer->remarks) }}</textarea>
-                            <x-input-error name="remarks" />
+                            <x-input-error :messages="$errors->get('remarks')" />
                         </div>
 
                         </div>
@@ -143,42 +143,42 @@
                                 <label class="block text-sm font-medium mb-1">配送先氏名</label>
                                 <input type="text" value="{{ old('shipping_name', $customer->shipping_name) }}" name="shipping_name"
                                 class="w-full rounded-xl border px-4 py-3 text-sm">
-                                <x-input-error name="shipping_name" />
+                                <x-input-error :messages="$errors->get('shipping_name')" />
                             </div>
 
                             <div>
                                 <label class="block text-sm font-medium mb-1">郵便番号</label>
                                 <input type="text" value="{{ old('shipping_postal_code', $customer->shipping_postal_code) }}" name="shipping_postal_code"
                                 class="w-full rounded-xl border px-4 py-3 text-sm">
-                                <x-input-error name="shipping_postal_code" />
+                                <x-input-error :messages="$errors->get('shipping_postal_code')" />
                             </div>
 
                             <div>
                                 <label class="block text-sm font-medium mb-1">都道府県</label>
                                 <input type="text" value="{{ old('shipping_prefecture', $customer->shipping_prefecture) }}" name="shipping_prefecture"
                                 class="w-full rounded-xl border px-4 py-3 text-sm">
-                                <x-input-error name="shipping_prefecture" />
+                                <x-input-error :messages="$errors->get('shipping_prefecture')" />
                             </div>
 
                             <div>
                                 <label class="block text-sm font-medium mb-1">市区町村</label>
                                 <input type="text" value="{{ old('shipping_city', $customer->shipping_city) }}" name="shipping_city"
                                 class="w-full rounded-xl border px-4 py-3 text-sm">
-                                <x-input-error name="shipping_city" />
+                                <x-input-error :messages="$errors->get('shipping_city')" />
                             </div>
 
                             <div>
                                 <label class="block text-sm font-medium mb-1">番地</label>
                                 <input type="text" value="{{ old('shipping_address_line1', $customer->shipping_address_line1) }}" name="shipping_address_line1"
                                 class="w-full rounded-xl border px-4 py-3 text-sm">
-                                <x-input-error name="shipping_address_line1" />
+                                <x-input-error :messages="$errors->get('shipping_address_line1')" />
                             </div>
 
                             <div class="">
                                 <label class="block text-sm font-medium mb-1">建物名・部屋番号</label>
                                 <input type="text" value="{{ old('shipping_address_line2', $customer->shipping_address_line2) }}" name="shipping_address_line2"
                                 class="w-full rounded-xl border px-4 py-3 text-sm">
-                                <x-input-error name="shipping_address_line2" />
+                                <x-input-error :messages="$errors->get('shipping_address_line2')" />
                             </div>
 
                         </div>

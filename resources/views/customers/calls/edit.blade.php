@@ -64,7 +64,7 @@
                                         </option>
                                     @endforeach
                                 </select>
-                                <x-input-error name="call_type" />
+                                <x-input-error :messages="$errors->get('call_type')" />
                             </div>
 
                             <div>
@@ -76,7 +76,7 @@
                                         </option>
                                     @endforeach
                                 </select>
-                                <x-input-error name="call_result" />
+                                <x-input-error :messages="$errors->get('call_result')" />
 
                             <div>
                                 <label class="mb-1 block text-sm font-medium text-gray-700">対応チャネル</label>
@@ -87,7 +87,7 @@
                                         </option>
                                     @endforeach
                                 </select>
-                                <x-input-error name="channel" />
+                                <x-input-error :messages="$errors->get('channel')" />
                             </div>
 
                             <div>
@@ -98,7 +98,7 @@
                                     value="{{ old('called_at', optional($callHistory->called_at)->format('Y-m-d\TH:i')) }}"
                                     class="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm"
                                 >
-                                <x-input-error name="called_at" />
+                                <x-input-error :messages="$errors->get('called_at')" />
                             </div>
 
                             <div class="md:col-span-2">
@@ -111,7 +111,7 @@
                                         </option>
                                     @endforeach
                                 </select>
-                                <x-input-error name="order_id" />
+                                <x-input-error :messages="$errors->get('order_id')" />
                             </div>
 
                             <div class="md:col-span-2">
@@ -121,7 +121,7 @@
                                     rows="5"
                                     class="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm"
                                 >{{ old('call_summary', $callHistory->call_summary) }}</textarea>
-                                <x-input-error name="call_summary" />
+                                <x-input-error :messages="$errors->get('call_summary')" />
                             </div>
 
                             <div>
@@ -130,7 +130,7 @@
                                     <option value="0" @selected(old('needs_follow_up', $callHistory->needs_follow_up) == 0)>不要</option>
                                     <option value="1" @selected(old('needs_follow_up', $callHistory->needs_follow_up) == 1)>必要</option>
                                 </select>
-                                <x-input-error name="needs_follow_up" />
+                                <x-input-error :messages="$errors->get('needs_follow_up')" />
                             </div>
 
                             <div>
@@ -141,7 +141,7 @@
                                     value="{{ old('follow_up_date', optional($callHistory->follow_up_date)->format('Y-m-d')) }}"
                                     class="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm"
                                 >
-                                <x-input-error name="follow_up_date" />
+                                <x-input-error :messages="$errors->get('follow_up_date')" />
                             </div>
                         </div>
                     </div>

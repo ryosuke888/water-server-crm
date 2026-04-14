@@ -120,7 +120,7 @@
                                                         class="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500"
                                                         placeholder="例：顧客都合のためキャンセル"
                                                     >{{ old('cancel_reason') }}</textarea>
-                                                    <x-input-error name="cancel_reason" />
+                                                    <x-input-error :messages="$errors->get('cancel_reason')" />
                                                 </div>
 
                                                 <div class="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
