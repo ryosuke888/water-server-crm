@@ -5,7 +5,7 @@
 
 @php
     $colors = [
-        'blue' => 'text-white bg-blue-600 hover:bg-blue-700',
+        'blue' => 'text-white bg-blue-500 hover:bg-blue-700',
         'emerald' => 'text-white bg-emerald-600 hover:bg-emerald-700',
         'gray' => 'text-white bg-gray-600 hover:bg-gray-700',
         'white' => 'border border-gray-200 text-gray-700 bg-white hover:bg-gray-50',
@@ -15,7 +15,7 @@
 
 <a href="{{ $href }}"
     {{ $attributes->merge([
-        'class' => "inline-flex items-center px-3 py-3 rounded-lg text-sm font-medium {$colorClass}"
+        'class' => "inline-flex items-center px-5 py-2 rounded-lg text-sm font-medium {$colorClass}"
     ]) }}>
     {{ $slot }}
 </a>

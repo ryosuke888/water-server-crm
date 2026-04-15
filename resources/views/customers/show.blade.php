@@ -143,15 +143,11 @@
                                     </td>
                                     <td class="py-3 pr-4">{{ $order->order_date}}</td>
                                     <td class="py-3 pr-4">{{ $order->scheduled_delivery_date}}</td>
-                                    <td class="px-3">
+                                    <td class="px-3 py-2">
                                         @can('view', $order)
-                                              <div>
-                                            <form action="{{ route('customers.orders.show', [$customer, $order]) }}" method="get">
-                                                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">詳細</button>
-                                            </form>
-                                        </div>
+                                            <x-link-button color="blue" :href="route('customers.orders.show', [$customer, $order])">詳細</x-link-button>
                                         @endcan
-                                </td>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
