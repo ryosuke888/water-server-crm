@@ -242,3 +242,12 @@ UploadedFile::fake()->createWithContent('test.csv', $csvContent);
 
 #### ■ Bladeコンポーネントのprops
 - コンポーネントに値を渡すための仕組み
+
+## 2026-04-15
+
+### やったこと
+- ボタンコンポーネントの作成
+- bladeのリファクタリング
+
+### 学んだこと
+- slotとpropsの違い
