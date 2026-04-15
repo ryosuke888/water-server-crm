@@ -25,10 +25,10 @@ class Product extends Model
     ];
 
     public function orders() {
-        $this->hasMany(Order::class);
+        return $this->hasMany(Order::class);
     }
 
     public function planProductPrices() {
-        $this->hasMany(PlanProductPrice::class);
+        return $this->hasMany(PlanProductPrice::class);
     }
 }

@@ -6,6 +6,8 @@ use App\Http\Requests\Customer\StoreCustomerRequest;
 use App\Http\Requests\Customer\UpdateCustomerRequest;
 use App\Models\CallHistory;
 use App\Models\Customer;
+use App\Queries\CallHistoryQuery;
+use App\Queries\CustomerQuery;
 use App\Services\CustomerService;
 use Exception;
 use Illuminate\Http\Request;
@@ -21,18 +23,10 @@ class CustomerController extends Controller
         $this->authorize('viewAny', Customer::class);
 
         $keyword = trim((string) $request->query('keyword'));
-        $customers = Customer::query()
-            ->when($keyword, function ($query) use($keyword) {
-                $query->whereAny([
-                'name',
-                'email',
-                'phone_number',
-                'customer_code'
-                ], 'like', '%' . $keyword . '%');
-        })
-        ->latest()
-        ->paginate(10)
-        ->withQueryString();
+        $customers = CustomerQuery::search($keyword)
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
 
         return view('customers.index', compact('customers'));
     }
@@ -47,17 +41,11 @@ class CustomerController extends Controller
     {
         $this->authorize('view', $customer);
 
-        $orders = $customer->orders()
-        ->with('product')
-        ->latest()
-        ->take(5)
-        ->get();
+        $orders = CustomerQuery::recentByCustomer($customer)
+            ->get();
 
-        $callHistories = CallHistory::query()
-        ->where('customer_id', $customer->id)
-        ->latest()
-        ->take(5)
-        ->get();
+        $callHistories = CallHistoryQuery::listByCustomer($customer)
+            ->get();
 
         return view('customers.show', compact('customer', 'orders', 'callHistories'));
     }

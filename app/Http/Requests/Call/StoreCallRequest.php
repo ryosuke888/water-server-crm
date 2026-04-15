@@ -37,7 +37,7 @@ class StoreCallRequest extends FormRequest
             'call_summary' => ['required', 'string', 'max:1000'],
 
             'needs_follow_up' => ['required', 'boolean'],
-            'follow_up_date' => ['nullable', 'date'],
+            'follow_up_date' => ['required_if:needs_follow_up,true', 'date'],
 
             'called_at' => ['required', 'date'],
         ];

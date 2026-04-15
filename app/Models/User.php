@@ -36,11 +36,11 @@ class User extends Authenticatable
     }
 
     public function orderHistories() {
-        $this->hasMany(OrderHistory::class);
+        return $this->hasMany(OrderHistory::class);
     }
 
     public function callHistories() {
-        $this->hasMany(CallHistory::class);
+        return $this->hasMany(CallHistory::class);
     }
 
 }

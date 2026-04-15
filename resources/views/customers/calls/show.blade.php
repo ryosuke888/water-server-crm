@@ -16,9 +16,9 @@
                             <div class="flex items-center gap-3">
                                 <h1 class="text-2xl font-bold text-gray-900">{{ $customer->name }}</h1>
 
-                                @if ($customer->contract_status === "解約済")
+                                @if ($customer->contract_status === App\Enums\CustomerContractStatus::CANCELED)
                                     <span class="px-3 py-1 text-xs font-medium rounded-full bg-red-100 text-red-700">
-                                        {{ $customer->contract_status }}
+                                        {{ $customer->contract_status->label() }}
                                     </span>
                                 @endif
                             </div>

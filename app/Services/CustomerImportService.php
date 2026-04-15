@@ -180,7 +180,7 @@ class CustomerImportService {
     private function normalizeCsvValue($value): ?string
     {
         $value = (string)$value;
-        $value = str_replace('\xE3\x80\x80', ' ', $value);  // 全角スペースを半角へ変換
+        $value = str_replace("\u{3000}", ' ', $value);  // 全角スペースを半角へ変換
         $value = trim($value); // 前後の空白除去
 
         return $value === '' ? null : $value;

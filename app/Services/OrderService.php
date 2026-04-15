@@ -26,12 +26,6 @@ class OrderService {
 
             $scheduledDeliveryDate = Carbon::parse($validated['scheduled_delivery_date']);
 
-            if ($scheduledDeliveryDate < now()->addDays(3)) {
-                throw ValidationException::withMessages([
-                    'scheduled_delivery_date' => '配送日は3日後以降を指定してください。',
-                ]);
-            }
-
             $scheduledShippingDate = $this->calculateScheduledShippingDate($scheduledDeliveryDate);
 
             $data = $this->makeOrderData($validated, $planProductPrice, $orderStatus, $scheduledShippingDate);
@@ -76,12 +70,6 @@ class OrderService {
                 $productId = $validated['product_id'];
                 $planProductPrice = $this->findPlanProductPrice($planId, $productId);
                 $scheduledDeliveryDate = Carbon::parse($validated['scheduled_delivery_date']);
-
-                if ($scheduledDeliveryDate < now()->addDays(3)) {
-                     throw ValidationException::withMessages([
-                        'scheduled_delivery_date' => '配送日は3日後以降を指定してください。',
-                    ]);
-                }
 
                 $scheduledShippingDate = $this->calculateScheduledShippingDate($scheduledDeliveryDate);
 

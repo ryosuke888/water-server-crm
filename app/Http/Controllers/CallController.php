@@ -6,6 +6,7 @@ use App\Http\Requests\Call\StoreCallRequest;
 use App\Http\Requests\Call\UpdateCallRequest;
 use App\Models\CallHistory;
 use App\Models\Customer;
+use App\Queries\CallHistoryQuery;
 use Exception;
 use Illuminate\Auth\Events\Validated;
 use Illuminate\Http\Request;
@@ -16,10 +17,10 @@ class CallController extends Controller
     {
         $this->authorize('viewAny', CallHistory::class);
 
-        $callHistories = $customer->callHistories()
-        ->latest()
-        ->paginate(10)
-        ->withQueryString();
+        $callHistories = CallHistoryQuery::listByCustomer($customer)
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
         return view('customers.calls.index', compact('customer', 'callHistories'));
     }
 

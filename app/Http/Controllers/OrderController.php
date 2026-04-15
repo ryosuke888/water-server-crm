@@ -10,10 +10,11 @@ use App\Models\Order;
 use App\Models\Plan;
 use App\Models\PlanProductPrice;
 use App\Models\Product;
+use App\Queries\OrderFormQuery;
+use App\Queries\OrderQuery;
 use App\Services\OrderService;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use RuntimeException;
@@ -25,18 +26,10 @@ class OrderController extends Controller
         $this->authorize('viewAny', Order::class);
 
         $keyword = trim((string)$request->query('keyword'));
-        $orders = $customer->orders()
-        ->with([
-            'product',
-            'plan',
-            'planProductPrice',
-        ])
-        ->when($keyword, function ($query) use ($keyword) {
-            $query->where('order_code', 'like', '%' . $keyword . '%');
-        })
-        ->latest()
-        ->paginate(10)
-        ->withQueryString();
+        $orders = OrderQuery::searchByCustomer($customer, $keyword)
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
         return view('customers.orders.index', compact('customer', 'orders'));
     }
 
@@ -52,9 +45,8 @@ class OrderController extends Controller
     public function edit(Customer $customer, Order $order)
     {
         $this->authorize('update', $order);
-        $plans = Plan::where('is_active', true)->get();
-        $products = Product::where('is_active', true)->get();
-        $planProductPrices = PlanProductPrice::with('plans', 'products')->get();
+        $masterData = OrderFormQuery::masterData();
+        ['plans' => $plans, 'products' => $products, 'planProductPrices' => $planProductPrices] = $masterData;
         $order = $customer->orders()->with('plan', 'product', 'planProductPrice')->findOrFail($order->id);
         return view('customers.orders.edit', compact('customer', 'order' , 'plans', 'products', 'planProductPrices'));
     }

@@ -17,7 +17,7 @@
             @can('update', $order)
                 <form action="{{ route('customers.orders.update', [$customer,$order]) }}" method="POST" class="space-y-8">
                     @csrf
-                    @method('PATCh')
+                    @method('PATCH')
 
                     <!-- 注文情報 -->
                     <div class="bg-white rounded-2xl shadow-sm ring-1 ring-gray-200">
@@ -31,7 +31,7 @@
                                 <label class="block text-sm font-medium mb-1">プラン名</label>
                                 <select class="w-full rounded-xl border px-4 py-3 text-sm" name="plan_id" id="plan">
                                     @foreach ($plans as $plan)
-                                        <option value="{{ $plan->id }}" {{ old('plan_id', $order->plan->plan_id) === $plan->id ? 'selected' : '' }}>{{ $plan->name }}</option>
+                                        <option value="{{ $plan->id }}" {{ old('plan_id', $order->plan_id) === $plan->id ? 'selected' : '' }}>{{ $plan->name }}</option>
                                     @endforeach
                                 </select>
                                 <x-input-error :messages="$errors->get('plan_id')" />
@@ -41,7 +41,7 @@
                                 <label class="block text-sm font-medium mb-1">製品</label>
                                 <select class="w-full rounded-xl border px-4 py-3 text-sm" name="product_id" id="product">
                                     @foreach ($products as $product)
-                                        <option value="{{ $product->id }}" {{ old('product_id', $order->product->product_id) === $product->id ? 'selected' : '' }}>{{ $product->name }}</option>
+                                        <option value="{{ $product->id }}" {{ old('product_id', $order->product_id) === $product->id ? 'selected' : '' }}>{{ $product->name }}</option>
                                     @endforeach
                                 </select>
                                 <x-input-error :messages="$errors->get('product_id')" />
