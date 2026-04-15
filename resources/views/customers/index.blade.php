@@ -123,18 +123,12 @@
             <div class="flex flex-wrap items-center justify-between gap-3">
                 <div class="flex flex-wrap gap-3">
                     @can('import-customers')
-                        <a href="{{ route('customers.import.create') }}"
-                            class="inline-flex items-center px-5 py-3 rounded-xl bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700">
-                            csv取込
-                        </a>
+                        <x-link-button color="emerald" :href="route('customers.import.create')">csv取込</x-link-button>
                     @endcan
                 </div>
                 <div class="flex flex-wrap gap-3">
                     @can('create', App\Models\Customer::class)
-                        <a href="{{ route('customers.create') }}"
-                            class="inline-flex items-center px-5 py-3 rounded-xl bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700">
-                            顧客登録
-                        </a>
+                        <x-link-button color="emerald" :href="route('customers.create')">顧客登録</x-link-button>
                     @endcan
                 </div>
             </div>

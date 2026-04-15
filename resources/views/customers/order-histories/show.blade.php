@@ -34,10 +34,7 @@
         </div>
 
         <div>
-            <a href="{{ route('customers.order-histories.index', $customer) }}"
-               class="px-4 py-2 rounded border bg-white text-sm">
-                一覧へ戻る
-            </a>
+            <x-link-button color="white" :href="route('customers.order-histories.index', $customer)">一覧へ戻る</x-link-button>
         </div>
     </div>
 </x-app-layout>

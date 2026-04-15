@@ -32,10 +32,7 @@
                     </div>
                     <div class="flex flex-wrap gap-3">
                         @can('update', $customer)
-                            <a href="{{ route('customers.edit', $customer) }}"
-                            class="inline-flex items-center px-5 py-3 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700">
-                                編集
-                            </a>
+                            <x-link-button color="blue" :href="route('customers.edit', $customer)">編集</x-link-button>
                         @endcan
                     </div>
                 </div>
@@ -114,16 +111,9 @@
                     <div class="flex flex-wrap gap-3">
 
                         @can('create', App\Models\Order::class)
-                            <a href="{{ route('customers.orders.create', $customer) }}"
-                            class="inline-flex items-center px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700">
-                                受注登録
-                            </a>
+                            <x-link-button color="emerald" :href="route('customers.orders.create', $customer)">受注登録</x-link-button>
                         @endcan
-
-                        <a href="{{ route('customers.orders.index', $customer) }}"
-                        class="inline-flex items-center px-4 py-2 rounded-lg bg-white border border-gray-200 text-gray-700 text-sm font-medium hover:bg-gray-50">
-                            一覧を見る
-                        </a>
+                        <x-link-button color="white" :href="route('customers.orders.index', $customer)">一覧を見る</x-link-button>
                     </div>
                 </div>
 
@@ -179,16 +169,10 @@
 
                     <div class="flex flex-wrap gap-3">
                         @can('create', App\Models\CallHistory::class)
-                            <a href="{{ route('customers.calls.create', $customer) }}"
-                            class="inline-flex items-center px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700">
-                                コール登録
-                            </a>
+                            <x-link-button color="emerald" :href="route('customers.calls.create', $customer)">コール登録</x-link-button>
                         @endcan
 
-                        <a href="{{ route('customers.calls.index', $customer) }}"
-                        class="inline-flex items-center px-4 py-2 rounded-lg bg-white border border-gray-200 text-gray-700 text-sm font-medium hover:bg-gray-50">
-                            一覧を見る
-                        </a>
+                        <x-link-button color="white" :href="route('customers.calls.index', $customer)">一覧を見る</x-link-button>
                     </div>
                 </div>
 
@@ -224,10 +208,7 @@
 
                                 <div class="shrink-0">
                                     @can('view', $callHistory)
-                                        <a href="{{ route('customers.calls.show', [$customer, $callHistory]) }}"
-                                        class="inline-flex items-center px-3 py-2 rounded-lg bg-white border border-gray-200 text-gray-700 text-xs font-medium hover:bg-gray-50">
-                                            詳細
-                                        </a>
+                                        <x-link-button color="white" :href="route('customers.calls.show', [$customer, $callHistory])">詳細</x-link-button>
                                     @endcan
                                 </div>
                             </div>
@@ -236,10 +217,7 @@
                 </div>
 
                 <div class="mt-5 pt-5 border-t border-gray-100 text-right">
-                    <a href="{{ route('customers.calls.index', $customer) }}"
-                    class="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-700">
-                        すべてのコール履歴を見る
-                    </a>
+                    <x-link-button color="blue" :href="route('customers.calls.index', $customer)">すべてのコール履歴を見る</x-link-button>
                 </div>
             </div>
 
@@ -248,16 +226,9 @@
                 <div>
 
                 </div>
-
                 <div class="flex flex-wrap gap-3">
-                    <a href="{{ route('customers.order-histories.index', $customer) }}"
-                       class="inline-flex items-center justify-center px-5 py-3 rounded-xl bg-white border border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50">
-                        受注履歴
-                    </a>
-                    <a href="{{ route('customers.index', $customer) }}"
-                       class="inline-flex items-center justify-center px-5 py-3 rounded-xl bg-white border border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50">
-                        一覧へ戻る
-                    </a>
+                    <x-link-button color="white" :href="route('customers.order-histories.index', $customer)">受注履歴</x-link-button>
+                    <x-link-button color="white" :href="route('customers.index', $customer)">一覧へ戻る</x-link-button>
                 </div>
             </div>
         </div>

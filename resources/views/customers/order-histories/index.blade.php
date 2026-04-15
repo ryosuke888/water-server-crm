@@ -65,10 +65,7 @@
                                 </td>
 
                                 <td class="px-4 py-4">
-                                    <a href="{{ route('customers.order-histories.show', [$customer, $history]) }}"
-                                       class="bg-blue-500 hover:bg-blue-700 text-white text-xs px-3 py-2 rounded">
-                                        詳細
-                                    </a>
+                                    <x-link-button color="blue" :href="route('customers.order-histories.show', [$customer, $history])">詳細</x-link-button>
                                 </td>
                             </tr>
                         @endforeach
@@ -95,10 +92,7 @@
 
             {{-- 戻るボタン --}}
             <div>
-                <a href="{{ route('customers.show', $customer) }}"
-                   class="inline-flex items-center px-4 py-2 rounded border bg-white text-sm hover:bg-gray-50">
-                    顧客詳細へ戻る
-                </a>
+                <x-link-button color="white" :href="route('customers.show', $customer)">顧客詳細へ戻る</x-link-button>
             </div>
 
         </div>

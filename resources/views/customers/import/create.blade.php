@@ -30,11 +30,7 @@
                     </div>
 
                     <div class="flex justify-between items-center">
-                        <a href="{{ route('customers.index') }}"
-                           class="rounded-xl border border-gray-300 bg-white px-5 py-3 text-sm hover:bg-gray-50">
-                            戻る
-                        </a>
-
+                        <x-link-button color="white" :href="route('customers.index')">戻る</x-link-button>
                         <button
                             type="submit"
                             class="rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white hover:bg-blue-700"

@@ -161,24 +161,15 @@
 
                 <!-- 下部ボタン -->
                 <div class="mt-6 pt-6 border-t border-gray-100 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                    <a href="{{ route('customers.calls.index', $customer) }}"
-                       class="inline-flex items-center justify-center px-5 py-3 rounded-xl bg-white border border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50">
-                        一覧へ戻る
-                    </a>
+                    <x-link-button color="white" :href="{{ route('customers.calls.index', $customer) }}">一覧へ戻る</x-link-button>
 
                     <div class="flex flex-wrap gap-3">
                         @can('update', $callHistory)
-                            <a href="{{ route('customers.calls.edit', [$customer, $callHistory]) }}"
-                            class="inline-flex items-center px-5 py-3 rounded-xl bg-blue-600 text-white text-sm font-medium hover:bg-blue-700">
-                                編集する
-                            </a>
+                            <x-link-button color="blue" :href="route('customers.calls.edit', [$customer, $callHistory])">編集する</x-link-button>
                         @endcan
 
                         @can('create', App\Models\CallHistory::class)
-                            <a href="{{ route('customers.calls.create', $customer) }}"
-                            class="inline-flex items-center px-5 py-3 rounded-xl bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700">
-                                新規コール登録
-                            </a>
+                            <x-link-button color="emerald" :href="route('customers.calls.create', $customer)">新規コール登録</x-link-button>
                         @endcan
                     </div>
                 </div>
