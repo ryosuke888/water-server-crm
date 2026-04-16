@@ -5,8 +5,10 @@ namespace App\Http\Requests\Call;
 use App\Enums\CallChannel;
 use App\Enums\CallResult;
 use App\Enums\CallType;
+use App\Models\CallHistory;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rules\Enum;
 
 class StoreCallRequest extends FormRequest
@@ -16,7 +18,7 @@ class StoreCallRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return Gate::allows('create', CallHistory::class);
     }
 
     /**

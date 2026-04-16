@@ -62,7 +62,6 @@ class OrderController extends Controller
 
     public function update(UpdateOrderRequest $request, Customer $customer, Order $order, OrderService $orderService)
     {
-        $this->authorize('update', $order);
         try {
             $validated = $request->validated();
             $userId = auth()->id();
@@ -91,7 +90,6 @@ class OrderController extends Controller
 
     public function store(StoreOrderRequest $request, OrderService $orderService, Customer $customer)
     {
-        $this->authorize('create', Order::class);
         try {
             $validated = $request->validated();
             $validated['customer_id'] = $customer->id;

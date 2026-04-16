@@ -7,6 +7,7 @@ use App\Enums\CallResult;
 use App\Enums\CallType;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rules\Enum;
 
 class UpdateCallRequest extends FormRequest
@@ -16,7 +17,7 @@ class UpdateCallRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return Gate::allows('update', $this->route('callHistory'));
     }
 
     /**

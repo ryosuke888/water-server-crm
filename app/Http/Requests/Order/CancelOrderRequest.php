@@ -4,6 +4,7 @@ namespace App\Http\Requests\Order;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 class CancelOrderRequest extends FormRequest
 {
@@ -12,7 +13,7 @@ class CancelOrderRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return Gate::allows('delete', $this->route('order'));
     }
 
     /**

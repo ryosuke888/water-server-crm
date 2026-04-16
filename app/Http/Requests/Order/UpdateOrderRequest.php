@@ -5,6 +5,7 @@ namespace App\Http\Requests\Order;
 use App\Enums\OrderStatus;
 use App\Http\Requests\Order\OrderRequest;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rules\Enum;
 
 class UpdateOrderRequest extends OrderRequest
@@ -14,7 +15,7 @@ class UpdateOrderRequest extends OrderRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return Gate::allows('update', $this->route('order'));
     }
 
     /**

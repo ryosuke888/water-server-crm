@@ -3,7 +3,9 @@
 namespace App\Http\Requests\Customer;
 
 use App\Http\Requests\Customer\CustomerRequest;
+use App\Models\Customer;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Support\Facades\Gate;
 
 class StoreCustomerRequest extends CustomerRequest
 {
@@ -12,7 +14,7 @@ class StoreCustomerRequest extends CustomerRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return Gate::allows('create', Customer::class);
     }
 
     /**

@@ -2,10 +2,10 @@
 
 namespace App\Http\Requests\Order;
 
-use App\Enums\OrderType;
 use App\Http\Requests\Order\OrderRequest;
+use App\Models\Order;
 use Illuminate\Contracts\Validation\ValidationRule;
-use Illuminate\Validation\Rules\Enum;
+use Illuminate\Support\Facades\Gate;
 
 class StoreOrderRequest extends OrderRequest
 {
@@ -14,7 +14,7 @@ class StoreOrderRequest extends OrderRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return Gate::allows('create', Order::class);
     }
 
     /**

@@ -3,13 +3,7 @@
 namespace App\Providers;
 
 use App\Enums\Role;
-use App\Models\CallHistory;
-use App\Models\Customer;
-use App\Models\Order;
 use App\Models\User;
-use App\Policies\CallHistoryPolicy;
-use App\Policies\CustomerPolicy;
-use App\Policies\OrderPolicy;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;

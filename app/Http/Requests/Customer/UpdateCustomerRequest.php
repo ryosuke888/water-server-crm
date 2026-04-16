@@ -4,6 +4,7 @@ namespace App\Http\Requests\Customer;
 
 use App\Http\Requests\Customer\CustomerRequest;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
 
 class UpdateCustomerRequest extends CustomerRequest
@@ -13,7 +14,7 @@ class UpdateCustomerRequest extends CustomerRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return Gate::allows('update', $this->route('customer'));
     }
 
     /**

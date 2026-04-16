@@ -52,8 +52,6 @@ class CallController extends Controller
 
     public function update(UpdateCallRequest $request, Customer $customer, CallHistory $callHistory)
     {
-        $this->authorize('update', $callHistory);
-
         try {
             $validated = $request->validated();
             $callHistory->update($validated);
@@ -65,7 +63,6 @@ class CallController extends Controller
 
     public function store(StoreCallRequest $request, Customer $customer)
     {
-        $this->authorize('create', CallHistory::class);
         try {
             $validated = $request->validated();
             $validated['user_id'] = auth()->id();

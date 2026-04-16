@@ -58,8 +58,6 @@ class CustomerController extends Controller
 
     public function update(UpdateCustomerRequest $request, Customer $customer)
     {
-        $this->authorize('update', $customer);
-
         try {
             $customer->update($request->validated());
             return redirect()->route('customers.show', compact('customer'))->with('success', '顧客情報更新に成功しました。');
@@ -81,8 +79,6 @@ class CustomerController extends Controller
 
     public function store(StoreCustomerRequest $request, CustomerService $customerService)
     {
-        $this->authorize('create', Customer::class);
-
         try {
             $validated = $request->validated();
             $customer = $customerService->store($validated);
