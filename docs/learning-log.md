@@ -251,3 +251,16 @@ UploadedFile::fake()->createWithContent('test.csv', $csvContent);
 
 ### 学んだこと
 - slotとpropsの違い
+
+## 2026-04-16
+
+### やったこと
+- FormRequestでGateを使った認可処理を実装
+- authorizeメソッドの役割を理解
+
+---
+
+### 学んだこと
+
+#### ■ FormRequestのauthorize
+- リクエスト時に認可チェックを行うことができる
