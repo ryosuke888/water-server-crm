@@ -264,3 +264,17 @@ UploadedFile::fake()->createWithContent('test.csv', $csvContent);
 
 #### ■ FormRequestのauthorize
 - リクエスト時に認可チェックを行うことができる
+
+
+## 2026-04-18
+
+### やったこと
+- JavaScriptの非同期処理（async / await）を理解
+- API通信によるデータ取得処理を実装
+
+---
+
+### 学んだこと
+
+#### ■ 非同期処理（async / await）
+- データ取得など時間がかかる処理を非同期で実行できる
