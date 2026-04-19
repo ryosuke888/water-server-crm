@@ -278,3 +278,20 @@ UploadedFile::fake()->createWithContent('test.csv', $csvContent);
 
 #### ■ 非同期処理（async / await）
 - データ取得など時間がかかる処理を非同期で実行できる
+
+## 2026-04-19
+
+### やったこと
+- JavaScriptの非同期処理（async / await）を理解
+- API通信によるデータ取得処理を実装の続き
+
+---
+
+### 詰まったところ
+- fetchで取得したデータの扱い方が分かりにくかった
+
+---
+
+### 学び・気づき
+- async / await を使うことで非同期処理を直感的に書け
+
