@@ -1,11 +1,11 @@
 <?php
 namespace App\Queries;
 
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 
 class OrderQuery
 {
-    public static function searchByCustomer($customer, $keyword): Builder
+    public static function searchByCustomer($customer, $keyword): EloquentBuilder
     {
         return $customer->orders()
         ->with([

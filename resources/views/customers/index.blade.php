@@ -12,7 +12,7 @@
             <!-- 顧客検索 -->
 
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
-                <form action="{{ route('customers.index') }}" method="GET" class="flex flex-col gap-4 md:flex-row md:items-end">
+                <form action="{{ route('customers.index') }}" id="search" method="GET" class="flex flex-col gap-4 md:flex-row md:items-end">
                     <div class="flex-1">
                         <label for="keyword" class="block text-sm font-medium text-gray-700 mb-1">顧客検索</label>
                         <input
@@ -69,7 +69,7 @@
                             <th class="w-[10%] px-4 py-4 text-left font-semibold text-gray-600">操作</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-100 bg-white">
+                    <tbody id="customer-table-body" class="divide-y divide-gray-100 bg-white">
                         @foreach ($customers as $customer)
                             <tr class="hover:bg-gray-50">
                                 <td class="px-4 py-4 text-gray-700 text-left">
@@ -134,5 +134,59 @@
             </div>
         </div>
     </div>
+    <script>
+        document.getElementById('search').addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const keyword = document.getElementById('keyword').value;
+                const url = new URL('{{ route('api.customers.index') }}');
+                url.searchParams.set('keyword', keyword);
+                const response = await fetch(url);
+                const data = await response.json();
+
+
+                const customer = (Object.values(data))[0].map(data => {
+                    return {
+                        id: data.id,
+                        name: data.name,
+                        phone_number: data.phone_number,
+                        email: data.email,
+                        contract_status: data.contract_status,
+                        created_at: data.created_at,
+
+                    }
+                })
+                const tableBody = document.getElementById('customer-table-body');
+                tableBody.innerHTML = '';
+
+                customer.forEach(customer => {
+                    tableBody.innerHTML += `
+                        <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-4 text-gray-700 text-left">
+                                <div class="truncate">${customer.name}</div>
+                                </td>
+                                <td class="px-4 py-4 text-gray-700 text-left">
+                                    <div class="truncate">${customer.phone_number}</div>
+                                </td>
+                                <td class="px-4 py-4 text-gray-700 text-left">
+                                    <div class="truncate">${customer.email}</div>
+                                </td>
+                                <td class="px-4 py-4 text-gray-700 text-left">
+                                    <div class="truncate">${customer.contract_status}</div>
+                                </td>
+                                <td class="px-4 py-4 text-gray-700 text-left">
+                                    <div class="truncate">${customer.created_at}</div>
+                                </td>
+                                <td class="px-4 py-4">
+                                    <div>
+                                        <form action="/customers/${customer.id}" method="get">
+                                            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">詳細</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                    `
+                });
+        });
+    </script>
 
 </x-app-layout>

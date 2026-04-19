@@ -2,11 +2,11 @@
 namespace App\Queries;
 
 use App\Models\Customer;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 
 class CustomerQuery
 {
-    public static function search($keyword): Builder
+    public static function search($keyword): EloquentBuilder
     {
        return Customer::query()
             ->when($keyword, function ($query) use($keyword) {
@@ -19,7 +19,7 @@ class CustomerQuery
         });
     }
 
-    public static function recentByCustomer($customer): Builder
+    public static function recentByCustomer($customer): EloquentBuilder
     {
         return $customer->orders()
         ->with('product')

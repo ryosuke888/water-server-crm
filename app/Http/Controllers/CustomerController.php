@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Customer\StoreCustomerRequest;
 use App\Http\Requests\Customer\UpdateCustomerRequest;
-use App\Models\CallHistory;
 use App\Models\Customer;
 use App\Queries\CallHistoryQuery;
 use App\Queries\CustomerQuery;
