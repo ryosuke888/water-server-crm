@@ -295,3 +295,22 @@ UploadedFile::fake()->createWithContent('test.csv', $csvContent);
 ### 学び・気づき
 - async / await を使うことで非同期処理を直感的に書け
 
+
+## 2026-04-20
+
+### やったこと
+- 非同期通信（fetch）を用いたページネーションを実装
+- Laravelの標準paginationとの組み合わせを検証
+
+---
+
+### 詰まったところ
+- Laravel標準のpaginationはサーバーサイド前提のため、非同期通信との組み合わせが難しかった
+- ページリンク生成とAPIレスポンスの整合性を取るのに苦戦した
+
+---
+
+### 学び・気づき
+- LaravelのpaginationはBladeでの描画を前提としている
+- 非同期通信で実装する場合は、APIレスポンスを元に独自でページネーション制御を行う必要がある
+
