@@ -31,6 +31,8 @@ class CustomerApiController extends Controller
                 'eachSide' => $customers->onEachSide(1)->links(),
                 'firstItem' => $customers->firstItem(),
                 'lastItem' => $customers->lastItem(),
+                'currentPage' => $customers->currentPage(),
+                'lastPage' => $customers->lastPage(),
             ]
         ]);
     }
