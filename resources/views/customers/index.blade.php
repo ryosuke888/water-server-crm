@@ -33,13 +33,13 @@
                             検索
                         </button>
 
-                        <a
-                            href="{{ route('customers.index') }}"
+                        <button
+                            type="button"
                             id="reset-button"
                             class="px-5 py-3 rounded-xl border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
                         >
                             リセット
-                        </a>
+                        </button>
                     </div>
                 </form>
             </div>
@@ -103,21 +103,57 @@
                     </tbody>
                 </table>
             <!-- ページネーション -->
-            @if ($customers->hasPages())
                 <div class="bg-white shadow-sm border border-gray-100 px-4 py-4" id="pagination-area">
-                    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                    @if ($customers->hasPages())
+                        <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
 
-                        <div class="text-sm text-gray-500">
-                            全 {{ $customers->total() }} 件中
-                            {{ $customers->firstItem() ?? 0 }}〜{{ $customers->lastItem() ?? 0 }} 件を表示
-                        </div>
+                            <div class="text-sm text-gray-500">
+                                全 {{ $customers->total() }} 件中
+                                {{ $customers->firstItem() ?? 0 }}〜{{ $customers->lastItem() ?? 0 }} 件を表示
+                            </div>
 
-                        <div class="flex items-center justify-center md:justify-end">
-                            {{ $customers->onEachSide(1)->links() }}
+                            <div class="flex items-center gap-2">
+                                @if ($customers->onFirstPage())
+                                    <button
+                                        type="button"
+                                        class="px-3 py-2 text-sm border rounded bg-white hover:bg-gray-50"
+                                        disabled
+                                    >
+                                        前へ
+                                    </button>
+                                @else
+                                    <a
+                                        href="{{ $customers->previousPageUrl() }}"
+                                        class="px-3 py-2 text-sm border rounded bg-white hover:bg-gray-50"
+                                    >
+                                        前へ
+                                </a>
+                                @endif
+
+                                <span class="text-sm text-gray-600">
+                                    {{ $customers->currentPage() }} / {{ $customers->lastPage() }}
+                                </span>
+
+                                @if ($customers->hasMorePages())
+                                    <a
+                                        href="{{ $customers->nextPageUrl() }}"
+                                        class="px-3 py-2 text-sm border rounded bg-white hover:bg-gray-50"
+                                    >
+                                        次へ
+                                    </a>
+                                @else
+                                    <button
+                                        type="button"
+                                        class="px-3 py-2 text-sm border rounded bg-white hover:bg-gray-50"
+                                        disabled
+                                    >
+                                        次へ
+                                    </button>
+                                @endif
+                            </div>
                         </div>
-                    </div>
+                    @endif
                 </div>
-            @endif
             </div>
 
             <!-- アクションボタン -->
@@ -141,9 +177,9 @@
                 fetchCustomers();
         });
 
-        document.getElementById('reset-button').addEventListener('click', async () => {
+        document.getElementById('reset-button').addEventListener('click', async (event) => {
             event.preventDefault();
-            keyword.value = '';
+             document.getElementById('keyword').value = '';
             await fetchCustomers('');
         });
 
@@ -152,13 +188,20 @@
             const url = new URL('{{ route('api.customers.index') }}');
             url.searchParams.set('keyword', keyword);
             if (page) {
-                url.searchParams.append('page', page);
+                url.searchParams.set('page', page);
             }
-            const response = await fetch(url);
+            const response = await fetch(url, {
+                headers: {
+                    'Accept': 'application/json',
+                }
+            });
+            if (!response.ok) {
+                throw new Error('顧客データの取得に失敗しました。');
+            }
             const data = await response.json();
             const customers = data.data;
             const meta = data.meta;
-            const resetButton = document.getElementById('reset-button');
+
             renderTableBody(customers);
             renderTotalEl(meta);
             renderRangeEl(meta);
@@ -183,23 +226,23 @@
             const rows = customers.map(customer => `
                     <tr class="hover:bg-gray-50">
                             <td class="px-4 py-4 text-gray-700 text-left">
-                            <div class="truncate">${customer.name}</div>
+                            <div class="truncate">${escapeHtml(customer.name)}</div>
                             </td>
                             <td class="px-4 py-4 text-gray-700 text-left">
-                                <div class="truncate">${customer.phone_number}</div>
+                                <div class="truncate">${escapeHtml(customer.phone_number)}</div>
                             </td>
                             <td class="px-4 py-4 text-gray-700 text-left">
-                                <div class="truncate">${customer.email}</div>
+                                <div class="truncate">${escapeHtml(customer.email)}</div>
                             </td>
                             <td class="px-4 py-4 text-gray-700 text-left">
-                                <div class="truncate">${customer.contract_status}</div>
+                                <div class="truncate">${escapeHtml(customer.contract_status)}</div>
                             </td>
                             <td class="px-4 py-4 text-gray-700 text-left">
-                                <div class="truncate">${formatDate(customer.created_at)}</div>
+                                <div class="truncate">${escapeHtml(formatDate(customer.created_at))}</div>
                             </td>
                             <td class="px-4 py-4">
                                 <div>
-                                    <form action="/customers/${customer.id}" method="get">
+                                    <form action="/customers/${escapeHtml(customer.id)}" method="get">
                                         <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">詳細</button>
                                     </form>
                                 </div>
@@ -213,9 +256,7 @@
 
         function renderTotalEl(meta) {
             const totalEl = document.getElementById('customer-total');
-            totalEl.innerHTML = `
-            <span id="customer-total" class="font-semibold text-gray-900">${meta.total}</span>
-        `;
+            totalEl.textContent = meta.total ?? 0;
         }
 
         function renderRangeEl(meta) {
@@ -229,66 +270,11 @@
             const paginationArea = document.getElementById('pagination-area');
             let pageButtons = '';
 
-            // // previousボタン
-            // if (meta.currentPage === 1) {
-            //     pageButtons += `
-            //         <span class="inline-flex items-center px-2 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 cursor-not-allowed rounded-l-md leading-5 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-400" aria-hidden="true">
-            //             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-            //                 <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-            //             </svg>
-            //         </span>
-            //     `
-            // }
-            // if (1 < meta.currentPage && meta.currentPage <= meta.lastPage) {
-            //     pageButtons += `
-            //         <a href="http://localhost:8080/customers?page=${meta.currentPage - 1}" rel="prev" class="inline-flex items-center px-2 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-l-md leading-5 hover:text-gray-400 focus:outline-none focus:ring ring-gray-300 focus:border-blue-300 active:bg-gray-100 active:text-gray-500 transition ease-in-out duration-150 dark:bg-gray-800 dark:border-gray-600 dark:active:bg-gray-700 dark:focus:border-blue-800 dark:text-gray-300 dark:hover:bg-gray-900 dark:hover:text-gray-300" aria-label="&amp;laquo; Previous">
-            //             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-            //                 <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-            //             </svg>
-            //         </a>
-
-            //     `;
-            // }
-
-            // // pageボタン
-            // const startPage = Math.max(1, meta.currentPage - 1);
-            // const endPage = Math.min(meta.lastPage, meta.currentPage + 1);
-
-            // for (let page = startPage; page <= endPage; page++) {
-            //     pageButtons += `
-            //         <a href="http://localhost:8080/customers?page=${page}" class="inline-flex items-center px-4 py-2 -ml-px text-sm font-medium text-gray-700 bg-white border border-gray-300 leading-5 hover:text-gray-700 focus:outline-none focus:ring ring-gray-300 focus:border-blue-300 active:bg-gray-100 active:text-gray-700 transition ease-in-out duration-150 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300 dark:hover:text-gray-300 dark:active:bg-gray-700 dark:focus:border-blue-800 hover:bg-gray-100 dark:hover:bg-gray-900" aria-label="Go to page ${page}">
-            //             ${page}
-            //         </a>
-            //     `;
-            // }
-
-            // // nextボタン
-            // if (meta.currentPage < meta.lastPage) {
-            //     pageButtons += `
-            //         <a href="http://localhost:8080/customers?page=${meta.currentPage + 1}" rel="next" class="inline-flex items-center px-2 py-2 -ml-px text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-r-md leading-5 hover:text-gray-400 focus:outline-none focus:ring ring-gray-300 focus:border-blue-300 active:bg-gray-100 active:text-gray-500 transition ease-in-out duration-150 dark:bg-gray-800 dark:border-gray-600 dark:active:bg-gray-700 dark:focus:border-blue-800 dark:text-gray-300 dark:hover:bg-gray-900 dark:hover:text-gray-300" aria-label="Next &amp;raquo;">
-            //             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-            //                 <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
-            //             </svg>
-            //         </a>
-
-            //     `;
-            // }
-
-            // if (meta.currentPage === meta.lastPage) {
-            //     pageButtons += `
-            //         <span class="inline-flex items-center px-2 py-2 -ml-px text-sm font-medium text-gray-500 bg-white border border-gray-300 cursor-not-allowed rounded-r-md leading-5 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-400" aria-hidden="true">
-            //             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-            //                 <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
-            //             </svg>
-            //         </span>
-            //     `
-            // }
-
             paginationArea.innerHTML = `
                 <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                     <div class="text-sm text-gray-500">
-                        全 ${meta.total} 件中
-                        ${meta.firstItem ?? 0}〜${meta.lastItem ?? 0} 件を表示
+                        全 ${escapeHtml(meta.total)} 件中
+                        ${escapeHtml(meta.firstItem) ?? 0}〜${escapeHtml(meta.lastItem) ?? 0} 件を表示
                     </div>
 
                     <div class="flex items-center gap-2">
@@ -296,20 +282,20 @@
                             type="button"
                             id="prev-page"
                             class="px-3 py-2 text-sm border rounded bg-white hover:bg-gray-50"
-                            ${meta.currentPage === 1 ? 'disabled' : ''}
+                            ${escapeHtml(meta.currentPage) === 1 ? 'disabled' : ''}
                         >
                             前へ
                         </button>
 
                         <span class="text-sm text-gray-600">
-                            ${meta.currentPage} / ${meta.lastPage}
+                            ${escapeHtml(meta.currentPage)} / ${escapeHtml(meta.lastPage)}
                         </span>
 
                         <button
                             type="button"
                             id="next-page"
                             class="px-3 py-2 text-sm border rounded bg-white hover:bg-gray-50"
-                            ${meta.currentPage === meta.lastPage ? 'disabled' : ''}
+                            ${escapeHtml(meta.currentPage) === escapeHtml(meta.lastPage) ? 'disabled' : ''}
                         >
                             次へ
                         </button>
@@ -331,6 +317,16 @@
                     fetchCustomers(meta.currentPage + 1);
                 });
             }
+        }
+
+        function escapeHtml(value) {
+            if (value === null || value === undefined) return '';
+            return String(value)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
         }
 
         function formatDate(value) {

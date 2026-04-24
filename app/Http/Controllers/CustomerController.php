@@ -22,7 +22,8 @@ class CustomerController extends Controller
         $this->authorize('viewAny', Customer::class);
 
         $keyword = trim((string) $request->query('keyword'));
-        $customers = CustomerQuery::search($keyword)
+        $customerQuery = CustomerQuery::search($keyword);
+        $customers = $customerQuery
             ->latest()
             ->paginate(10)
             ->withQueryString();

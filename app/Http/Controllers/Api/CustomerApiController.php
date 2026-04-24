@@ -28,7 +28,6 @@ class CustomerApiController extends Controller
             'data' => $customers->items(),
             'meta' => [
                 'total' => $customers->total(),
-                'eachSide' => $customers->onEachSide(1)->links(),
                 'firstItem' => $customers->firstItem(),
                 'lastItem' => $customers->lastItem(),
                 'currentPage' => $customers->currentPage(),

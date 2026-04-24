@@ -3,6 +3,7 @@ namespace App\Queries;
 
 use App\Models\Customer;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class CustomerQuery
 {
@@ -19,7 +20,7 @@ class CustomerQuery
         });
     }
 
-    public static function recentByCustomer($customer): EloquentBuilder
+    public static function recentByCustomer($customer): HasMany
     {
         return $customer->orders()
         ->with('product')

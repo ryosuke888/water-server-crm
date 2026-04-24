@@ -1,11 +1,12 @@
 <?php
 namespace App\Queries;
 
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Query\Builder;
 
 class CallHistoryQuery
 {
-    public static function listByCustomer($customer): Builder
+    public static function listByCustomer($customer): HasMany
     {
         return $customer->callHistories();
     }

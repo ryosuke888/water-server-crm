@@ -1,11 +1,11 @@
 <?php
 namespace App\Queries;
 
-use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class OrderQuery
 {
-    public static function searchByCustomer($customer, $keyword): EloquentBuilder
+    public static function searchByCustomer($customer, $keyword): HasMany
     {
         return $customer->orders()
         ->with([
