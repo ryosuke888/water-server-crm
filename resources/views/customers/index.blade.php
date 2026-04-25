@@ -91,9 +91,7 @@
                                 <td class="px-4 py-4">
                                     @can('view', $customer)
                                         <div>
-                                            <form action="{{ route('customers.show', $customer) }}" method="get">
-                                                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">詳細</button>
-                                            </form>
+                                            <x-link-button color="blue" :href="route('customers.show', $customer)">詳細</x-link-button>
                                         </div>
                                     @endcan
 
@@ -184,28 +182,43 @@
         });
 
         async function fetchCustomers(page = '') {
-            const keyword = document.getElementById('keyword').value;
-            const url = new URL('{{ route('api.customers.index') }}');
-            url.searchParams.set('keyword', keyword);
-            if (page) {
-                url.searchParams.set('page', page);
-            }
-            const response = await fetch(url, {
-                headers: {
-                    'Accept': 'application/json',
-                }
-            });
-            if (!response.ok) {
-                throw new Error('顧客データの取得に失敗しました。');
-            }
-            const data = await response.json();
-            const customers = data.data;
-            const meta = data.meta;
+            try {
+                const keyword = document.getElementById('keyword').value;
+                const apiUrl = new URL('{{ route('api.customers.index') }}');
+                apiUrl.searchParams.set('keyword', keyword);
 
-            renderTableBody(customers);
-            renderTotalEl(meta);
-            renderRangeEl(meta);
-            renderPaginationArea(meta);
+                if (page) {
+                    apiUrl.searchParams.set('page', page);
+                }
+
+                const browserUrl = new URL('{{ route('customers.index') }}');
+                browserUrl.searchParams.set('keyword', keyword);
+
+                if (page) {
+                    browserUrl.searchParams.set('page', page);
+                }
+
+                history.pushState(null, '', browserUrl);
+
+                const response = await fetch(apiUrl, {
+                    headers: {
+                        'Accept': 'application/json',
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error('顧客データの取得に失敗しました。');
+                }
+                const data = await response.json();
+                const customers = data.data;
+                const meta = data.meta;
+
+                renderTableBody(customers);
+                renderTotalEl(meta);
+                renderRangeEl(meta);
+                renderPaginationArea(meta);
+            } catch(error) {
+                alert('顧客データの取得に失敗しました。');
+            }
 
         }
 
@@ -242,9 +255,7 @@
                             </td>
                             <td class="px-4 py-4">
                                 <div>
-                                    <form action="/customers/${escapeHtml(customer.id)}" method="get">
-                                        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">詳細</button>
-                                    </form>
+                                    <a href="/customers/${escapeHtml(customer.id)}" class="inline-flex items-center px-5 py-2 rounded-lg text-sm font-medium text-white bg-blue-500 hover:bg-blue-700">詳細</a>
                                 </div>
                             </td>
                         </tr>
