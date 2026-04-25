@@ -314,3 +314,26 @@ UploadedFile::fake()->createWithContent('test.csv', $csvContent);
 - LaravelのpaginationはBladeでの描画を前提としている
 - 非同期通信で実装する場合は、APIレスポンスを元に独自でページネーション制御を行う必要がある
 
+## 2026-04-25
+
+### やったこと
+- 非同期通信時のページネーションのイベント処理を実装
+- イベント委譲を用いたクリック処理の最適化
+- history.pushState を使ったURL制御を実装
+
+---
+
+### 学んだこと
+
+#### ■ イベント委譲
+- 親要素にイベントを設定し、子要素のクリックを検知する手法
+- ページネーションのように動的に生成される要素にも対応可能
+
+- 不要なイベント登録を減らし、パフォーマンス向上につながる
+
+---
+
+#### ■ history.pushState
+```javascript
+history.pushState(null, '', `?page=${page}`);
+```
