@@ -111,43 +111,27 @@
                             </div>
 
                             <div class="flex items-center gap-2">
-                                @if ($customers->onFirstPage())
-                                    <button
-                                        type="button"
-                                        class="px-3 py-2 text-sm border rounded bg-white hover:bg-gray-50"
-                                        disabled
-                                    >
-                                        前へ
-                                    </button>
-                                @else
-                                    <a
-                                        href="{{ $customers->previousPageUrl() }}"
-                                        class="px-3 py-2 text-sm border rounded bg-white hover:bg-gray-50"
-                                    >
-                                        前へ
-                                </a>
-                                @endif
+                                <button
+                                    type="button"
+                                    class="px-3 py-2 text-sm border rounded bg-white hover:bg-gray-50"
+                                    data-page="{{ $customers->currentPage() - 1 }}"
+                                    @disabled($customers->onFirstPage())
+                                >
+                                    前へ
+                                </button>
 
                                 <span class="text-sm text-gray-600">
                                     {{ $customers->currentPage() }} / {{ $customers->lastPage() }}
                                 </span>
 
-                                @if ($customers->hasMorePages())
-                                    <a
-                                        href="{{ $customers->nextPageUrl() }}"
-                                        class="px-3 py-2 text-sm border rounded bg-white hover:bg-gray-50"
-                                    >
-                                        次へ
-                                    </a>
-                                @else
-                                    <button
-                                        type="button"
-                                        class="px-3 py-2 text-sm border rounded bg-white hover:bg-gray-50"
-                                        disabled
-                                    >
-                                        次へ
-                                    </button>
-                                @endif
+                                <button
+                                    type="button"
+                                    class="px-3 py-2 text-sm border rounded bg-white hover:bg-gray-50"
+                                    data-page="{{ $customers->currentPage() + 1 }}"
+                                    @disabled(!$customers->hasMorePages())
+                                >
+                                    次へ
+                                </button>
                             </div>
                         </div>
                     @endif
@@ -172,13 +156,23 @@
     <script>
         document.getElementById('search').addEventListener('submit', async (event) => {
                 event.preventDefault();
-                fetchCustomers();
+                await fetchCustomers();
         });
 
         document.getElementById('reset-button').addEventListener('click', async (event) => {
             event.preventDefault();
-             document.getElementById('keyword').value = '';
+            document.getElementById('keyword').value = '';
             await fetchCustomers('');
+        });
+
+        document.getElementById('pagination-area').addEventListener('click', async (event) => {
+            const button = event.target.closest('button[data-page]');
+
+            if (!button || button.disabled) {
+                return;
+            }
+
+            await fetchCustomers(Number(button.dataset.page));
         });
 
         async function fetchCustomers(page = '') {
@@ -192,7 +186,10 @@
                 }
 
                 const browserUrl = new URL('{{ route('customers.index') }}');
-                browserUrl.searchParams.set('keyword', keyword);
+
+                if (keyword) {
+                    browserUrl.searchParams.set('keyword', keyword);
+                }
 
                 if (page) {
                     browserUrl.searchParams.set('page', page);
@@ -272,7 +269,7 @@
 
         function renderRangeEl(meta) {
             const rangeEl = document.getElementById('customer-range');
-            rangeEl.innerHTML = `
+            rangeEl.textContent = `
             ${meta.firstItem ?? 0} - ${meta.lastItem ?? 0} 件を表示
         `;
         }
@@ -285,7 +282,7 @@
                 <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                     <div class="text-sm text-gray-500">
                         全 ${escapeHtml(meta.total)} 件中
-                        ${escapeHtml(meta.firstItem) ?? 0}〜${escapeHtml(meta.lastItem) ?? 0} 件を表示
+                        ${escapeHtml(meta.firstItem ?? 0)}〜${escapeHtml(meta.lastItem ?? 0)} 件を表示
                     </div>
 
                     <div class="flex items-center gap-2">
@@ -293,7 +290,8 @@
                             type="button"
                             id="prev-page"
                             class="px-3 py-2 text-sm border rounded bg-white hover:bg-gray-50"
-                            ${escapeHtml(meta.currentPage) === 1 ? 'disabled' : ''}
+                            data-page="${meta.currentPage - 1}"
+                            ${meta.currentPage === 1 ? 'disabled' : ''}
                         >
                             前へ
                         </button>
@@ -306,28 +304,14 @@
                             type="button"
                             id="next-page"
                             class="px-3 py-2 text-sm border rounded bg-white hover:bg-gray-50"
-                            ${escapeHtml(meta.currentPage) === escapeHtml(meta.lastPage) ? 'disabled' : ''}
+                            data-page="${meta.currentPage + 1}"
+                            ${meta.currentPage === meta.lastPage ? 'disabled' : ''}
                         >
                             次へ
                         </button>
                     </div>
                 </div>
             `;
-
-            const prevButton = document.getElementById('prev-page');
-            const nextButton = document.getElementById('next-page');
-
-            if (prevButton && meta.currentPage > 1) {
-                prevButton.addEventListener('click', () => {
-                    fetchCustomers(meta.currentPage - 1);
-                });
-            }
-
-            if (nextButton && meta.currentPage < meta.lastPage) {
-                nextButton.addEventListener('click', () => {
-                    fetchCustomers(meta.currentPage + 1);
-                });
-            }
         }
 
         function escapeHtml(value) {
